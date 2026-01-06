@@ -5,6 +5,10 @@ import { UnorderedList, OrderedList, ListItem } from './List'
 import { Code, Pre } from './CodeBlock'
 import { Blockquote } from './Blockquote'
 import { FreeResponse } from './FreeResponse'
+import { MultipleChoice } from './MultipleChoice'
+import { TemperatureCheck } from './TemperatureCheck'
+import { Scale } from './Scale'
+import { Checklist } from './Checklist'
 
 export const mdxComponents: MDXComponents = {
   h1: H1,
@@ -21,4 +25,8 @@ export const mdxComponents: MDXComponents = {
   pre: Pre,
   blockquote: Blockquote,
   FreeResponse,
+  MultipleChoice,
+  TemperatureCheck,
+  Scale,
+  Checklist,
 }
