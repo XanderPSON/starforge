@@ -22,7 +22,9 @@
       "Bash(then find /Users/xander/src/lnd/tl/starbase/mdparser/specs/002-interactive-component-library/checklists -name \"*.md\" -type f)",
       "Bash(fi)",
       "Bash(lsof:*)",
-      "Bash(kill:*)"
+      "Bash(kill:*)",
+      "Bash(git push:*)",
+      "Bash(cat:*)"
     ]
   }
 }
