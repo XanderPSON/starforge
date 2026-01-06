@@ -1,6 +1,10 @@
 'use client'
 
-import { useState, useEffect, createContext, useContext, ReactNode } from 'react'
+import { useState, useEffect } from 'react'
+import { useComponentRegistry } from '@/components/ComponentRegistryProvider'
+
+// Re-export for convenience
+export { ComponentRegistryProvider } from '@/components/ComponentRegistryProvider'
 
 // ============================================================================
 // Constants
@@ -24,37 +28,6 @@ interface InteractiveState<T> {
 interface SizeCheckResult {
   ok: boolean
   size: number
-}
-
-interface ComponentRegistry {
-  activeIds: Set<string>
-}
-
-// ============================================================================
-// Component Registry Context
-// ============================================================================
-
-const ComponentRegistryContext = createContext<ComponentRegistry | null>(null)
-
-export function ComponentRegistryProvider({ children }: { children: ReactNode }) {
-  const [registry] = useState<ComponentRegistry>(() => ({
-    activeIds: new Set<string>()
-  }))
-
-  return (
-    <ComponentRegistryContext.Provider value={registry}>
-      {children}
-    </ComponentRegistryContext.Provider>
-  )
-}
-
-function useComponentRegistry(): ComponentRegistry {
-  const registry = useContext(ComponentRegistryContext)
-  if (!registry) {
-    // Fallback to module-level Set if provider not found
-    return { activeIds: new Set<string>() }
-  }
-  return registry
 }
 
 // ============================================================================

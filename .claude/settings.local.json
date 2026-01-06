@@ -20,7 +20,9 @@
       "Bash(git commit:*)",
       "Bash(if [ -d \"/Users/xander/src/lnd/tl/starbase/mdparser/specs/002-interactive-component-library/checklists\" ])",
       "Bash(then find /Users/xander/src/lnd/tl/starbase/mdparser/specs/002-interactive-component-library/checklists -name \"*.md\" -type f)",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(lsof:*)",
+      "Bash(kill:*)"
     ]
   }
 }
