@@ -28,11 +28,12 @@ export function Code({ children, className }: CodeBlockProps) {
   // Inline code styling
   return (
     <code className={cn(
-      'bg-gray-900 text-gray-100',
-      'px-1.5 py-0.5',
-      'rounded',
-      'text-sm font-mono',
+      'bg-coinbase-space text-coinbase-cyan',
+      'px-2 py-0.5',
+      'rounded-md',
+      'text-sm font-mono font-medium',
       'whitespace-nowrap',
+      'border border-coinbase-blue/30',
       className
     )}>
       {children}
@@ -46,20 +47,23 @@ export function Code({ children, className }: CodeBlockProps) {
  */
 export function Pre({ children, className }: PreProps) {
   return (
-    <pre className={cn(
-      'bg-gray-900 text-gray-100',
-      'p-4',
-      'rounded-lg',
-      'overflow-x-auto',
-      'mb-4',
-      'font-mono text-sm leading-relaxed',
-      // Ensure long lines scroll horizontally
-      'whitespace-pre',
-      // Smooth scrolling
-      'scroll-smooth',
-      className
-    )}>
-      <code>{children}</code>
-    </pre>
+    <div className="my-6">
+      <pre className={cn(
+        'bg-coinbase-dark text-gray-200',
+        'p-6',
+        'rounded-xl',
+        'overflow-x-auto',
+        'font-mono text-sm leading-relaxed',
+        'border border-coinbase-blue/30',
+        'shadow-lg shadow-coinbase-blue/10',
+        // Ensure long lines scroll horizontally
+        'whitespace-pre',
+        // Smooth scrolling
+        'scroll-smooth',
+        className
+      )}>
+        <code>{children}</code>
+      </pre>
+    </div>
   )
 }

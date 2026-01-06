@@ -66,25 +66,29 @@ export function FreeResponse({ id, className, placeholder }: FreeResponseProps) 
   }, [value])
 
   return (
-    <div className={cn('my-6', className)}>
+    <div className={cn('my-8', className)}>
       {!isStorageAvailable && (
-        <div className="mb-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-800">
+        <div className="mb-3 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-sm text-yellow-300 backdrop-blur-sm">
           ⚠️ localStorage is disabled. Your responses will not be saved.
         </div>
       )}
-      <textarea
-        ref={textareaRef}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder={placeholder || 'Type your answer here...'}
-        aria-label={`Free response answer for ${id}`}
-        className={cn(
-          'w-full min-h-[100px] p-4 border border-gray-300 rounded-lg',
-          'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-          'resize-none overflow-hidden',
-          'font-sans text-base leading-relaxed'
-        )}
-      />
+      <div className="glass-effect rounded-xl border-coinbase-blue/30 p-1 glow-blue-hover transition-all duration-300">
+        <textarea
+          ref={textareaRef}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder={placeholder || 'Type your answer here...'}
+          aria-label={`Free response answer for ${id}`}
+          className={cn(
+            'w-full min-h-[120px] p-4 bg-coinbase-space/50 rounded-lg',
+            'text-gray-200 placeholder:text-gray-500',
+            'focus:outline-none focus:ring-2 focus:ring-coinbase-blue/50',
+            'resize-none overflow-hidden',
+            'font-sans text-base leading-relaxed',
+            'backdrop-blur-sm'
+          )}
+        />
+      </div>
     </div>
   )
 }

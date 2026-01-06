@@ -1,3 +1,61 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+body {
+  background-color: #05111F;
+  color: #e5e7eb;
+  background-image: radial-gradient(ellipse at top, #1B263B 0%, #0D1B2A 50%, #05111F 100%);
+  background-attachment: fixed;
+  background-size: cover;
+  min-height: 100vh;
+}
+
+/* Starfield effect - commented out for now, may use later */
+/*
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(1px 1px at 25% 15%, white, transparent),
+    radial-gradient(1px 1px at 65% 70%, white, transparent),
+    radial-gradient(1px 1px at 85% 25%, white, transparent),
+    radial-gradient(1px 1px at 45% 85%, white, transparent),
+    radial-gradient(1px 1px at 90% 60%, white, transparent),
+    radial-gradient(1px 1px at 15% 75%, white, transparent),
+    radial-gradient(1px 1px at 55% 40%, white, transparent),
+    radial-gradient(1px 1px at 75% 10%, white, transparent),
+    radial-gradient(1px 1px at 35% 55%, white, transparent),
+    radial-gradient(1px 1px at 10% 35%, white, transparent);
+  background-size: 300% 300%;
+  background-position: 0% 0%;
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: 0;
+}
+*/
+
+/* Content should be above starfield */
+#__next,
+body > div {
+  position: relative;
+  z-index: 1;
+}
+
+/* Glass effect utility */
+.glass-effect {
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Glow effects */
+.glow-blue {
+  box-shadow: 0 0 20px rgba(0, 82, 255, 0.3);
+}
+
+.glow-blue-hover:hover {
+  box-shadow: 0 0 30px rgba(0, 82, 255, 0.5);
+}

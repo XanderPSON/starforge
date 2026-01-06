@@ -20,21 +20,22 @@ export function ErrorMessage({
 }: ErrorMessageProps) {
   return (
     <div
-      className={cn('max-w-2xl mx-auto text-center p-8', className)}
+      className={cn('max-w-2xl mx-auto text-center glass-effect p-12 rounded-2xl border-red-500/30', className)}
       role="alert"
       aria-live="assertive"
     >
-      <h1 className="text-4xl font-bold mb-4 text-red-600">{title}</h1>
-      <p className="text-lg text-gray-600 mb-4">{message}</p>
+      <div className="text-6xl mb-6">⚠️</div>
+      <h1 className="text-4xl font-bold mb-4 text-red-400">{title}</h1>
+      <p className="text-lg text-gray-300 mb-6">{message}</p>
       {details && (
-        <pre className="bg-gray-100 p-4 rounded-lg text-left text-sm overflow-x-auto mb-8 text-gray-800">
+        <pre className="bg-coinbase-dark/80 p-6 rounded-xl text-left text-sm overflow-x-auto mb-8 text-gray-300 border border-coinbase-blue/30">
           {details}
         </pre>
       )}
       {action && (
         <button
           onClick={action.onClick}
-          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="px-8 py-3 bg-coinbase-gradient text-white font-semibold rounded-lg hover:scale-105 transition-transform duration-200 glow-blue focus:outline-none focus:ring-2 focus:ring-coinbase-blue focus:ring-offset-2 focus:ring-offset-coinbase-dark-bg"
           aria-label={action.label}
         >
           {action.label}

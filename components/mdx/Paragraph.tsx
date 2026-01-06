@@ -7,7 +7,7 @@ interface ParagraphProps {
 
 export function Paragraph({ children, className }: ParagraphProps) {
   return (
-    <p className={cn('max-w-[65ch] leading-7 mb-4', className)}>
+    <p className={cn('max-w-[75ch] leading-relaxed mb-5 text-gray-300', className)}>
       {children}
     </p>
   )

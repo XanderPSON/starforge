@@ -7,7 +7,11 @@ interface HeadingProps {
 
 export function H1({ children, className }: HeadingProps) {
   return (
-    <h1 className={cn('text-4xl font-bold mt-0 mb-4', className)}>
+    <h1 className={cn(
+      'text-5xl font-bold mt-0 mb-6',
+      'bg-gradient-to-r from-white via-blue-100 to-cyan-200 bg-clip-text text-transparent',
+      className
+    )}>
       {children}
     </h1>
   )
@@ -15,7 +19,11 @@ export function H1({ children, className }: HeadingProps) {
 
 export function H2({ children, className }: HeadingProps) {
   return (
-    <h2 className={cn('text-3xl font-bold mt-8 mb-4', className)}>
+    <h2 className={cn(
+      'text-4xl font-bold mt-12 mb-4 pb-2',
+      'text-gray-100 border-b-2 border-coinbase-blue',
+      className
+    )}>
       {children}
     </h2>
   )
@@ -23,7 +31,7 @@ export function H2({ children, className }: HeadingProps) {
 
 export function H3({ children, className }: HeadingProps) {
   return (
-    <h3 className={cn('text-2xl font-semibold mt-6 mb-3', className)}>
+    <h3 className={cn('text-2xl font-semibold mt-8 mb-3 text-gray-200', className)}>
       {children}
     </h3>
   )
