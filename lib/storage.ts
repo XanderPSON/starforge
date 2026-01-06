@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useComponentRegistry } from '@/components/ComponentRegistryProvider'
 
 // Re-export for convenience
@@ -157,6 +157,9 @@ export function useInteractive<T>(
   const [isSaved, setIsSaved] = useState(true)
   const registry = useComponentRegistry()
 
+  // Store initial default value in ref to avoid re-hydration on defaultValue changes
+  const initialDefaultValue = useRef(defaultValue)
+
   // Detect duplicate IDs
   useEffect(() => {
     if (registry.activeIds.has(id)) {
@@ -171,10 +174,12 @@ export function useInteractive<T>(
   }, [id, registry])
 
   // Client-only hydration (prevents SSR mismatch)
+  // Only runs once on mount, using the initial default value
   useEffect(() => {
     const stored = safeGetItem<T>(id)
-    setValue(stored !== null ? stored : defaultValue)
-  }, [id, defaultValue])
+    setValue(stored !== null ? stored : initialDefaultValue.current)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   // Debounced save to localStorage
   useEffect(() => {
