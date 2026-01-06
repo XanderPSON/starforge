@@ -9,6 +9,8 @@ import { MultipleChoice } from './MultipleChoice'
 import { TemperatureCheck } from './TemperatureCheck'
 import { Scale } from './Scale'
 import { Checklist } from './Checklist'
+import { QuizMath, QuizPlanet } from './QuizDemo'
+import { ChecklistDemo } from './ChecklistDemo'
 
 export const mdxComponents: MDXComponents = {
   h1: H1,
@@ -29,4 +31,7 @@ export const mdxComponents: MDXComponents = {
   TemperatureCheck,
   Scale,
   Checklist,
+  QuizMath,
+  QuizPlanet,
+  ChecklistDemo,
 }
