@@ -12,6 +12,12 @@ import { Checklist } from './Checklist'
 import { QuizMath, QuizPlanet } from './QuizDemo'
 import { ChecklistDemo } from './ChecklistDemo'
 
+import { createElement } from 'react'
+
+function HorizontalRule() {
+  return createElement('hr', { className: 'my-12 border-t border-coinbase-blue/30' })
+}
+
 export const mdxComponents: MDXComponents = {
   h1: H1,
   h2: H2,
@@ -26,6 +32,7 @@ export const mdxComponents: MDXComponents = {
   code: Code,
   pre: Pre,
   blockquote: Blockquote,
+  hr: HorizontalRule,
   FreeResponse,
   MultipleChoice,
   TemperatureCheck,

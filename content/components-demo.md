@@ -19,6 +19,8 @@ Multi-line textarea with auto-save and persistence. Perfect for reflections, ans
 
 <FreeResponse id="demo-free-1" label="What did you learn today?" placeholder="Type your answer..." />
 
+![Test image](/images/basethreads/jacket-1.png)
+
 ### Features
 
 - ✅ Auto-resizing textarea (grows with content)
