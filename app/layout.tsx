@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'MDX Codelab Viewer',
-  description: 'Interactive local Markdown codelab viewer with persistence',
+  title: 'Starforge',
+  description: 'Interactive engineering training hub',
 }
 
 export default function RootLayout({
@@ -15,8 +16,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(t===null&&d)){document.documentElement.classList.add('dark')}}catch(_){}`,
+          }}
+        />
+        <ThemeToggle />
+        {children}
+      </body>
     </html>
   )
 }

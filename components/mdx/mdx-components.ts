@@ -11,6 +11,8 @@ import { Scale } from './Scale'
 import { Checklist } from './Checklist'
 import { QuizMath, QuizPlanet } from './QuizDemo'
 import { ChecklistDemo } from './ChecklistDemo'
+import { SuggestedAnswer } from './SuggestedAnswer'
+import { SubmissionBox } from './SubmissionBox'
 
 import { createElement } from 'react'
 
@@ -41,4 +43,6 @@ export const mdxComponents: MDXComponents = {
   QuizMath,
   QuizPlanet,
   ChecklistDemo,
+  SuggestedAnswer,
+  SubmissionBox,
 }
