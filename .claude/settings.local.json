@@ -24,7 +24,20 @@
       "Bash(lsof:*)",
       "Bash(kill:*)",
       "Bash(git push:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(npm run:*)",
+      "Bash(npx next:*)",
+      "Bash(npx:*)",
+      "Bash(pwd && node /Users/xander/src/starbase/eng-onboarding-starbase/mdparser/node_modules/.bin/next lint /Users/xander/src/starbase/eng-onboarding-starbase/mdparser 2>&1)",
+      "Bash(node:*)",
+      "Bash(npm test:*)",
+      "Bash(open:*)",
+      "Bash(python3:*)",
+      "Bash(head:*)",
+      "Bash(source:*)",
+      "Bash(jobs:*)",
+      "WebFetch(domain:learning-ten-kappa.vercel.app)",
+      "Bash(git:*)"
     ]
   }
 }
