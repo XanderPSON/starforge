@@ -15,7 +15,6 @@ export function Scale({ id, max = 5, label, className }: ScaleProps) {
   const params = useParams()
   const slug = params.slug as string || 'default'
 
-  // Validate required props
   if (!id) {
     return (
       <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
@@ -24,18 +23,16 @@ export function Scale({ id, max = 5, label, className }: ScaleProps) {
     )
   }
 
-  // Use useInteractive hook with codelab-scoped key
   const storageKey = getStorageKey(slug, id)
-  const [value, setValue, isSaved] = useInteractive<number | null>(storageKey, null)
+  const [value, setValue] = useInteractive<number | null>(storageKey, null)
 
-  // Show skeleton during hydration
   if (value === undefined) {
     return (
       <div className={cn('my-8', className)}>
         {label && <div className="mb-3 h-5 bg-white/10 rounded w-1/3 animate-pulse" />}
-        <div className="flex justify-center gap-2">
+        <div className="flex gap-1">
           {Array.from({ length: max }).map((_, i) => (
-            <div key={i} className="w-10 h-10 bg-white/5 rounded-full animate-pulse" />
+            <div key={i} className="flex-1 h-10 bg-white/5 rounded animate-pulse" />
           ))}
         </div>
       </div>
@@ -61,10 +58,10 @@ export function Scale({ id, max = 5, label, className }: ScaleProps) {
       <div
         role="group"
         aria-label={label || `Rate from 1 to ${max}`}
-        className="flex justify-center gap-2"
+        className="flex gap-1"
       >
         {Array.from({ length: max }, (_, i) => i + 1).map((rating) => {
-          const isHighlighted = value !== null && rating <= value
+          const isFilled = value !== null && rating <= value
           const isCurrent = value === rating
 
           return (
@@ -75,20 +72,26 @@ export function Scale({ id, max = 5, label, className }: ScaleProps) {
               aria-label={`Rate ${rating} out of ${max}`}
               aria-current={isCurrent || undefined}
               className={cn(
-                'w-10 h-10 rounded-full border-2 transition-all duration-100',
-                'hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500/50',
-                isHighlighted
-                  ? 'bg-blue-500/30 border-blue-500 scale-105'
-                  : 'bg-white/5 border-white/20'
+                'flex-1 h-10 flex items-center justify-center',
+                'text-sm font-medium font-mono',
+                'border transition-all duration-100',
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-coinbase-blue focus-visible:z-10',
+                'first:rounded-l-lg last:rounded-r-lg',
+                isFilled
+                  ? cn(
+                      'bg-coinbase-blue/30 border-coinbase-blue text-white',
+                      isCurrent && 'bg-coinbase-blue/50 font-bold'
+                    )
+                  : 'bg-white/5 border-white/15 text-gray-500 hover:bg-white/10 hover:text-gray-300 hover:border-white/30'
               )}
             >
-              <span className="sr-only">{rating}</span>
+              {rating}
             </button>
           )
         })}
       </div>
       {value !== null && (
-        <p className="mt-3 text-center text-sm text-gray-400">
+        <p className="mt-2 text-center text-xs text-gray-400">
           {value} / {max}
         </p>
       )}
