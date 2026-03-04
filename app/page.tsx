@@ -1,4 +1,8 @@
-export default function Home() {
+import { listCodelabs } from '@/lib/mdx'
+
+export default async function Home() {
+  const codelabs = await listCodelabs()
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-8 md:p-24">
       <div className="max-w-4xl w-full">
@@ -55,28 +59,47 @@ export default function Home() {
           </div>
         </div>
 
-        {/* CTA Section */}
-        <div className="glass-effect p-8 rounded-2xl border-coinbase-blue/30 text-center">
-          <p className="text-gray-300 mb-4">
-            Try the sample codelabs to see it in action
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <a
-              href="/codelab/demo"
-              className="px-8 py-3 bg-coinbase-gradient text-white font-semibold rounded-lg hover:scale-105 transition-transform duration-200 glow-blue"
-            >
-              View Demo Codelab
-            </a>
-            <a
-              href="/codelab/intro"
-              className="px-8 py-3 glass-effect text-white font-semibold rounded-lg hover:scale-105 transition-transform duration-200"
-            >
-              Introduction Guide
-            </a>
+        {/* Available Codelabs */}
+        <div className="glass-effect p-8 rounded-2xl border-coinbase-blue/30">
+          <h2 className="text-2xl font-bold text-white mb-6 text-center">Available Codelabs</h2>
+          <div className="grid gap-4">
+            {codelabs.map(({ slug, frontmatter }) => (
+              <a
+                key={slug}
+                href={`/codelab/${slug}`}
+                className="block glass-effect p-5 rounded-xl hover:scale-[1.02] transition-all duration-200 glow-blue-hover group"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-semibold text-white group-hover:text-coinbase-cyan transition-colors">
+                      {frontmatter.title || slug}
+                    </h3>
+                    {frontmatter.description && (
+                      <p className="text-gray-400 text-sm mt-1">{frontmatter.description}</p>
+                    )}
+                    {frontmatter.tags && frontmatter.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        {frontmatter.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="text-xs px-2 py-0.5 rounded-full bg-coinbase-blue/10 text-coinbase-cyan border border-coinbase-blue/20"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3 shrink-0 text-sm text-gray-500">
+                    {frontmatter.duration && (
+                      <span>{frontmatter.duration} min</span>
+                    )}
+                    <span className="text-coinbase-blue group-hover:translate-x-1 transition-transform">→</span>
+                  </div>
+                </div>
+              </a>
+            ))}
           </div>
-          <p className="text-sm text-gray-500 mt-6">
-            Or navigate to <code className="bg-coinbase-space text-coinbase-cyan px-3 py-1 rounded-md border border-coinbase-blue/30">/codelab/[filename]</code>
-          </p>
         </div>
       </div>
     </main>
