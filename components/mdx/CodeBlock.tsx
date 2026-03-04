@@ -46,8 +46,7 @@ export function Code({ children, className }: CodeBlockProps) {
 
 /**
  * Code block component (pre element)
- * Handles multi-line code with syntax highlighting support.
- * Click the code text to copy; no separate copy button.
+ * Hover to reveal a copy chip in the top-right corner.
  */
 export function Pre({ children, className, raw }: PreProps) {
   const [copied, setCopied] = useState(false)
@@ -74,37 +73,40 @@ export function Pre({ children, className, raw }: PreProps) {
 
   return (
     <div className="my-6 relative group">
-      <p className="text-xs font-medium text-gray-400 mb-2" aria-hidden>
-        📋 COPY AND HIT ENTER
-      </p>
+      <pre
+        className={cn(
+          'bg-coinbase-dark text-gray-200',
+          'p-6',
+          'rounded-xl',
+          'overflow-x-auto',
+          'font-mono text-sm leading-relaxed',
+          'border border-coinbase-blue/30',
+          'shadow-lg shadow-coinbase-blue/10',
+          'whitespace-pre',
+          'scroll-smooth',
+          copied && 'ring-2 ring-emerald-400/50',
+          className
+        )}
+      >
+        <code>{children}</code>
+      </pre>
       <button
         type="button"
         onClick={handleCopy}
         className={cn(
-          'w-full text-left cursor-pointer rounded-xl',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-coinbase-blue focus-visible:ring-offset-2 focus-visible:ring-offset-coinbase-dark',
-          'hover:border-coinbase-blue/50 transition-colors'
+          'absolute top-3 right-3',
+          'px-2.5 py-1 rounded-md',
+          'text-xs font-medium',
+          'bg-coinbase-space/80 text-gray-300 border border-coinbase-blue/30',
+          'backdrop-blur-sm',
+          'opacity-0 group-hover:opacity-100 transition-opacity duration-150',
+          'focus:outline-none focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-coinbase-blue',
+          'cursor-pointer',
+          copied && 'text-emerald-400 border-emerald-400/40'
         )}
-        title="Click to copy"
         aria-label="Copy code"
       >
-        <pre
-          className={cn(
-            'bg-coinbase-dark text-gray-200',
-            'p-6',
-            'rounded-xl',
-            'overflow-x-auto',
-            'font-mono text-sm leading-relaxed',
-            'border border-coinbase-blue/30',
-            'shadow-lg shadow-coinbase-blue/10',
-            'whitespace-pre',
-            'scroll-smooth',
-            copied && 'ring-2 ring-emerald-400/50',
-            className
-          )}
-        >
-          <code>{children}</code>
-        </pre>
+        {copied ? 'Copied!' : 'Copy'}
       </button>
     </div>
   )
