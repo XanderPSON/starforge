@@ -4,6 +4,7 @@ import path from 'path'
 import remarkGfm from 'remark-gfm'
 import { mdxComponents } from '@/components/mdx/mdx-components'
 import { listTrainingDirectories, fetchTrainingMarkdown } from '@/lib/github'
+import { splitIntoPages, getPageHeadings } from '@/lib/training-pages'
 
 export interface TrainingFrontmatter {
   title?: string
@@ -126,6 +127,55 @@ export async function listTrainings() {
       return { slug, frontmatter: parseFrontmatterFromSource(source) }
     })
   )
+}
+
+// ─── Paginated training functions ─────────────────────────────────────────────
+
+export interface TrainingPageResult {
+  slug: string
+  content: React.ReactElement
+  frontmatter: TrainingFrontmatter | null
+  pageIndex: number
+  totalPages: number
+  pageHeading: string
+  pageHeadings: string[]
+  requiredIds: string[]
+}
+
+export async function getTrainingPage(
+  slug: string,
+  pageIndex: number
+): Promise<TrainingPageResult | null> {
+  let rawSource: string | null = null
+
+  if (process.env.TRAINING_REPO_URL) {
+    rawSource = await fetchTrainingMarkdown(slug)
+  } else if (process.env.TRAININGS_LOCAL_PATH) {
+    const filePath = path.join(process.env.TRAININGS_LOCAL_PATH, slug, 'index.md')
+    rawSource = await readFile(filePath, 'utf-8')
+  } else {
+    const filePath = path.join(process.cwd(), 'content', `${slug}.md`)
+    rawSource = await readFile(filePath, 'utf-8')
+  }
+
+  if (rawSource === null) return null
+
+  const pages = splitIntoPages(rawSource)
+  if (pageIndex >= pages.length || pageIndex < 0) return null
+
+  const page = pages[pageIndex]!
+  const { content, frontmatter } = await compileMdxSource(page.source)
+
+  return {
+    slug,
+    content,
+    frontmatter: frontmatter || null,
+    pageIndex,
+    totalPages: pages.length,
+    pageHeading: page.heading,
+    pageHeadings: getPageHeadings(pages),
+    requiredIds: page.requiredIds,
+  }
 }
 
 // ─── Legacy codelab functions (kept for backward compat) ─────────────────────

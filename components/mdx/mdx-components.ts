@@ -13,6 +13,7 @@ import { QuizMath, QuizPlanet } from './QuizDemo'
 import { ChecklistDemo } from './ChecklistDemo'
 import { SuggestedAnswer } from './SuggestedAnswer'
 import { SubmissionBox } from './SubmissionBox'
+import { Reveal } from './Reveal'
 
 import { createElement } from 'react'
 
@@ -45,4 +46,5 @@ export const mdxComponents: MDXComponents = {
   ChecklistDemo,
   SuggestedAnswer,
   SubmissionBox,
+  Reveal,
 }
