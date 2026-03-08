@@ -39,3 +39,5 @@ coverage/
 *.log
 .cache/
 tdd-output.md
+
+/lib/generated/prisma

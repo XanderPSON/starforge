@@ -8,3 +8,13 @@ import { twMerge } from 'tailwind-merge'
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+const ACRONYMS: Record<string, string> = { ai: 'AI', nho: 'NHO', grpc: 'gRPC' }
+
+export function toTitleCase(str: string): string {
+  return str
+    .replace(/-/g, ' ')
+    .split(' ')
+    .map((w) => ACRONYMS[w.toLowerCase()] ?? w.replace(/^\w/, (c) => c.toUpperCase()))
+    .join(' ')
+}

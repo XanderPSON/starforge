@@ -48,14 +48,14 @@ const config: Config = {
               },
             },
             h1: {
-              fontSize: '2.5rem',
+              fontSize: '1.875rem',
               fontWeight: '700',
               marginTop: '0',
               marginBottom: '1.5rem',
               color: '#141621',
             },
             h2: {
-              fontSize: '2rem',
+              fontSize: '1.5rem',
               fontWeight: '600',
               marginTop: '2.5rem',
               marginBottom: '1rem',
@@ -64,7 +64,7 @@ const config: Config = {
               paddingBottom: '0.5rem',
             },
             h3: {
-              fontSize: '1.5rem',
+              fontSize: '1.25rem',
               fontWeight: '600',
               marginTop: '2rem',
               marginBottom: '0.75rem',
@@ -74,7 +74,7 @@ const config: Config = {
             h5: { color: '#141621' },
             h6: { color: '#141621' },
             p: {
-              color: '#374151',
+              color: '#4b5563',
               lineHeight: '1.8',
             },
             strong: {
@@ -119,7 +119,6 @@ const config: Config = {
               color: '#5b6270',
               borderLeftColor: '#4c5bff',
               borderLeftWidth: '4px',
-              fontStyle: 'italic',
               backgroundColor: '#eef1f7',
               padding: '1rem 1.5rem',
               borderRadius: '0.5rem',

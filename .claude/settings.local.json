@@ -37,7 +37,9 @@
       "Bash(source:*)",
       "Bash(jobs:*)",
       "WebFetch(domain:learning-ten-kappa.vercel.app)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(wc:*)",
+      "Bash(grep:*)"
     ]
   }
 }

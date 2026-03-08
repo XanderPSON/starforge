@@ -97,6 +97,7 @@ export function safeSetItem<T>(key: string, value: T): boolean {
     localStorage.setItem(key, JSON.stringify(state))
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('codelab:saved', { detail: { key } }))
+      window.dispatchEvent(new CustomEvent('starforge:dbSync', { detail: { key, value } }))
     }
     return true
   } catch (error) {
