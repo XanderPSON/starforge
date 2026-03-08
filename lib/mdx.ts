@@ -4,7 +4,7 @@ import path from 'path'
 import remarkGfm from 'remark-gfm'
 import { mdxComponents } from '@/components/mdx/mdx-components'
 import { listTrainingDirectories, fetchTrainingMarkdown } from '@/lib/github'
-import { splitIntoPages, getPageHeadings } from '@/lib/training-pages'
+import { splitIntoPages, getPageHeadings, type TrainingPageHeading } from '@/lib/training-pages'
 
 export interface TrainingFrontmatter {
   title?: string
@@ -138,7 +138,7 @@ export interface TrainingPageResult {
   pageIndex: number
   totalPages: number
   pageHeading: string
-  pageHeadings: string[]
+  pageHeadings: TrainingPageHeading[]
   requiredIds: string[]
 }
 
