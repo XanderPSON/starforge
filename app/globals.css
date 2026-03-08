@@ -11,6 +11,14 @@
   --color-hub-primary: #4c5bff;
   --color-hub-primary-dark: #2f3be6;
   --color-hub-accent: #12b5a6;
+
+  --color-coinbase-blue: #0052FF;
+  --color-coinbase-dark: #0A1F44;
+  --color-coinbase-dark-bg: #05111F;
+  --color-coinbase-space: #0D1B2A;
+  --color-coinbase-space-light: #1B263B;
+  --color-coinbase-purple: #5B21B6;
+  --color-coinbase-cyan: #06B6D4;
 }
 
 body {

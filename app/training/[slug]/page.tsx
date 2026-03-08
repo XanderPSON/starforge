@@ -43,6 +43,7 @@ export default async function TrainingPage({ params, searchParams }: TrainingPag
       pageHeadings={pageHeadings}
       requiredIds={requiredIds}
       showHeader={pageIndex === 0}
+      pageExplicitlyRequested={page !== undefined}
       frontmatter={frontmatter}
     >
       {content}

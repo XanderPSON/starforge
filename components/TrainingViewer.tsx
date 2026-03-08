@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { ComponentRegistryProvider } from '@/components/ComponentRegistryProvider'
 import { safeGetItem, safeSetItem, getStorageKey } from '@/lib/storage'
+import { LEARNING_EVENT_TYPES, trackEvent } from '@/lib/event-tracking'
+import { toTitleCase } from '@/lib/utils'
 import type { TrainingFrontmatter } from '@/lib/mdx'
 import type { ReactNode } from 'react'
 
@@ -16,6 +17,7 @@ interface TrainingViewerProps {
   pageHeadings: string[]
   requiredIds: string[]
   showHeader: boolean
+  pageExplicitlyRequested: boolean
   frontmatter: TrainingFrontmatter | null
   children: ReactNode
 }
@@ -50,10 +52,6 @@ function getTagColor(tag: string): string {
   return TAG_COLORS[hash]!
 }
 
-function toTitleCase(str: string): string {
-  return str.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
-}
-
 const difficultyColors = {
   beginner: 'bg-green-100 text-green-700 border-green-200 dark:bg-green-500/20 dark:text-green-300 dark:border-green-500/30',
   intermediate: 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/30',
@@ -67,12 +65,17 @@ export default function TrainingViewer({
   pageHeadings,
   requiredIds,
   showHeader,
+  pageExplicitlyRequested,
   frontmatter,
   children,
 }: TrainingViewerProps) {
   const router = useRouter()
   const [allAnswered, setAllAnswered] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [adminMode, setAdminMode] = useState(false)
+  const pageEnteredAtRef = useRef<number>(Date.now())
+  const previousPageIndexRef = useRef<number | null>(null)
+  const currentPageIndexRef = useRef<number>(currentPageIndex)
 
   const checkGate = useCallback(() => {
     if (requiredIds.length === 0) {
@@ -82,9 +85,23 @@ export default function TrainingViewer({
     setAllAnswered(requiredIds.every((id) => isIdAnswered(slug, id)))
   }, [requiredIds, slug])
 
-  // On mount: handle resume redirect (page 0 only) + save current page + scroll to top
+  // Read admin mode on mount + listen for changes
   useEffect(() => {
-    if (currentPageIndex === 0) {
+    try {
+      setAdminMode(localStorage.getItem('starforge:adminMode') === 'true')
+    } catch (_) {}
+
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { enabled?: boolean } | undefined
+      setAdminMode(detail?.enabled ?? false)
+    }
+    window.addEventListener('starforge:adminModeChanged', handler)
+    return () => window.removeEventListener('starforge:adminModeChanged', handler)
+  }, [])
+
+  // On mount: handle resume redirect (page 0 only, when no explicit page was requested) + save current page + scroll to top
+  useEffect(() => {
+    if (currentPageIndex === 0 && !pageExplicitlyRequested) {
       const navState = safeGetItem<{ currentPage: number }>(NAV_KEY(slug))
       if (navState && typeof navState.currentPage === 'number' && navState.currentPage > 0 && navState.currentPage < totalPages) {
         router.replace(`/training/${slug}?page=${navState.currentPage}`)
@@ -92,11 +109,51 @@ export default function TrainingViewer({
       }
     }
 
+    if (previousPageIndexRef.current !== null && previousPageIndexRef.current !== currentPageIndex) {
+      const durationMs = Date.now() - pageEnteredAtRef.current
+      trackEvent(LEARNING_EVENT_TYPES.PAGE_EXIT, {
+        slug,
+        pageIndex: previousPageIndexRef.current,
+        metadata: {
+          durationMs,
+          durationSeconds: Math.round(durationMs / 1000),
+          reason: 'page_change',
+          toPageIndex: currentPageIndex,
+        },
+      })
+    }
+
+    pageEnteredAtRef.current = Date.now()
+    previousPageIndexRef.current = currentPageIndex
+    currentPageIndexRef.current = currentPageIndex
+
     safeSetItem(NAV_KEY(slug), { currentPage: currentPageIndex })
+    trackEvent(LEARNING_EVENT_TYPES.PAGE_VIEW, {
+      slug,
+      pageIndex: currentPageIndex,
+      metadata: {
+        source: 'training_viewer',
+      },
+    })
     checkGate()
     window.scrollTo({ top: 0, behavior: 'smooth' })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPageIndex])
+
+  useEffect(() => {
+    return () => {
+      const durationMs = Date.now() - pageEnteredAtRef.current
+      trackEvent(LEARNING_EVENT_TYPES.PAGE_EXIT, {
+        slug,
+        pageIndex: currentPageIndexRef.current,
+        metadata: {
+          durationMs,
+          durationSeconds: Math.round(durationMs / 1000),
+          reason: 'unmount',
+        },
+      })
+    }
+  }, [slug])
 
   // Listen for codelab:saved events to re-check gate
   useEffect(() => {
@@ -104,14 +161,32 @@ export default function TrainingViewer({
     return () => window.removeEventListener('codelab:saved', checkGate)
   }, [checkGate])
 
-  const goToPage = (page: number) => {
+  const goToPage = (page: number, source: 'next' | 'previous' | 'direct' = 'direct') => {
+    if (source === 'next' || source === 'previous') {
+      trackEvent(LEARNING_EVENT_TYPES.NAV_CLICK, {
+        slug,
+        pageIndex: currentPageIndex,
+        metadata: {
+          direction: source,
+          fromPageIndex: currentPageIndex,
+          toPageIndex: page,
+          buttonLabel: source === 'next' ? 'Next' : 'Previous',
+        },
+      })
+    }
+
     router.push(`/training/${slug}?page=${page}`)
   }
 
   const isFirstPage = currentPageIndex === 0
   const isLastPage = currentPageIndex === totalPages - 1
-  const canGoNext = allAnswered && !isLastPage
+  const effectiveAllAnswered = adminMode || allAnswered
+  const canGoNext = effectiveAllAnswered && !isLastPage
   const canGoPrev = !isFirstPage
+
+  const duration = frontmatter?.duration ?? null
+  const minutesPerPage = duration && totalPages > 0 ? duration / totalPages : null
+  const minutesRemaining = minutesPerPage !== null ? Math.round((totalPages - currentPageIndex - 1) * minutesPerPage) : null
 
   return (
     <div className="min-h-screen bg-hub-bg dark:bg-transparent flex">
@@ -121,13 +196,20 @@ export default function TrainingViewer({
           hidden md:flex flex-col flex-shrink-0 transition-all duration-300
           ${sidebarOpen ? 'w-64' : 'w-0 overflow-hidden'}
           bg-hub-surface dark:bg-white/5 border-r border-black/[0.08] dark:border-white/10
-          sticky top-0 h-screen
+          sticky top-12 h-[calc(100vh-3rem)]
         `}
       >
         <div className="flex items-center justify-between px-4 py-4 border-b border-black/[0.08] dark:border-white/10">
-          <span className="text-xs font-semibold uppercase tracking-wide text-hub-muted dark:text-gray-400">
-            Progress
-          </span>
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-wide text-hub-muted dark:text-gray-400">
+              Progress
+            </span>
+            {duration !== null && (
+              <span className="ml-2 text-xs text-hub-muted dark:text-gray-500">
+                {duration} min total
+              </span>
+            )}
+          </div>
           <button
             onClick={() => setSidebarOpen(false)}
             className="text-hub-muted dark:text-gray-500 hover:text-hub-text dark:hover:text-gray-200 transition-colors p-1 rounded"
@@ -141,20 +223,21 @@ export default function TrainingViewer({
             const isCompleted = idx < currentPageIndex
             const isActive = idx === currentPageIndex
             const isFuture = idx > currentPageIndex
+            const isLocked = isFuture && !adminMode
 
             return (
               <button
                 key={idx}
-                onClick={() => !isFuture && goToPage(idx)}
-                disabled={isFuture}
+                onClick={() => !isLocked && goToPage(idx, 'direct')}
+                disabled={isLocked}
                 className={`
                   w-full text-left px-3 py-2.5 rounded-lg mb-1 text-sm transition-all duration-150
                   flex items-start gap-2
                   ${isActive
                     ? 'bg-hub-primary/10 dark:bg-blue-500/20 text-hub-primary dark:text-blue-300 font-semibold'
-                    : isCompleted
-                    ? 'text-hub-text dark:text-gray-300 hover:bg-hub-surface-alt dark:hover:bg-white/10 cursor-pointer'
-                    : 'text-hub-muted dark:text-gray-600 cursor-not-allowed opacity-50'
+                    : isLocked
+                    ? 'text-hub-muted dark:text-gray-500 cursor-not-allowed opacity-60'
+                    : 'text-hub-text dark:text-gray-300 hover:bg-hub-surface-alt dark:hover:bg-white/10 cursor-pointer'
                   }
                 `}
                 aria-current={isActive ? 'page' : undefined}
@@ -195,13 +278,6 @@ export default function TrainingViewer({
         {showHeader && frontmatter && (
           <div className="max-w-4xl mx-auto px-6 pt-12 pb-0">
             <header className="mb-10 bg-hub-surface dark:bg-white/5 dark:backdrop-blur-sm rounded-2xl border border-black/[0.08] dark:border-white/10 shadow-sm p-8">
-              <Link
-                href="/"
-                className="inline-flex items-center gap-2 text-sm text-hub-muted dark:text-gray-400 hover:text-hub-primary dark:hover:text-blue-400 transition-colors mb-6"
-              >
-                ← All Trainings
-              </Link>
-
               {frontmatter.title && (
                 <h1 className="text-4xl font-bold text-hub-text dark:text-gray-100 mb-3">
                   {frontmatter.title}
@@ -240,17 +316,6 @@ export default function TrainingViewer({
           </div>
         )}
 
-        {!showHeader && (
-          <div className="max-w-4xl mx-auto px-6 pt-8">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 text-sm text-hub-muted dark:text-gray-400 hover:text-hub-primary dark:hover:text-blue-400 transition-colors"
-            >
-              ← All Trainings
-            </Link>
-          </div>
-        )}
-
         <ComponentRegistryProvider>
           <article className="max-w-4xl mx-auto px-6 py-8 prose prose-lg max-w-none dark:prose-invert">
             {children}
@@ -262,7 +327,7 @@ export default function TrainingViewer({
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-hub-surface/95 dark:bg-gray-900/95 backdrop-blur-sm border-t border-black/[0.08] dark:border-white/10 shadow-lg">
         <div className="max-w-4xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
           <button
-            onClick={() => goToPage(currentPageIndex - 1)}
+            onClick={() => goToPage(currentPageIndex - 1, 'previous')}
             disabled={!canGoPrev}
             className={`
               px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150
@@ -284,13 +349,24 @@ export default function TrainingViewer({
             >
               ☰
             </button>
-            <span className="text-sm text-hub-muted dark:text-gray-400 font-mono">
-              {currentPageIndex + 1} / {totalPages}
+            {adminMode && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300 font-medium">
+                Admin
+              </span>
+            )}
+            <span className="text-sm text-hub-muted dark:text-gray-400">
+              <span className="font-mono">Page {currentPageIndex + 1} of {totalPages}</span>
+              {minutesRemaining !== null && minutesRemaining > 0 && (
+                <span className="ml-1">&middot; ~{minutesRemaining} min remaining</span>
+              )}
+              {isLastPage && effectiveAllAnswered && (
+                <span className="ml-1 text-green-500 dark:text-green-400">&middot; Complete!</span>
+              )}
             </span>
           </div>
 
           <button
-            onClick={() => canGoNext && goToPage(currentPageIndex + 1)}
+            onClick={() => canGoNext && goToPage(currentPageIndex + 1, 'next')}
             disabled={!canGoNext}
             aria-disabled={!canGoNext}
             className={`

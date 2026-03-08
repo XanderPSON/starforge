@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import type { TrainingFrontmatter } from '@/lib/mdx'
+import { toTitleCase } from '@/lib/utils'
 
 interface Training {
   slug: string
@@ -10,10 +11,6 @@ interface Training {
 
 interface TrainingCatalogProps {
   trainings: Training[]
-}
-
-function toTitleCase(str: string): string {
-  return str.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 // Each entry includes both light and dark variants so Tailwind can detect them statically

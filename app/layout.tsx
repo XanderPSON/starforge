@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { ThemeToggle } from '@/components/ThemeToggle'
+import { TopNav } from '@/components/TopNav'
+import { AuthProvider } from '@/components/AuthProvider'
+import { DbSyncProvider } from '@/components/DbSyncProvider'
+import { EventTrackingProvider } from '@/components/EventTrackingProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,8 +26,12 @@ export default function RootLayout({
             __html: `try{var t=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(t===null&&d)){document.documentElement.classList.add('dark')}}catch(_){}`,
           }}
         />
-        <ThemeToggle />
-        {children}
+        <TopNav />
+        <AuthProvider>
+          <DbSyncProvider>
+            <EventTrackingProvider>{children}</EventTrackingProvider>
+          </DbSyncProvider>
+        </AuthProvider>
       </body>
     </html>
   )
