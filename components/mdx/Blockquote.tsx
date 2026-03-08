@@ -8,10 +8,9 @@ interface BlockquoteProps {
 export function Blockquote({ children, className }: BlockquoteProps) {
   return (
     <blockquote className={cn(
-      'border-l-4 border-coinbase-blue pl-6 pr-4 py-4 italic my-6',
-      'bg-coinbase-dark/50 rounded-r-lg',
-      'text-gray-300',
-      'backdrop-blur-sm',
+      'border-l-4 border-hub-primary/60 dark:border-coinbase-blue/50 pl-6 pr-4 py-4 my-6',
+      'bg-hub-surface-alt dark:bg-white/[0.08] rounded-r-lg',
+      'text-gray-600 dark:text-gray-300',
       className
     )}>
       {children}

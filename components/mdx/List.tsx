@@ -23,7 +23,7 @@ export function OrderedList({ children, className }: ListProps) {
 
 export function ListItem({ children, className }: ListProps) {
   return (
-    <li className={cn('leading-7 text-gray-300', className)}>
+    <li className={cn('leading-7 text-gray-700 dark:text-gray-200', className)}>
       {children}
     </li>
   )
