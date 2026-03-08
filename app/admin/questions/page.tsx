@@ -1,6 +1,7 @@
 import { listTrainings } from '@/lib/mdx'
 import { getResponseDistribution } from '@/lib/admin-queries'
 import { ResponseTable } from '@/components/admin/ResponseTable'
+import { DistributionChart } from '@/components/admin/charts/DistributionChart'
 import { getPrisma } from '@/lib/prisma'
 
 interface AdminQuestionsPageProps {
@@ -90,6 +91,14 @@ export default async function AdminQuestionsPage({ searchParams }: AdminQuestion
               <p className="mt-4 text-sm text-hub-muted dark:text-gray-400">No responses submitted yet.</p>
             ) : (
               <div className="mt-4 space-y-2">
+                <DistributionChart
+                  data={distribution.distribution.map((entry) => ({
+                    label: entry.valueLabel,
+                    count: entry.count,
+                    percentage: entry.percentage,
+                  }))}
+                />
+
                 {isLikelyMultipleChoice && (
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-hub-muted dark:text-gray-400">
                     Multiple choice answer frequency

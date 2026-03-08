@@ -18,3 +18,13 @@ export function toTitleCase(str: string): string {
     .map((w) => ACRONYMS[w.toLowerCase()] ?? w.replace(/^\w/, (c) => c.toUpperCase()))
     .join(' ')
 }
+
+export function slugify(str: string): string {
+  return str
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/[\s_]+/g, '-')
+    .replace(/[^\w-]+/g, '')
+    .replace(/--+/g, '-')
+}

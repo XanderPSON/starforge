@@ -3,6 +3,8 @@
 import { useState, useTransition } from 'react'
 import Link from 'next/link'
 import { updateUserRoleAction } from '@/app/admin/actions'
+import { ActivitySparkline } from '@/components/admin/charts/ActivitySparkline'
+import type { SparklinePoint } from '@/lib/admin-queries'
 
 type UserRow = {
   id: string
@@ -19,6 +21,7 @@ type UserRow = {
 interface UserTableProps {
   users: UserRow[]
   currentUserId: string
+  sparklines: Record<string, SparklinePoint[]>
 }
 
 function formatLastActive(value?: Date | string): string {
@@ -27,7 +30,7 @@ function formatLastActive(value?: Date | string): string {
   return Number.isNaN(date.getTime()) ? '—' : date.toLocaleString()
 }
 
-export function UserTable({ users, currentUserId }: UserTableProps) {
+export function UserTable({ users, currentUserId, sparklines }: UserTableProps) {
   const [pendingUserId, setPendingUserId] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
@@ -50,6 +53,7 @@ export function UserTable({ users, currentUserId }: UserTableProps) {
               <th className="px-4 py-3 text-left font-semibold text-hub-text dark:text-gray-200">Email</th>
               <th className="px-4 py-3 text-left font-semibold text-hub-text dark:text-gray-200">Role</th>
               <th className="px-4 py-3 text-left font-semibold text-hub-text dark:text-gray-200">Trainings</th>
+              <th className="px-4 py-3 text-left font-semibold text-hub-text dark:text-gray-200">Activity</th>
               <th className="px-4 py-3 text-left font-semibold text-hub-text dark:text-gray-200">Last Active</th>
             </tr>
           </thead>
@@ -80,6 +84,16 @@ export function UserTable({ users, currentUserId }: UserTableProps) {
                     </select>
                   </td>
                   <td className="px-4 py-3 text-hub-muted dark:text-gray-300">{user._count.progress}</td>
+                  <td className="px-4 py-3">
+                    {(() => {
+                      const points = sparklines[user.id]
+                      return points ? (
+                        <ActivitySparkline data={points} />
+                      ) : (
+                        <span className="text-xs text-hub-muted dark:text-gray-500">—</span>
+                      )
+                    })()}
+                  </td>
                   <td className="px-4 py-3 text-hub-muted dark:text-gray-400">{formatLastActive(user.updatedAt)}</td>
                 </tr>
               )

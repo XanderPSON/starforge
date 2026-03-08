@@ -1,4 +1,8 @@
 import { getPrisma } from '@/lib/prisma'
+import { readFile } from 'fs/promises'
+import path from 'path'
+import type { Prisma } from '@/lib/generated/prisma/client'
+import { fetchTrainingMarkdown } from '@/lib/github'
 
 export interface DashboardStats {
   totalUsers: number
@@ -88,6 +92,12 @@ export interface EventStatsResult {
   perDay: Array<{ date: string; count: number }>
 }
 
+export interface CompletionTrendPoint {
+  date: string
+  completions: number
+  responses: number
+}
+
 export interface PageViewAnalytics {
   slug: string
   viewsPerPage: Array<{ pageIndex: number; views: number }>
@@ -131,6 +141,21 @@ export interface BirdEyeStudentRow {
   firstInteraction: Date | null
   lastInteraction: Date | null
   isActive: boolean
+}
+
+export interface AlertRecord {
+  id: string
+  type: string
+  severity: string
+  title: string
+  message: string
+  slug: string | null
+  userId: string | null
+  metadata: Prisma.JsonValue | null
+  resolved: boolean
+  resolvedAt: Date | null
+  resolvedBy: string | null
+  createdAt: Date
 }
 
 function safePercent(numerator: number, denominator: number): number {
@@ -182,6 +207,117 @@ function toDayKey(date: Date): string {
   return date.toISOString().slice(0, 10)
 }
 
+function formatDurationShort(ms: number): string {
+  if (ms <= 0) return '0m'
+
+  const totalMinutes = Math.floor(ms / 60000)
+  const totalHours = Math.floor(totalMinutes / 60)
+  const days = Math.floor(totalHours / 24)
+
+  if (days > 0) return `${days}d ${totalHours % 24}h`
+  if (totalHours > 0) return `${totalHours}h ${totalMinutes % 60}m`
+  return `${totalMinutes}m`
+}
+
+function formatDateLabel(date: Date): string {
+  return date.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
+}
+
+const INTERACTIVE_COMPONENT_TAGS = [
+  'TemperatureCheck',
+  'FreeResponse',
+  'MultipleChoice',
+  'Scale',
+  'Checklist',
+  'SubmissionBox',
+  'FlavorText',
+  'AIPrompt',
+  'SuggestedAnswer',
+]
+
+function countInteractiveComponents(source: string): number {
+  const tagPattern = INTERACTIVE_COMPONENT_TAGS.join('|')
+  const regex = new RegExp(`<(?:${tagPattern})\\b[^>]*\\bid=["']([^"']+)["'][^>]*\\/?>`, 'g')
+  const componentIds = new Set<string>()
+  let match: RegExpExecArray | null
+
+  while ((match = regex.exec(source)) !== null) {
+    const componentId = match[1]?.trim()
+    if (!componentId) continue
+    componentIds.add(componentId)
+  }
+
+  return componentIds.size
+}
+
+async function getTrainingSource(slug: string): Promise<string | null> {
+  if (process.env.TRAINING_REPO_URL) {
+    return fetchTrainingMarkdown(slug)
+  }
+
+  try {
+    if (process.env.TRAININGS_LOCAL_PATH) {
+      return await readFile(path.join(process.env.TRAININGS_LOCAL_PATH, slug, 'index.md'), 'utf-8')
+    }
+
+    return await readFile(path.join(process.cwd(), 'content', `${slug}.md`), 'utf-8')
+  } catch {
+    return null
+  }
+}
+
+async function upsertUnresolvedAlert(input: {
+  type: string
+  severity: string
+  title: string
+  message: string
+  slug?: string
+  userId?: string
+  metadata?: Prisma.InputJsonValue
+}): Promise<void> {
+  const prisma = getPrisma()
+  if (!prisma) return
+
+  const existing = await prisma.alert.findFirst({
+    where: {
+      type: input.type,
+      slug: input.slug ?? null,
+      userId: input.userId ?? null,
+      resolved: false,
+    },
+    select: { id: true },
+  })
+
+  if (existing) {
+    await prisma.alert.update({
+      where: { id: existing.id },
+      data: {
+        severity: input.severity,
+        title: input.title,
+        message: input.message,
+        metadata: input.metadata,
+      },
+    })
+    return
+  }
+
+  await prisma.alert.create({
+    data: {
+      type: input.type,
+      severity: input.severity,
+      title: input.title,
+      message: input.message,
+      slug: input.slug,
+      userId: input.userId,
+      metadata: input.metadata,
+    },
+  })
+}
+
 function getMetadataNumber(metadata: unknown, key: string): number | null {
   if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) {
     return null
@@ -222,6 +358,73 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     totalResponses,
     overallCompletionRate,
   }
+}
+
+export async function getCompletionTrend(days: number): Promise<CompletionTrendPoint[]> {
+  if (days <= 0) return []
+
+  const prisma = getPrisma()
+  if (!prisma) return []
+
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const startDate = new Date(today)
+  startDate.setDate(today.getDate() - (days - 1))
+
+  const endDate = new Date(today)
+  endDate.setDate(today.getDate() + 1)
+
+  const [completionRows, responseRows] = await Promise.all([
+    prisma.trainingProgress.findMany({
+      where: {
+        completedAt: {
+          gte: startDate,
+          lt: endDate,
+        },
+      },
+      select: {
+        completedAt: true,
+      },
+    }),
+    prisma.interactionResponse.findMany({
+      where: {
+        submittedAt: {
+          gte: startDate,
+          lt: endDate,
+        },
+      },
+      select: {
+        submittedAt: true,
+      },
+    }),
+  ])
+
+  const completionByDay = new Map<string, number>()
+  for (const row of completionRows) {
+    const key = toDayKey(row.completedAt)
+    completionByDay.set(key, (completionByDay.get(key) ?? 0) + 1)
+  }
+
+  const responsesByDay = new Map<string, number>()
+  for (const row of responseRows) {
+    const key = toDayKey(row.submittedAt)
+    responsesByDay.set(key, (responsesByDay.get(key) ?? 0) + 1)
+  }
+
+  const trend: CompletionTrendPoint[] = []
+  for (let i = 0; i < days; i++) {
+    const day = new Date(startDate)
+    day.setDate(startDate.getDate() + i)
+    const key = toDayKey(day)
+    trend.push({
+      date: key,
+      completions: completionByDay.get(key) ?? 0,
+      responses: responsesByDay.get(key) ?? 0,
+    })
+  }
+
+  return trend
 }
 
 export async function getTrainingCompletionRates(): Promise<TrainingCompletionRate[]> {
@@ -786,6 +989,62 @@ export async function getTrainingTimeAnalytics(slug: string): Promise<TrainingTi
   }
 }
 
+export type SparklinePoint = { date: string; count: number }
+
+export async function getUserActivitySparklines(
+  userIds: string[]
+): Promise<Map<string, SparklinePoint[]>> {
+  const result = new Map<string, SparklinePoint[]>()
+  if (userIds.length === 0) return result
+
+  const prisma = getPrisma()
+  if (!prisma) return result
+
+  const sevenDaysAgo = new Date()
+  sevenDaysAgo.setHours(0, 0, 0, 0)
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6)
+
+  const dayKeys: string[] = []
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(sevenDaysAgo)
+    date.setDate(sevenDaysAgo.getDate() + i)
+    dayKeys.push(toDayKey(date))
+  }
+
+  const responses = await prisma.interactionResponse.findMany({
+    where: {
+      userId: { in: userIds },
+      submittedAt: { gte: sevenDaysAgo },
+    },
+    select: {
+      userId: true,
+      submittedAt: true,
+    },
+  })
+
+  const countsByUserAndDay = new Map<string, Map<string, number>>()
+  for (const row of responses) {
+    const day = toDayKey(row.submittedAt)
+    let userMap = countsByUserAndDay.get(row.userId)
+    if (!userMap) {
+      userMap = new Map<string, number>()
+      countsByUserAndDay.set(row.userId, userMap)
+    }
+    userMap.set(day, (userMap.get(day) ?? 0) + 1)
+  }
+
+  for (const userId of userIds) {
+    const userMap = countsByUserAndDay.get(userId)
+    const points: SparklinePoint[] = dayKeys.map((date) => ({
+      date,
+      count: userMap?.get(date) ?? 0,
+    }))
+    result.set(userId, points)
+  }
+
+  return result
+}
+
 export async function getLiveBirdEyeData(slug: string): Promise<BirdEyeStudentRow[]> {
   const prisma = getPrisma()
   if (!prisma) return []
@@ -952,4 +1211,208 @@ export async function getLiveBirdEyeData(slug: string): Promise<BirdEyeStudentRo
       const bTime = b.lastInteraction?.getTime() ?? b.firstInteraction?.getTime() ?? 0
       return bTime - aTime || a.email.localeCompare(b.email)
     })
+}
+
+export async function detectAlerts(): Promise<void> {
+  const prisma = getPrisma()
+  if (!prisma) return
+
+  const [progressSlugs, responseSlugs, inactiveRows] = await Promise.all([
+    prisma.trainingProgress.groupBy({ by: ['slug'] }),
+    prisma.interactionResponse.groupBy({ by: ['slug'] }),
+    prisma.interactionResponse.groupBy({
+      by: ['slug', 'userId'],
+      _max: { updatedAt: true, submittedAt: true },
+    }),
+  ])
+
+  const slugs = Array.from(new Set<string>([
+    ...progressSlugs.map((row) => row.slug),
+    ...responseSlugs.map((row) => row.slug),
+  ])).sort((a, b) => a.localeCompare(b))
+
+  const [analyticsRows, responseCounts, trainingSources] = await Promise.all([
+    Promise.all(slugs.map((slug) => getTrainingTimeAnalytics(slug))),
+    prisma.interactionResponse.groupBy({ by: ['slug'], _count: { _all: true } }),
+    Promise.all(slugs.map((slug) => getTrainingSource(slug))),
+  ])
+
+  const responseCountBySlug = new Map(responseCounts.map((row) => [row.slug, row._count._all]))
+  const sourceBySlug = new Map<string, string | null>()
+  slugs.forEach((slug, index) => {
+    sourceBySlug.set(slug, trainingSources[index] ?? null)
+  })
+
+  const medianBaselineValues = analyticsRows
+    .filter((analytics) => analytics.totalLearners > 0 && analytics.medianCompletionMs > 0)
+    .map((analytics) => analytics.medianCompletionMs)
+  const averageMedianAcrossTrainings = medianBaselineValues.length === 0
+    ? 0
+    : medianBaselineValues.reduce((sum, value) => sum + value, 0) / medianBaselineValues.length
+
+  for (const slug of slugs) {
+    const dropOff = await getDropOffAnalysis(slug)
+
+    let largestDrop: { pageIndex: number; previousCount: number; currentCount: number; dropPercent: number } | null = null
+    for (let index = 1; index < dropOff.length; index += 1) {
+      const previousCount = dropOff[index - 1]?.count ?? 0
+      const currentCount = dropOff[index]?.count ?? 0
+      if (previousCount <= 0) continue
+
+      const dropPercent = ((previousCount - currentCount) / previousCount) * 100
+      if (dropPercent <= 50) continue
+
+      if (!largestDrop || dropPercent > largestDrop.dropPercent) {
+        largestDrop = {
+          pageIndex: dropOff[index]?.pageIndex ?? index,
+          previousCount,
+          currentCount,
+          dropPercent,
+        }
+      }
+    }
+
+    if (largestDrop) {
+      const roundedDrop = Math.round(largestDrop.dropPercent * 10) / 10
+      await upsertUnresolvedAlert({
+        type: 'high_dropoff',
+        severity: 'critical',
+        slug,
+        title: `High drop-off detected on ${slug}`,
+        message: `Page ${largestDrop.pageIndex + 1} has ${roundedDrop}% drop-off from previous page (${largestDrop.previousCount} → ${largestDrop.currentCount} learners)`,
+        metadata: {
+          pageIndex: largestDrop.pageIndex,
+          previousCount: largestDrop.previousCount,
+          currentCount: largestDrop.currentCount,
+          dropPercent: roundedDrop,
+        },
+      })
+    }
+
+    const analytics = analyticsRows.find((row) => row.slug === slug)
+    if (!analytics || analytics.totalLearners <= 0) continue
+
+    if (averageMedianAcrossTrainings > 0 && analytics.medianCompletionMs > averageMedianAcrossTrainings * 2) {
+      const ratio = Math.round((analytics.medianCompletionMs / averageMedianAcrossTrainings) * 10) / 10
+      await upsertUnresolvedAlert({
+        type: 'slow_completion',
+        severity: 'warning',
+        slug,
+        title: `Slow completion time for ${slug}`,
+        message: `Median completion time is ${formatDurationShort(analytics.medianCompletionMs)}, which is ${ratio}x the average`,
+        metadata: {
+          medianCompletionMs: analytics.medianCompletionMs,
+          averageMedianMs: Math.round(averageMedianAcrossTrainings),
+          ratio,
+        },
+      })
+    }
+
+    const source = sourceBySlug.get(slug)
+    const totalComponents = source ? countInteractiveComponents(source) : 0
+    if (totalComponents <= 0) continue
+
+    const totalPossibleResponses = totalComponents * analytics.totalLearners
+    if (totalPossibleResponses <= 0) continue
+
+    const actualResponses = responseCountBySlug.get(slug) ?? 0
+    const responseRate = (actualResponses / totalPossibleResponses) * 100
+
+    if (responseRate < 30) {
+      const roundedRate = Math.round(responseRate * 10) / 10
+      await upsertUnresolvedAlert({
+        type: 'low_engagement',
+        severity: 'warning',
+        slug,
+        title: `Low engagement on ${slug}`,
+        message: `Only ${roundedRate}% of interactive components have been answered`,
+        metadata: {
+          responseRate: roundedRate,
+          actualResponses,
+          totalPossibleResponses,
+          totalComponents,
+          totalLearners: analytics.totalLearners,
+        },
+      })
+    }
+  }
+
+  const inactivityThreshold = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
+  const staleRows = inactiveRows.filter((row) => {
+    const lastUpdatedAt = row._max.updatedAt ?? row._max.submittedAt
+    return Boolean(lastUpdatedAt && lastUpdatedAt.getTime() < inactivityThreshold.getTime())
+  })
+
+  if (staleRows.length === 0) return
+
+  const userIds = Array.from(new Set(staleRows.map((row) => row.userId)))
+  const users = await prisma.user.findMany({
+    where: { id: { in: userIds } },
+    select: { id: true, name: true, email: true },
+  })
+  const usersById = new Map(users.map((user) => [user.id, user]))
+
+  for (const row of staleRows) {
+    const lastActive = row._max.updatedAt ?? row._max.submittedAt
+    if (!lastActive) continue
+
+    const inactivityMs = Date.now() - lastActive.getTime()
+    const inactiveDays = Math.max(1, Math.floor(inactivityMs / (24 * 60 * 60 * 1000)))
+    const user = usersById.get(row.userId)
+    const learnerLabel = user?.name ?? user?.email ?? row.userId
+
+    await upsertUnresolvedAlert({
+      type: 'inactive_user',
+      severity: 'warning',
+      slug: row.slug,
+      userId: row.userId,
+      title: `Inactive learner: ${learnerLabel}`,
+      message: `${learnerLabel} hasn't interacted with ${row.slug} in ${inactiveDays} days (last active: ${formatDateLabel(lastActive)})`,
+      metadata: {
+        inactiveDays,
+        lastActiveAt: lastActive.toISOString(),
+      },
+    })
+  }
+}
+
+export async function getAlerts(options?: { resolved?: boolean; limit?: number }): Promise<AlertRecord[]> {
+  const prisma = getPrisma()
+  if (!prisma) return []
+
+  const resolvedFilter = options?.resolved
+  const limit = options?.limit
+
+  if (typeof limit === 'number' && limit <= 0) return []
+
+  return prisma.alert.findMany({
+    where: typeof resolvedFilter === 'boolean' ? { resolved: resolvedFilter } : undefined,
+    orderBy: [{ resolved: 'asc' }, { createdAt: 'desc' }],
+    take: limit,
+  })
+}
+
+export async function resolveAlert(alertId: string, resolvedByUserId: string): Promise<AlertRecord | null> {
+  const prisma = getPrisma()
+  if (!prisma) return null
+
+  try {
+    return await prisma.alert.update({
+      where: { id: alertId },
+      data: {
+        resolved: true,
+        resolvedAt: new Date(),
+        resolvedBy: resolvedByUserId,
+      },
+    })
+  } catch {
+    return null
+  }
+}
+
+export async function getUnresolvedAlertCount(): Promise<number> {
+  const prisma = getPrisma()
+  if (!prisma) return 0
+
+  return prisma.alert.count({ where: { resolved: false } })
 }

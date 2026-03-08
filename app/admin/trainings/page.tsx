@@ -1,15 +1,50 @@
 import Link from 'next/link'
+import { TrainingComparisonChart } from '@/components/admin/charts/TrainingComparisonChart'
 import { getTrainingCompletionRates } from '@/lib/admin-queries'
+import { ExportCSVButton } from '@/components/admin/ExportCSVButton'
+
+const csvColumns = [
+  { key: 'slug', label: 'Training' },
+  { key: 'completionRate', label: 'Completion Rate (%)' },
+  { key: 'completions', label: 'Completions' },
+  { key: 'totalUsers', label: 'Total Users' },
+  { key: 'responseCount', label: 'Response Count' },
+] as const
 
 export default async function AdminTrainingsPage() {
   const trainings = await getTrainingCompletionRates()
 
+  const csvData = trainings.map((t) => ({
+    slug: t.slug,
+    completionRate: t.completionRate,
+    completions: t.completions,
+    totalUsers: t.totalUsers,
+    responseCount: t.responseCount,
+  }))
+
+  const today = new Date().toISOString().slice(0, 10)
+
   return (
     <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-semibold text-hub-text dark:text-gray-100">Training Analytics</h1>
-        <p className="mt-1 text-sm text-hub-muted dark:text-gray-400">Completion and response health by training slug.</p>
+      <header className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold text-hub-text dark:text-gray-100">Training Analytics</h1>
+          <p className="mt-1 text-sm text-hub-muted dark:text-gray-400">Completion and response health by training slug.</p>
+        </div>
+        <ExportCSVButton
+          data={csvData}
+          filename={`training-analytics-${today}.csv`}
+          columns={[...csvColumns]}
+        />
       </header>
+
+      <TrainingComparisonChart
+        data={trainings.map((training) => ({
+          slug: training.slug,
+          completionRate: training.completionRate,
+          responseCount: training.responseCount,
+        }))}
+      />
 
       <div className="overflow-hidden rounded-xl border border-black/[0.08] bg-white shadow-sm dark:border-white/10 dark:bg-white/5 dark:backdrop-blur-sm">
         <div className="overflow-x-auto">

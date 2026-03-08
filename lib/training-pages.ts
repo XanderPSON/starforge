@@ -1,8 +1,23 @@
+import { slugify } from './utils'
+
+export interface SidebarHeading {
+  text: string
+  level: number
+  id: string
+  children: SidebarHeading[]
+}
+
+export interface TrainingPageHeading {
+  text: string
+  subHeadings: SidebarHeading[]
+}
+
 export interface TrainingPage {
   pageIndex: number
   heading: string
   source: string
   requiredIds: string[]
+  subHeadings: SidebarHeading[]
 }
 
 /**
@@ -17,6 +32,43 @@ export function extractRequiredIds(pageSource: string): string[] {
     ids.push(match[1]!)
   }
   return ids
+}
+
+/**
+ * Extract H2, H3, H4 headings from page source and build a tree.
+ */
+export function extractPageSubHeadings(pageSource: string): SidebarHeading[] {
+  const headings: SidebarHeading[] = []
+  // Match lines starting with ##, ###, or #### followed by space and text
+  const regex = /^(#{2,4})\s+(.+)$/gm
+  let match: RegExpExecArray | null
+  
+  while ((match = regex.exec(pageSource)) !== null) {
+    const level = match[1]!.length
+    const text = match[2]!.trim()
+    const id = slugify(text)
+    
+    headings.push({ text, level, id, children: [] })
+  }
+
+  // Build tree
+  const root: SidebarHeading[] = []
+  const stack: SidebarHeading[] = []
+
+  for (const heading of headings) {
+    while (stack.length > 0 && stack[stack.length - 1]!.level >= heading.level) {
+      stack.pop()
+    }
+    
+    if (stack.length === 0) {
+      root.push(heading)
+    } else {
+      stack[stack.length - 1]!.children.push(heading)
+    }
+    stack.push(heading)
+  }
+
+  return root
 }
 
 /**
@@ -58,6 +110,7 @@ export function splitIntoPages(rawSource: string): TrainingPage[] {
       heading,
       source,
       requiredIds: extractRequiredIds(source),
+      subHeadings: extractPageSubHeadings(part),
     })
 
     pageIndex++
@@ -66,6 +119,9 @@ export function splitIntoPages(rawSource: string): TrainingPage[] {
   return pages
 }
 
-export function getPageHeadings(pages: TrainingPage[]): string[] {
-  return pages.map((p) => p.heading)
+export function getPageHeadings(pages: TrainingPage[]): TrainingPageHeading[] {
+  return pages.map((p) => ({
+    text: p.heading,
+    subHeadings: p.subHeadings
+  }))
 }

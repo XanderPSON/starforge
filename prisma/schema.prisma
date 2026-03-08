@@ -112,3 +112,22 @@ model LearningEvent {
   @@index([sessionId])
   @@index([createdAt])
 }
+
+model Alert {
+  id         String    @id @default(cuid())
+  type       String // "high_dropoff", "slow_completion", "inactive_user", "low_engagement"
+  severity   String // "warning", "critical"
+  title      String
+  message    String
+  slug       String? // training slug if training-specific
+  userId     String? // user ID if user-specific
+  metadata   Json? // flexible payload (thresholds, values, etc.)
+  resolved   Boolean   @default(false)
+  resolvedAt DateTime?
+  resolvedBy String? // admin user ID who resolved it
+  createdAt  DateTime  @default(now())
+
+  @@index([resolved, createdAt])
+  @@index([type])
+  @@index([slug])
+}

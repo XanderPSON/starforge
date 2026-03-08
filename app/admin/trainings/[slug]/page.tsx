@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { SectionTimeChart } from '@/components/admin/charts/SectionTimeChart'
 import { getDropOffAnalysis, getTrainingTimeAnalytics } from '@/lib/admin-queries'
 import { DropOffChart } from '@/components/admin/DropOffChart'
 import { StatsCard } from '@/components/admin/StatsCard'
@@ -89,42 +90,52 @@ export default async function AdminTrainingDetailPage({ params }: TrainingDetail
         {timeAnalytics.perSectionTime.length === 0 ? (
           <p className="mt-4 text-sm text-hub-muted dark:text-gray-400">No per-section timing events recorded yet.</p>
         ) : (
-          <div className="mt-4 overflow-x-auto">
-            <table className="min-w-full text-sm">
-              <thead className="border-b border-black/[0.08] bg-black/[0.02] dark:border-white/10 dark:bg-white/[0.03]">
-                <tr>
-                  <th className="px-4 py-3 text-left font-semibold text-hub-text dark:text-gray-200">Page</th>
-                  <th className="px-4 py-3 text-left font-semibold text-hub-text dark:text-gray-200">Average</th>
-                  <th className="px-4 py-3 text-left font-semibold text-hub-text dark:text-gray-200">Median</th>
-                  <th className="px-4 py-3 text-left font-semibold text-hub-text dark:text-gray-200">Std Dev</th>
-                  <th className="px-4 py-3 text-left font-semibold text-hub-text dark:text-gray-200">Samples</th>
-                </tr>
-              </thead>
-              <tbody>
-                {timeAnalytics.perSectionTime.map((row) => {
-                  const barWidth = maxSectionAverage === 0 ? 0 : Math.round((row.averageDurationMs / maxSectionAverage) * 100)
-                  return (
-                    <tr key={row.pageIndex} className="border-t border-black/[0.06] dark:border-white/10">
-                      <td className="px-4 py-3 text-hub-text dark:text-gray-100">Page {row.pageIndex + 1}</td>
-                      <td className="px-4 py-3 text-hub-text dark:text-gray-100">
-                        <div className="space-y-2">
-                          <span>{formatDuration(row.averageDurationMs)}</span>
-                          <div className="h-2 w-full rounded-full bg-black/[0.08] dark:bg-white/10">
-                            <div
-                              className="h-full rounded-full bg-hub-primary dark:bg-blue-400"
-                              style={{ width: `${barWidth}%` }}
-                            />
+          <div className="mt-4 space-y-5">
+            <SectionTimeChart
+              data={timeAnalytics.perSectionTime.map((row) => ({
+                page: `Page ${row.pageIndex + 1}`,
+                averageMs: row.averageDurationMs,
+                medianMs: row.medianDurationMs,
+              }))}
+            />
+
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead className="border-b border-black/[0.08] bg-black/[0.02] dark:border-white/10 dark:bg-white/[0.03]">
+                  <tr>
+                    <th className="px-4 py-3 text-left font-semibold text-hub-text dark:text-gray-200">Page</th>
+                    <th className="px-4 py-3 text-left font-semibold text-hub-text dark:text-gray-200">Average</th>
+                    <th className="px-4 py-3 text-left font-semibold text-hub-text dark:text-gray-200">Median</th>
+                    <th className="px-4 py-3 text-left font-semibold text-hub-text dark:text-gray-200">Std Dev</th>
+                    <th className="px-4 py-3 text-left font-semibold text-hub-text dark:text-gray-200">Samples</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {timeAnalytics.perSectionTime.map((row) => {
+                    const barWidth = maxSectionAverage === 0 ? 0 : Math.round((row.averageDurationMs / maxSectionAverage) * 100)
+                    return (
+                      <tr key={row.pageIndex} className="border-t border-black/[0.06] dark:border-white/10">
+                        <td className="px-4 py-3 text-hub-text dark:text-gray-100">Page {row.pageIndex + 1}</td>
+                        <td className="px-4 py-3 text-hub-text dark:text-gray-100">
+                          <div className="space-y-2">
+                            <span>{formatDuration(row.averageDurationMs)}</span>
+                            <div className="h-2 w-full rounded-full bg-black/[0.08] dark:bg-white/10">
+                              <div
+                                className="h-full rounded-full bg-hub-primary dark:bg-blue-400"
+                                style={{ width: `${barWidth}%` }}
+                              />
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-hub-muted dark:text-gray-300">{formatDuration(row.medianDurationMs)}</td>
-                      <td className="px-4 py-3 text-hub-muted dark:text-gray-300">{formatDuration(row.stdDevDurationMs)}</td>
-                      <td className="px-4 py-3 text-hub-muted dark:text-gray-300">{row.samples}</td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+                        </td>
+                        <td className="px-4 py-3 text-hub-muted dark:text-gray-300">{formatDuration(row.medianDurationMs)}</td>
+                        <td className="px-4 py-3 text-hub-muted dark:text-gray-300">{formatDuration(row.stdDevDurationMs)}</td>
+                        <td className="px-4 py-3 text-hub-muted dark:text-gray-300">{row.samples}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </section>
