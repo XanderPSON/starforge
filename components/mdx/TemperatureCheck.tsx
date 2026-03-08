@@ -1,141 +1,91 @@
 'use client'
 
 import { useInteractive, getStorageKey } from '@/lib/storage'
+import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
 import { useParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import {
+  Frown,
+  Annoyed,
+  Meh,
+  Smile,
+  Laugh,
+  ThermometerSun,
+  type LucideIcon,
+} from 'lucide-react'
 
 interface TemperatureCheckProps {
   id: string
+  label?: string
   className?: string
 }
 
-const TEMPERATURE_OPTIONS = [
+const TEMPERATURE_OPTIONS: {
+  value: TemperatureValue
+  label: string
+  icon: LucideIcon
+  color: string
+  hoverColor: string
+  hoverBg: string
+  selectedBg: string
+}[] = [
   {
-    value: 1 as const,
+    value: 1,
     label: 'Confused',
-    color: 'text-red-400',
-    ringColor: 'ring-red-400',
-    // Distressed face: furrowed brows, frown
-    face: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="w-full h-full">
-        <circle cx="24" cy="24" r="22" stroke="currentColor" strokeWidth="2" />
-        {/* Furrowed left brow */}
-        <path d="M13 16 Q17 13 19 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-        {/* Furrowed right brow */}
-        <path d="M29 16 Q31 13 35 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-        {/* Left eye */}
-        <circle cx="17" cy="21" r="2" fill="currentColor" />
-        {/* Right eye */}
-        <circle cx="31" cy="21" r="2" fill="currentColor" />
-        {/* Frown */}
-        <path d="M16 33 Q24 27 32 33" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-      </svg>
-    ),
+    icon: Frown,
+    color: 'text-red-500 dark:text-red-400',
+    hoverColor: 'hover:text-red-500 dark:hover:text-red-400',
+    hoverBg: 'hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-400/15 dark:hover:border-red-400/40',
+    selectedBg: 'bg-red-50 border-red-300 dark:bg-red-400/15 dark:border-red-400/50',
   },
   {
-    value: 2 as const,
+    value: 2,
     label: 'Skeptical',
-    color: 'text-orange-400',
-    ringColor: 'ring-orange-400',
-    // Skeptical face: one raised brow, flat mouth
-    face: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="w-full h-full">
-        <circle cx="24" cy="24" r="22" stroke="currentColor" strokeWidth="2" />
-        {/* Raised left brow */}
-        <path d="M13 15 Q17 11 21 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-        {/* Flat right brow */}
-        <path d="M27 17 Q31 17 35 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-        {/* Left eye */}
-        <circle cx="17" cy="21" r="2" fill="currentColor" />
-        {/* Right eye */}
-        <circle cx="31" cy="21" r="2" fill="currentColor" />
-        {/* Flat mouth, slightly angled */}
-        <path d="M16 32 Q24 30 32 32" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-      </svg>
-    ),
+    icon: Annoyed,
+    color: 'text-orange-500 dark:text-orange-400',
+    hoverColor: 'hover:text-orange-500 dark:hover:text-orange-400',
+    hoverBg: 'hover:bg-orange-50 hover:border-orange-200 dark:hover:bg-orange-400/15 dark:hover:border-orange-400/40',
+    selectedBg: 'bg-orange-50 border-orange-300 dark:bg-orange-400/15 dark:border-orange-400/50',
   },
   {
-    value: 3 as const,
+    value: 3,
     label: 'Neutral',
-    color: 'text-yellow-400',
-    ringColor: 'ring-yellow-400',
-    // Neutral face: level brows, straight mouth
-    face: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="w-full h-full">
-        <circle cx="24" cy="24" r="22" stroke="currentColor" strokeWidth="2" />
-        {/* Left brow */}
-        <path d="M13 16 Q17 15 21 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-        {/* Right brow */}
-        <path d="M27 16 Q31 15 35 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-        {/* Left eye */}
-        <circle cx="17" cy="21" r="2" fill="currentColor" />
-        {/* Right eye */}
-        <circle cx="31" cy="21" r="2" fill="currentColor" />
-        {/* Straight mouth */}
-        <path d="M16 31 L32 31" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      </svg>
-    ),
+    icon: Meh,
+    color: 'text-yellow-500 dark:text-yellow-400',
+    hoverColor: 'hover:text-yellow-500 dark:hover:text-yellow-400',
+    hoverBg: 'hover:bg-yellow-50 hover:border-yellow-200 dark:hover:bg-yellow-400/15 dark:hover:border-yellow-400/40',
+    selectedBg: 'bg-yellow-50 border-yellow-300 dark:bg-yellow-400/15 dark:border-yellow-400/50',
   },
   {
-    value: 4 as const,
+    value: 4,
     label: 'Content',
-    color: 'text-lime-400',
-    ringColor: 'ring-lime-400',
-    // Content face: soft smile
-    face: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="w-full h-full">
-        <circle cx="24" cy="24" r="22" stroke="currentColor" strokeWidth="2" />
-        {/* Left brow */}
-        <path d="M13 16 Q17 15 21 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-        {/* Right brow */}
-        <path d="M27 16 Q31 15 35 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-        {/* Left eye */}
-        <circle cx="17" cy="21" r="2" fill="currentColor" />
-        {/* Right eye */}
-        <circle cx="31" cy="21" r="2" fill="currentColor" />
-        {/* Gentle smile */}
-        <path d="M16 29 Q24 35 32 29" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-      </svg>
-    ),
+    icon: Smile,
+    color: 'text-lime-500 dark:text-lime-400',
+    hoverColor: 'hover:text-lime-500 dark:hover:text-lime-400',
+    hoverBg: 'hover:bg-lime-50 hover:border-lime-200 dark:hover:bg-lime-400/15 dark:hover:border-lime-400/40',
+    selectedBg: 'bg-lime-50 border-lime-300 dark:bg-lime-400/15 dark:border-lime-400/50',
   },
   {
-    value: 5 as const,
+    value: 5,
     label: 'Delighted',
-    color: 'text-emerald-400',
-    ringColor: 'ring-emerald-400',
-    // Delighted face: raised brows, big smile, rosy cheeks
-    face: (
-      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="w-full h-full">
-        <circle cx="24" cy="24" r="22" stroke="currentColor" strokeWidth="2" />
-        {/* Left brow raised */}
-        <path d="M12 14 Q17 10 21 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-        {/* Right brow raised */}
-        <path d="M27 14 Q31 10 36 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-        {/* Left eye (arc = squinting with joy) */}
-        <path d="M15 21 Q17 18 19 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-        {/* Right eye */}
-        <path d="M29 21 Q31 18 33 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-        {/* Big smile */}
-        <path d="M14 28 Q24 38 34 28" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-        {/* Left cheek blush */}
-        <ellipse cx="12" cy="30" rx="3" ry="2" fill="currentColor" opacity="0.25" />
-        {/* Right cheek blush */}
-        <ellipse cx="36" cy="30" rx="3" ry="2" fill="currentColor" opacity="0.25" />
-      </svg>
-    ),
+    icon: Laugh,
+    color: 'text-emerald-500 dark:text-emerald-400',
+    hoverColor: 'hover:text-emerald-500 dark:hover:text-emerald-400',
+    hoverBg: 'hover:bg-emerald-50 hover:border-emerald-200 dark:hover:bg-emerald-400/15 dark:hover:border-emerald-400/40',
+    selectedBg: 'bg-emerald-50 border-emerald-300 dark:bg-emerald-400/15 dark:border-emerald-400/50',
   },
 ]
 
 type TemperatureValue = 1 | 2 | 3 | 4 | 5
 
-export function TemperatureCheck({ id, className }: TemperatureCheckProps) {
+export function TemperatureCheck({ id, label, className }: TemperatureCheckProps) {
   const params = useParams()
   const slug = params.slug as string || 'default'
 
   if (!id) {
     return (
       <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
-        ❌ TemperatureCheck Error: Missing required prop <code>id</code>
+        TemperatureCheck Error: Missing required prop <code>id</code>
       </div>
     )
   }
@@ -146,10 +96,13 @@ export function TemperatureCheck({ id, className }: TemperatureCheckProps) {
   if (value === undefined) {
     return (
       <div className={cn('my-8', className)}>
-        <div className="flex justify-center gap-4">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="w-14 h-14 bg-white/5 rounded-full animate-pulse" />
-          ))}
+        <div className="rounded-xl border-2 border-gray-200 dark:border-white/10 p-5">
+          <div className="h-5 bg-gray-200 dark:bg-white/10 rounded w-1/3 mb-5 animate-pulse" />
+          <div className="flex justify-between gap-2">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="flex-1 h-20 bg-gray-100 dark:bg-white/5 rounded-lg animate-pulse" />
+            ))}
+          </div>
         </div>
       </div>
     )
@@ -157,6 +110,16 @@ export function TemperatureCheck({ id, className }: TemperatureCheckProps) {
 
   const handleSelect = (temp: TemperatureValue) => {
     setValue(temp)
+    const option = TEMPERATURE_OPTIONS.find((o) => o.value === temp)
+    trackEvent(LEARNING_EVENT_TYPES.TEMPERATURE_CHECK, {
+      slug,
+      metadata: {
+        componentId: id,
+        value: temp,
+        label: option?.label ?? String(temp),
+        promptText: label || 'How are you feeling about this section?',
+      },
+    })
   }
 
   const handleKeyDown = (e: React.KeyboardEvent, temp: TemperatureValue) => {
@@ -166,49 +129,70 @@ export function TemperatureCheck({ id, className }: TemperatureCheckProps) {
     }
   }
 
+  const promptText = label || 'How are you feeling about this section?'
+
   return (
     <div className={cn('my-8', className)}>
-      <div
-        role="group"
-        aria-label="How do you feel about this content?"
-        className="flex justify-center gap-3"
-      >
-        {TEMPERATURE_OPTIONS.map(({ value: temp, label, color, ringColor, face }) => {
-          const isSelected = value === temp
+      <div className={cn(
+        'rounded-xl border-2 border-gray-200 dark:border-white/10',
+        'bg-white dark:bg-coinbase-space/50',
+        'p-5',
+      )}>
+        <div className="flex items-center gap-2.5 mb-5">
+          <ThermometerSun className="w-4 h-4 text-hub-primary dark:text-coinbase-blue flex-shrink-0" />
+          <span className="text-sm font-semibold text-hub-text dark:text-gray-200">
+            {promptText}
+          </span>
+        </div>
 
-          return (
-            <button
-              key={temp}
-              onClick={() => handleSelect(temp)}
-              onKeyDown={(e) => handleKeyDown(e, temp)}
-              aria-label={label}
-              aria-pressed={isSelected}
-              className={cn(
-                'flex flex-col items-center gap-2 p-2 rounded-xl transition-all duration-200',
-                'hover:bg-white/8 focus:outline-none focus-visible:ring-2 focus-visible:ring-coinbase-blue',
-                isSelected && 'bg-white/5'
-              )}
-            >
-              <div
+        <div
+          role="group"
+          aria-label={promptText}
+          className="grid grid-cols-5 gap-2"
+        >
+          {TEMPERATURE_OPTIONS.map(({ value: temp, label: optLabel, icon: Icon, color, hoverColor, hoverBg, selectedBg }) => {
+            const isSelected = value === temp
+
+            return (
+              <button
+                key={temp}
+                onClick={() => handleSelect(temp)}
+                onKeyDown={(e) => handleKeyDown(e, temp)}
+                aria-label={optLabel}
+                aria-pressed={isSelected}
                 className={cn(
-                  'w-12 h-12 rounded-full transition-all duration-200',
-                  color,
+                  'flex flex-col items-center gap-2 py-3 px-2 rounded-lg',
+                  'border-2 transition-all duration-200 cursor-pointer',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+                  'focus-visible:ring-coinbase-blue dark:focus-visible:ring-offset-coinbase-dark',
                   isSelected
-                    ? cn('ring-2 ring-offset-2 ring-offset-coinbase-dark scale-110', ringColor)
-                    : 'opacity-50 hover:opacity-80'
+                    ? cn(selectedBg, color, 'scale-105')
+                    : cn(
+                        'border-transparent',
+                        'bg-gray-50 dark:bg-white/[0.04]',
+                        'text-gray-400 dark:text-gray-500',
+                        hoverColor,
+                        hoverBg,
+                      )
                 )}
               >
-                {face}
-              </div>
-              <span className={cn(
-                'text-xs transition-colors duration-200',
-                isSelected ? color : 'text-gray-500'
-              )}>
-                {label}
-              </span>
-            </button>
-          )
-        })}
+                <Icon
+                  className={cn(
+                    'w-7 h-7 transition-transform duration-200',
+                    isSelected && 'scale-110',
+                  )}
+                  strokeWidth={isSelected ? 2.5 : 1.75}
+                />
+                <span className={cn(
+                  'text-xs font-medium transition-colors duration-200',
+                  isSelected ? 'opacity-100' : 'opacity-70',
+                )}>
+                  {optLabel}
+                </span>
+              </button>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

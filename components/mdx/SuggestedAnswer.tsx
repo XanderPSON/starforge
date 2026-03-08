@@ -1,21 +1,39 @@
 'use client'
 
 import { useState } from 'react'
+import { useParams } from 'next/navigation'
+import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
 import type { ReactNode } from 'react'
 
 interface SuggestedAnswerProps {
+  id?: string
   children: ReactNode
   label?: string
 }
 
-export function SuggestedAnswer({ children, label = 'Suggested answer' }: SuggestedAnswerProps) {
+export function SuggestedAnswer({ id, children, label = 'Suggested answer' }: SuggestedAnswerProps) {
+  const params = useParams()
+  const slug = (params.slug as string) || 'default'
   const [isRevealed, setIsRevealed] = useState(false)
+
+  const handleToggle = () => {
+    const newState = !isRevealed
+    setIsRevealed(newState)
+    trackEvent(LEARNING_EVENT_TYPES.REVEAL_TOGGLE, {
+      slug,
+      metadata: {
+        componentId: id || 'suggested-answer',
+        action: newState ? 'reveal' : 'hide',
+        label,
+      },
+    })
+  }
 
   return (
     <div className="my-8">
       <button
-        onClick={() => setIsRevealed((prev) => !prev)}
-        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-coinbase-cyan border border-coinbase-blue/30 rounded-lg glass-effect hover:bg-coinbase-blue/10 transition-colors"
+        onClick={handleToggle}
+        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-hub-primary dark:text-coinbase-cyan border border-hub-primary/20 dark:border-coinbase-blue/30 rounded-lg bg-hub-surface-alt dark:bg-white/5 hover:bg-hub-primary/10 dark:hover:bg-coinbase-blue/10 transition-colors"
         aria-expanded={isRevealed}
       >
         <span
@@ -28,7 +46,7 @@ export function SuggestedAnswer({ children, label = 'Suggested answer' }: Sugges
       </button>
 
       {isRevealed && (
-        <div className="mt-3 p-5 glass-effect rounded-xl border border-coinbase-blue/30 text-gray-300 prose prose-invert max-w-none">
+        <div className="mt-3 p-5 bg-hub-surface-alt dark:bg-white/5 rounded-xl border border-hub-primary/20 dark:border-coinbase-blue/30 text-gray-600 dark:text-gray-300 prose dark:prose-invert max-w-none">
           {children}
         </div>
       )}

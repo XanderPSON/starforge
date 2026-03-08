@@ -1,6 +1,7 @@
 'use client'
 
 import { useInteractive, getStorageKey } from '@/lib/storage'
+import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
 import { useParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
@@ -36,8 +37,8 @@ export function SubmissionBox({ id, label, placeholder }: SubmissionBoxProps) {
   if (state === undefined) {
     return (
       <div className="my-8">
-        {label && <div className="mb-2 h-5 bg-white/10 rounded w-1/4 animate-pulse" />}
-        <div className="h-32 bg-white/5 border border-white/10 rounded-lg animate-pulse" />
+        {label && <div className="mb-2 h-5 bg-gray-200 dark:bg-white/10 rounded w-1/4 animate-pulse" />}
+        <div className="h-32 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg animate-pulse" />
       </div>
     )
   }
@@ -45,21 +46,37 @@ export function SubmissionBox({ id, label, placeholder }: SubmissionBoxProps) {
   const handleSubmit = () => {
     if (!state.draft.trim()) return
     setState({ ...state, isSubmitted: true })
+    trackEvent(LEARNING_EVENT_TYPES.SUBMISSION, {
+      slug,
+      metadata: {
+        componentId: id,
+        action: 'submit',
+        responseText: state.draft,
+        responseLength: state.draft.length,
+      },
+    })
   }
 
   const handleEdit = () => {
     setState({ ...state, isSubmitted: false })
+    trackEvent(LEARNING_EVENT_TYPES.SUBMISSION, {
+      slug,
+      metadata: {
+        componentId: id,
+        action: 'edit',
+      },
+    })
   }
 
   return (
     <div className="my-8">
       {label && (
-        <label htmlFor={id} className="block mb-2 text-sm font-medium text-gray-200">
+        <label htmlFor={id} className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-200">
           {label}
         </label>
       )}
 
-      <div className="glass-effect rounded-xl border-coinbase-blue/30 p-1 glow-blue-hover transition-all duration-300">
+      <div className="rounded-xl border border-gray-300 dark:border-coinbase-blue/30 p-1 transition-all duration-300">
         <textarea
           id={id}
           value={state.draft}
@@ -68,8 +85,8 @@ export function SubmissionBox({ id, label, placeholder }: SubmissionBoxProps) {
           placeholder={placeholder || 'Write your response here...'}
           aria-label={label || `Submission for ${id}`}
           className={cn(
-            'w-full min-h-[120px] p-4 bg-coinbase-space/50 rounded-lg',
-            'text-gray-200 placeholder:text-gray-500',
+            'w-full min-h-[120px] p-4 bg-white dark:bg-coinbase-space/50 rounded-lg',
+            'text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500',
             'focus:outline-none focus:ring-2 focus:ring-coinbase-blue/50',
             'resize-none',
             'font-sans text-base leading-relaxed',

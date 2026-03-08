@@ -1,6 +1,7 @@
 'use client'
 
 import { useInteractive, getStorageKey } from '@/lib/storage'
+import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
 import { useParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
@@ -29,10 +30,10 @@ export function Scale({ id, max = 5, label, className }: ScaleProps) {
   if (value === undefined) {
     return (
       <div className={cn('my-8', className)}>
-        {label && <div className="mb-3 h-5 bg-white/10 rounded w-1/3 animate-pulse" />}
+        {label && <div className="mb-3 h-5 bg-gray-200 dark:bg-white/10 rounded w-1/3 animate-pulse" />}
         <div className="flex gap-1">
           {Array.from({ length: max }).map((_, i) => (
-            <div key={i} className="flex-1 h-10 bg-white/5 rounded animate-pulse" />
+            <div key={i} className="flex-1 h-10 bg-gray-100 dark:bg-white/5 rounded animate-pulse" />
           ))}
         </div>
       </div>
@@ -41,6 +42,15 @@ export function Scale({ id, max = 5, label, className }: ScaleProps) {
 
   const handleSelect = (rating: number) => {
     setValue(rating)
+    trackEvent(LEARNING_EVENT_TYPES.SCALE_RATING, {
+      slug,
+      metadata: {
+        componentId: id,
+        value: rating,
+        max,
+        label: label || null,
+      },
+    })
   }
 
   const handleKeyDown = (e: React.KeyboardEvent, rating: number) => {
@@ -53,7 +63,7 @@ export function Scale({ id, max = 5, label, className }: ScaleProps) {
   return (
     <div className={cn('my-8', className)}>
       {label && (
-        <p className="mb-3 text-sm font-medium text-gray-200">{label}</p>
+        <p className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-200">{label}</p>
       )}
       <div
         role="group"
@@ -82,7 +92,7 @@ export function Scale({ id, max = 5, label, className }: ScaleProps) {
                       'bg-coinbase-blue/30 border-coinbase-blue text-white',
                       isCurrent && 'bg-coinbase-blue/50 font-bold'
                     )
-                  : 'bg-white/5 border-white/15 text-gray-500 hover:bg-white/10 hover:text-gray-300 hover:border-white/30'
+                  : 'bg-gray-100 dark:bg-white/5 border-gray-300 dark:border-white/15 text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-400 dark:hover:border-white/30'
               )}
             >
               {rating}

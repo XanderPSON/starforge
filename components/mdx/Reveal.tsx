@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import { safeGetItem, getStorageKey } from '@/lib/storage'
+import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
 import type { ReactNode } from 'react'
 
 interface RevealProps {
@@ -43,8 +44,15 @@ export function Reveal({ requiredId, children }: RevealProps) {
         const nowAnswered = checkIsAnswered(slug, requiredId)
         if (nowAnswered) {
           setRevealed(true)
-          // Small delay so element mounts at opacity-0 before fading in
           requestAnimationFrame(() => setVisible(true))
+          trackEvent(LEARNING_EVENT_TYPES.REVEAL_TOGGLE, {
+            slug,
+            metadata: {
+              componentId: requiredId,
+              action: 'reveal',
+              trigger: 'dependency_answered',
+            },
+          })
         }
       }
     }

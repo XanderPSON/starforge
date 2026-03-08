@@ -1,6 +1,7 @@
 'use client'
 
 import { useInteractive, getStorageKey } from '@/lib/storage'
+import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
 import { useParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
@@ -42,8 +43,8 @@ export function Checklist({ id, items, className }: ChecklistProps) {
         <div className="space-y-3">
           {items.map((_, index) => (
             <div key={index} className="flex items-center gap-3">
-              <div className="w-5 h-5 bg-white/10 rounded animate-pulse" />
-              <div className="h-4 bg-white/10 rounded flex-1 animate-pulse" />
+              <div className="w-5 h-5 bg-gray-200 dark:bg-white/10 rounded animate-pulse" />
+              <div className="h-4 bg-gray-200 dark:bg-white/10 rounded flex-1 animate-pulse" />
             </div>
           ))}
         </div>
@@ -55,6 +56,20 @@ export function Checklist({ id, items, className }: ChecklistProps) {
     const newCheckedItems = [...checkedItems]
     newCheckedItems[index] = !newCheckedItems[index]
     setCheckedItems(newCheckedItems)
+
+    const newCompleted = newCheckedItems.filter(Boolean).length
+    trackEvent(LEARNING_EVENT_TYPES.CHECKLIST_TOGGLE, {
+      slug,
+      metadata: {
+        componentId: id,
+        itemIndex: index,
+        itemText: items[index],
+        checked: newCheckedItems[index],
+        completedCount: newCompleted,
+        totalCount: items.length,
+        allComplete: newCompleted === items.length,
+      },
+    })
   }
 
   const completedCount = checkedItems.filter(Boolean).length
@@ -72,7 +87,7 @@ export function Checklist({ id, items, className }: ChecklistProps) {
               htmlFor={`${id}-item-${index}`}
               className={cn(
                 'flex items-start gap-3 p-3 rounded-lg cursor-pointer transition-all',
-                'hover:bg-white/5',
+                'hover:bg-gray-50 dark:hover:bg-white/5',
                 isChecked && 'bg-green-500/5'
               )}
             >
@@ -87,7 +102,7 @@ export function Checklist({ id, items, className }: ChecklistProps) {
                   'cursor-pointer',
                   isChecked
                     ? 'bg-green-500 border-green-500'
-                    : 'bg-white/5 border-white/30'
+                    : 'bg-gray-50 dark:bg-white/5 border-gray-300 dark:border-white/30'
                 )}
               />
               <span
@@ -95,7 +110,7 @@ export function Checklist({ id, items, className }: ChecklistProps) {
                   'flex-1 text-base transition-all',
                   isChecked
                     ? 'text-gray-400 line-through'
-                    : 'text-gray-200'
+                    : 'text-gray-800 dark:text-gray-200'
                 )}
               >
                 {item}

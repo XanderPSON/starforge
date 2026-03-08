@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import { useInteractive, getStorageKey } from '@/lib/storage'
+import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
 import { useParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
@@ -42,30 +43,45 @@ export function FreeResponse({ id, label, className, placeholder }: FreeResponse
   if (value === undefined) {
     return (
       <div className={cn('my-8', className)}>
-        {label && <div className="mb-2 h-5 bg-white/10 rounded w-1/4 animate-pulse" />}
-        <div className="h-32 bg-white/5 border border-white/10 rounded-lg animate-pulse" />
+        {label && <div className="mb-2 h-5 bg-gray-200 dark:bg-white/10 rounded w-1/4 animate-pulse" />}
+        <div className="h-32 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg animate-pulse" />
       </div>
     )
   }
 
+  const handleBlur = useCallback(() => {
+    if (value && value.trim().length > 0) {
+      trackEvent(LEARNING_EVENT_TYPES.FREE_RESPONSE, {
+        slug,
+        metadata: {
+          componentId: id,
+          responseText: value,
+          responseLength: value.length,
+          label: label || null,
+        },
+      })
+    }
+  }, [value, slug, id, label])
+
   return (
     <div className={cn('my-8', className)}>
       {label && (
-        <label htmlFor={id} className="block mb-2 text-sm font-medium text-gray-200">
+        <label htmlFor={id} className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-200">
           {label}
         </label>
       )}
-      <div className="glass-effect rounded-xl border-coinbase-blue/30 p-1 glow-blue-hover transition-all duration-300">
+      <div className="rounded-xl border border-gray-300 dark:border-coinbase-blue/30 p-1 transition-all duration-300">
         <textarea
           id={id}
           ref={textareaRef}
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          onBlur={handleBlur}
           placeholder={placeholder || 'Type your answer here...'}
           aria-label={label || `Free response answer for ${id}`}
           className={cn(
-            'w-full min-h-[120px] p-4 bg-coinbase-space/50 rounded-lg',
-            'text-gray-200 placeholder:text-gray-500',
+            'w-full min-h-[120px] p-4 bg-white dark:bg-coinbase-space/50 rounded-lg',
+            'text-gray-800 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-500',
             'focus:outline-none focus:ring-2 focus:ring-coinbase-blue/50',
             'resize-none overflow-hidden',
             'font-sans text-base leading-relaxed',
