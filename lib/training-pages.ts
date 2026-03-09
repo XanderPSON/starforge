@@ -9,12 +9,20 @@ export interface SidebarHeading {
 
 export interface TrainingPageHeading {
   text: string
+  group: string | null
   subHeadings: SidebarHeading[]
+}
+
+/** A group of pages in the sidebar. Pages without a group get their own single-item group. */
+export interface SidebarGroup {
+  label: string | null
+  pages: { text: string; pageIndex: number }[]
 }
 
 export interface TrainingPage {
   pageIndex: number
   heading: string
+  group: string | null
   source: string
   requiredIds: string[]
   subHeadings: SidebarHeading[]
@@ -72,6 +80,15 @@ export function extractPageSubHeadings(pageSource: string): SidebarHeading[] {
 }
 
 /**
+ * Extract a group name from an HTML comment like <!-- group: Setup -->
+ * that appears in the content before the H1 heading.
+ */
+function extractGroupFromContent(content: string): string | null {
+  const match = content.match(/<!--\s*group:\s*(.+?)\s*-->/)
+  return match ? match[1]!.trim() : null
+}
+
+/**
  * Split raw MDX source into pages, one per H1 heading.
  * Frontmatter is prepended to each page so compileMDX can parse it.
  */
@@ -90,29 +107,43 @@ export function splitIntoPages(rawSource: string): TrainingPage[] {
 
   const pages: TrainingPage[] = []
   let pageIndex = 0
+  // Track content between pages (where group comments live)
+  let precedingContent = ''
 
   for (const part of parts) {
     const trimmed = part.trim()
     if (!trimmed) continue
 
-    // Skip any content before the first H1
-    if (!trimmed.startsWith('# ')) continue
+    // Content before the first H1 (or between pages) may contain group comments
+    if (!trimmed.startsWith('# ')) {
+      precedingContent = trimmed
+      continue
+    }
+
+    // Check for group comment in the part itself (comment is on the line before `# `)
+    // or in preceding content between the `---` separator and the H1
+    const group = extractGroupFromContent(part) ?? extractGroupFromContent(precedingContent)
 
     // Extract H1 heading text
     const headingMatch = trimmed.match(/^# (.+)$/m)
     const heading = headingMatch ? headingMatch[1]!.trim() : `Page ${pageIndex + 1}`
 
+    // Strip group comment from the page source before compiling MDX
+    const cleanedPart = part.replace(/<!--\s*group:\s*.+?\s*-->\n?/, '')
+
     // Prepend frontmatter so compileMDX has access to it
-    const source = frontmatter ? `${frontmatter}\n\n${part}` : part
+    const source = frontmatter ? `${frontmatter}\n\n${cleanedPart}` : cleanedPart
 
     pages.push({
       pageIndex,
       heading,
+      group,
       source,
       requiredIds: extractRequiredIds(source),
-      subHeadings: extractPageSubHeadings(part),
+      subHeadings: extractPageSubHeadings(cleanedPart),
     })
 
+    precedingContent = ''
     pageIndex++
   }
 
@@ -122,6 +153,38 @@ export function splitIntoPages(rawSource: string): TrainingPage[] {
 export function getPageHeadings(pages: TrainingPage[]): TrainingPageHeading[] {
   return pages.map((p) => ({
     text: p.heading,
-    subHeadings: p.subHeadings
+    group: p.group,
+    subHeadings: p.subHeadings,
   }))
+}
+
+/** Build grouped sidebar structure from page headings. */
+export function getSidebarGroups(headings: TrainingPageHeading[]): SidebarGroup[] {
+  const groups: SidebarGroup[] = []
+
+  for (let i = 0; i < headings.length; i++) {
+    const heading = headings[i]!
+    const groupLabel = heading.group
+
+    // Find or create the group
+    if (groupLabel) {
+      const existing = groups.find((g) => g.label === groupLabel)
+      if (existing) {
+        existing.pages.push({ text: heading.text, pageIndex: i })
+      } else {
+        groups.push({
+          label: groupLabel,
+          pages: [{ text: heading.text, pageIndex: i }],
+        })
+      }
+    } else {
+      // Ungrouped page gets its own entry
+      groups.push({
+        label: null,
+        pages: [{ text: heading.text, pageIndex: i }],
+      })
+    }
+  }
+
+  return groups
 }

@@ -4,7 +4,7 @@ import path from 'path'
 import remarkGfm from 'remark-gfm'
 import { mdxComponents } from '@/components/mdx/mdx-components'
 import { listTrainingDirectories, fetchTrainingMarkdown } from '@/lib/github'
-import { splitIntoPages, getPageHeadings, type TrainingPageHeading } from '@/lib/training-pages'
+import { splitIntoPages, getPageHeadings, getSidebarGroups, type TrainingPageHeading, type SidebarGroup } from '@/lib/training-pages'
 
 export interface TrainingFrontmatter {
   title?: string
@@ -139,6 +139,7 @@ export interface TrainingPageResult {
   totalPages: number
   pageHeading: string
   pageHeadings: TrainingPageHeading[]
+  sidebarGroups: SidebarGroup[]
   requiredIds: string[]
 }
 
@@ -166,6 +167,8 @@ export async function getTrainingPage(
   const page = pages[pageIndex]!
   const { content, frontmatter } = await compileMdxSource(page.source)
 
+  const pageHeadings = getPageHeadings(pages)
+
   return {
     slug,
     content,
@@ -173,7 +176,8 @@ export async function getTrainingPage(
     pageIndex,
     totalPages: pages.length,
     pageHeading: page.heading,
-    pageHeadings: getPageHeadings(pages),
+    pageHeadings,
+    sidebarGroups: getSidebarGroups(pageHeadings),
     requiredIds: page.requiredIds,
   }
 }

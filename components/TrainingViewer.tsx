@@ -7,7 +7,7 @@ import { safeGetItem, safeSetItem, getStorageKey } from '@/lib/storage'
 import { LEARNING_EVENT_TYPES, trackEvent } from '@/lib/event-tracking'
 import { toTitleCase } from '@/lib/utils'
 import type { TrainingFrontmatter } from '@/lib/mdx'
-import type { TrainingPageHeading, SidebarHeading } from '@/lib/training-pages'
+import type { SidebarGroup } from '@/lib/training-pages'
 import type { ReactNode } from 'react'
 
 interface TrainingViewerProps {
@@ -15,7 +15,7 @@ interface TrainingViewerProps {
   currentPageIndex: number
   totalPages: number
   pageHeading: string
-  pageHeadings: TrainingPageHeading[]
+  sidebarGroups: SidebarGroup[]
   requiredIds: string[]
   showHeader: boolean
   pageExplicitlyRequested: boolean
@@ -59,31 +59,11 @@ const difficultyColors = {
   advanced: 'bg-red-100 text-red-700 border-red-200 dark:bg-red-500/20 dark:text-red-300 dark:border-red-500/30',
 }
 
-function SubHeadingTree({ headings, depth }: { headings: SidebarHeading[]; depth: number }) {
-  return (
-    <div className={`${depth === 0 ? 'ml-6' : 'ml-3'} border-l border-black/[0.06] dark:border-white/10`}>
-      {headings.map((heading) => (
-        <div key={heading.id}>
-          <a
-            href={`#${heading.id}`}
-            className="block pl-3 py-1 text-xs text-hub-muted dark:text-gray-500 hover:text-hub-primary dark:hover:text-blue-300 transition-colors leading-snug"
-          >
-            {heading.text}
-          </a>
-          {heading.children.length > 0 && (
-            <SubHeadingTree headings={heading.children} depth={depth + 1} />
-          )}
-        </div>
-      ))}
-    </div>
-  )
-}
-
 export default function TrainingViewer({
   slug,
   currentPageIndex,
   totalPages,
-  pageHeadings,
+  sidebarGroups,
   requiredIds,
   showHeader,
   pageExplicitlyRequested,
@@ -240,45 +220,102 @@ export default function TrainingViewer({
           </button>
         </div>
         <nav className="flex-1 overflow-y-auto py-4 px-3">
-          {pageHeadings.map((pageHeading, idx) => {
-            const isCompleted = idx < currentPageIndex
-            const isActive = idx === currentPageIndex
-            const isFuture = idx > currentPageIndex
+          {sidebarGroups.map((group, gi) => {
+            const groupHasActive = group.pages.some((p) => p.pageIndex === currentPageIndex)
+            const allCompleted = group.pages.every((p) => p.pageIndex < currentPageIndex)
+
+            if (group.label) {
+              return (
+                <div key={gi} className="mb-2">
+                  <div className={`
+                    px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider
+                    ${allCompleted
+                      ? 'text-green-600 dark:text-green-400'
+                      : groupHasActive
+                      ? 'text-hub-primary dark:text-blue-300'
+                      : 'text-hub-muted dark:text-gray-500'
+                    }
+                  `}>
+                    {group.label}
+                  </div>
+                  <div className="ml-2 border-l border-black/[0.06] dark:border-white/10 pl-1">
+                    {group.pages.map((page) => {
+                      const isCompleted = page.pageIndex < currentPageIndex
+                      const isActive = page.pageIndex === currentPageIndex
+                      const isFuture = page.pageIndex > currentPageIndex
+                      const isLocked = isFuture && !adminMode
+
+                      return (
+                        <button
+                          key={page.pageIndex}
+                          onClick={() => !isLocked && goToPage(page.pageIndex, 'direct')}
+                          disabled={isLocked}
+                          className={`
+                            w-full text-left px-3 py-2 rounded-lg mb-0.5 text-sm transition-all duration-150
+                            flex items-start gap-2
+                            ${isActive
+                              ? 'bg-hub-primary/10 dark:bg-blue-500/20 text-hub-primary dark:text-blue-300 font-semibold'
+                              : isLocked
+                              ? 'text-hub-muted dark:text-gray-500 cursor-not-allowed opacity-60'
+                              : 'text-hub-text dark:text-gray-300 hover:bg-hub-surface-alt dark:hover:bg-white/10 cursor-pointer'
+                            }
+                          `}
+                          aria-current={isActive ? 'page' : undefined}
+                        >
+                          <span className={`flex-shrink-0 w-3.5 h-3.5 mt-0.5 rounded-full flex items-center justify-center text-[9px] font-bold border
+                            ${isCompleted
+                              ? 'bg-green-500 border-green-500 text-white'
+                              : isActive
+                              ? 'border-hub-primary dark:border-blue-400 bg-hub-primary/10 dark:bg-blue-500/20 text-hub-primary dark:text-blue-300'
+                              : 'border-gray-300 dark:border-gray-600'
+                            }
+                          `}>
+                            {isCompleted ? '✓' : isActive ? '●' : ''}
+                          </span>
+                          <span className="leading-tight line-clamp-2">{page.text}</span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              )
+            }
+
+            const page = group.pages[0]!
+            const isCompleted = page.pageIndex < currentPageIndex
+            const isActive = page.pageIndex === currentPageIndex
+            const isFuture = page.pageIndex > currentPageIndex
             const isLocked = isFuture && !adminMode
 
             return (
-              <div key={idx}>
-                <button
-                  onClick={() => !isLocked && goToPage(idx, 'direct')}
-                  disabled={isLocked}
-                  className={`
-                    w-full text-left px-3 py-2.5 rounded-lg mb-1 text-sm transition-all duration-150
-                    flex items-start gap-2
-                    ${isActive
-                      ? 'bg-hub-primary/10 dark:bg-blue-500/20 text-hub-primary dark:text-blue-300 font-semibold'
-                      : isLocked
-                      ? 'text-hub-muted dark:text-gray-500 cursor-not-allowed opacity-60'
-                      : 'text-hub-text dark:text-gray-300 hover:bg-hub-surface-alt dark:hover:bg-white/10 cursor-pointer'
-                    }
-                  `}
-                  aria-current={isActive ? 'page' : undefined}
-                >
-                  <span className={`flex-shrink-0 w-4 h-4 mt-0.5 rounded-full flex items-center justify-center text-[10px] font-bold border
-                    ${isCompleted
-                      ? 'bg-green-500 border-green-500 text-white'
-                      : isActive
-                      ? 'border-hub-primary dark:border-blue-400 bg-hub-primary/10 dark:bg-blue-500/20 text-hub-primary dark:text-blue-300'
-                      : 'border-gray-300 dark:border-gray-600'
-                    }
-                  `}>
-                    {isCompleted ? '✓' : isActive ? '●' : ''}
-                  </span>
-                  <span className="leading-tight line-clamp-2">{pageHeading.text}</span>
-                </button>
-                {isActive && pageHeading.subHeadings.length > 0 && (
-                  <SubHeadingTree headings={pageHeading.subHeadings} depth={0} />
-                )}
-              </div>
+              <button
+                key={gi}
+                onClick={() => !isLocked && goToPage(page.pageIndex, 'direct')}
+                disabled={isLocked}
+                className={`
+                  w-full text-left px-3 py-2.5 rounded-lg mb-1 text-sm transition-all duration-150
+                  flex items-start gap-2
+                  ${isActive
+                    ? 'bg-hub-primary/10 dark:bg-blue-500/20 text-hub-primary dark:text-blue-300 font-semibold'
+                    : isLocked
+                    ? 'text-hub-muted dark:text-gray-500 cursor-not-allowed opacity-60'
+                    : 'text-hub-text dark:text-gray-300 hover:bg-hub-surface-alt dark:hover:bg-white/10 cursor-pointer'
+                  }
+                `}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                <span className={`flex-shrink-0 w-4 h-4 mt-0.5 rounded-full flex items-center justify-center text-[10px] font-bold border
+                  ${isCompleted
+                    ? 'bg-green-500 border-green-500 text-white'
+                    : isActive
+                    ? 'border-hub-primary dark:border-blue-400 bg-hub-primary/10 dark:bg-blue-500/20 text-hub-primary dark:text-blue-300'
+                    : 'border-gray-300 dark:border-gray-600'
+                  }
+                `}>
+                  {isCompleted ? '✓' : isActive ? '●' : ''}
+                </span>
+                <span className="leading-tight line-clamp-2">{page.text}</span>
+              </button>
             )
           })}
         </nav>

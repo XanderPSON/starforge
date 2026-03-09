@@ -32,7 +32,7 @@ export default async function TrainingPage({ params, searchParams }: TrainingPag
     notFound()
   }
 
-  const { content, frontmatter, totalPages, pageHeading, pageHeadings, requiredIds } = result
+  const { content, frontmatter, totalPages, pageHeading, sidebarGroups, requiredIds } = result
 
   return (
     <TrainingViewer
@@ -40,7 +40,7 @@ export default async function TrainingPage({ params, searchParams }: TrainingPag
       currentPageIndex={pageIndex}
       totalPages={totalPages}
       pageHeading={pageHeading}
-      pageHeadings={pageHeadings}
+      sidebarGroups={sidebarGroups}
       requiredIds={requiredIds}
       showHeader={pageIndex === 0}
       pageExplicitlyRequested={page !== undefined}
