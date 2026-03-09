@@ -132,7 +132,7 @@ export function TemperatureCheck({ id, label, className }: TemperatureCheckProps
   const promptText = label || 'How are you feeling about this section?'
 
   return (
-    <div className={cn('my-8', className)}>
+    <div className={cn('my-8 max-w-2xl', className)}>
       <div className={cn(
         'rounded-xl border-2 border-gray-200 dark:border-white/10',
         'bg-white dark:bg-coinbase-space/50',
@@ -168,9 +168,9 @@ export function TemperatureCheck({ id, label, className }: TemperatureCheckProps
                   isSelected
                     ? cn(selectedBg, color, 'scale-105')
                     : cn(
-                        'border-transparent',
-                        'bg-gray-50 dark:bg-white/[0.04]',
-                        'text-gray-400 dark:text-gray-500',
+                        'border-gray-200 dark:border-white/15',
+                        'bg-gray-50 dark:bg-white/[0.07]',
+                        'text-gray-500 dark:text-gray-400',
                         hoverColor,
                         hoverBg,
                       )

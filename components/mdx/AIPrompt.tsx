@@ -48,7 +48,7 @@ export function AIPrompt({ prompt, className }: AIPromptProps) {
   return (
     <div 
       className={cn(
-        "my-6 relative group rounded-xl overflow-hidden shadow-sm dark:shadow-lg dark:shadow-purple-900/20 border border-purple-200 dark:border-purple-800/60",
+        "my-6 max-w-2xl relative group rounded-xl overflow-hidden shadow-sm dark:shadow-lg dark:shadow-purple-900/20 border border-purple-200 dark:border-purple-800/60",
         "cursor-pointer transition-all duration-300",
         "hover:ring-2 hover:ring-purple-400/40 hover:-translate-y-0.5 hover:shadow-md",
         className
