@@ -3,7 +3,7 @@
 import { useInteractive, getStorageKey } from '@/lib/storage'
 import { useParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { Sparkles } from 'lucide-react'
+
 
 interface FlavorTextProps {
   id: string
@@ -122,16 +122,6 @@ export function FlavorText({ id, emoji, text, className }: FlavorTextProps) {
           {text}
         </span>
 
-        {/* Sparkle hint on hover (unchecked only) */}
-        {!value.checked && (
-          <Sparkles
-            className={cn(
-              'flex-shrink-0 w-3.5 h-3.5 transition-opacity duration-200',
-              'text-gray-300 dark:text-white/15',
-              'opacity-0 group-hover:opacity-100',
-            )}
-          />
-        )}
       </div>
     </div>
   )
