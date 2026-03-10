@@ -20,6 +20,8 @@ import { SubmissionBox } from './SubmissionBox'
 import { Reveal } from './Reveal'
 import { FlavorText } from './FlavorText'
 import { AIPrompt } from './AIPrompt'
+import { HumanStep } from './HumanStep'
+import { HybridStep } from './HybridStep'
 
 import { createElement } from 'react'
 
@@ -64,4 +66,6 @@ export const mdxComponents: MDXComponents = {
   Reveal,
   FlavorText,
   AIPrompt,
+  HumanStep,
+  HybridStep,
 }
