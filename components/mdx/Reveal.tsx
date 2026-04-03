@@ -62,6 +62,14 @@ export function Reveal({ requiredId, children }: RevealProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, requiredId])
 
+  if (!requiredId) {
+    return (
+      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
+        ❌ Reveal Error: Missing required prop: <code>requiredId</code>
+      </div>
+    )
+  }
+
   // Prevent SSR mismatch — render nothing until hydrated
   if (!isHydrated || !revealed) return null
 

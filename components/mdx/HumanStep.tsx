@@ -32,8 +32,18 @@ export function HumanStep({ instruction, className }: HumanStepProps) {
     })
   }, [instruction, params])
 
+  if (!instruction) {
+    return (
+      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
+        ❌ HumanStep Error: Missing required prop: <code>instruction</code>
+      </div>
+    )
+  }
+
   return (
     <div 
+      role="region"
+      aria-label="Human step instruction"
       className={cn(
         "my-6 max-w-2xl relative group rounded-xl overflow-hidden shadow-sm dark:shadow-lg dark:shadow-blue-900/20 border border-blue-200 dark:border-blue-800/60",
         className

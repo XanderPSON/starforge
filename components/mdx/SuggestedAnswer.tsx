@@ -16,6 +16,14 @@ export function SuggestedAnswer({ id, children, label = 'Suggested answer' }: Su
   const slug = (params.slug as string) || 'default'
   const [isRevealed, setIsRevealed] = useState(false)
 
+  if (!children) {
+    return (
+      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
+        ❌ SuggestedAnswer Error: Missing required prop: <code>children</code>
+      </div>
+    )
+  }
+
   const handleToggle = () => {
     const newState = !isRevealed
     setIsRevealed(newState)
@@ -35,6 +43,7 @@ export function SuggestedAnswer({ id, children, label = 'Suggested answer' }: Su
         onClick={handleToggle}
         className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-hub-primary dark:text-coinbase-cyan border border-hub-primary/20 dark:border-coinbase-blue/30 rounded-lg bg-hub-surface-alt dark:bg-white/5 hover:bg-hub-primary/10 dark:hover:bg-coinbase-blue/10 transition-colors"
         aria-expanded={isRevealed}
+        aria-label={isRevealed ? 'Hide suggested answer' : 'Reveal suggested answer'}
       >
         <span
           className="inline-block transition-transform duration-200"

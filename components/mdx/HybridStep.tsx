@@ -32,8 +32,18 @@ export function HybridStep({ instruction, className }: HybridStepProps) {
     })
   }, [instruction, params])
 
+  if (!instruction) {
+    return (
+      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
+        ❌ HybridStep Error: Missing required prop: <code>instruction</code>
+      </div>
+    )
+  }
+
   return (
     <div 
+      role="region"
+      aria-label="Human and AI step instruction"
       className={cn(
         "my-6 max-w-2xl relative group rounded-xl overflow-hidden shadow-sm dark:shadow-lg dark:shadow-amber-900/20 border border-amber-200 dark:border-amber-800/60",
         className
