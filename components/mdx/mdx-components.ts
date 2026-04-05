@@ -51,15 +51,39 @@ const ACTION_COLORS: Record<string, string> = {
 
 function Details({ children }: { children?: React.ReactNode }) {
   return createElement('details', {
-    className: 'my-4 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-white/[0.03] overflow-hidden group'
+    className: [
+      'my-6 rounded-xl overflow-hidden',
+      'border border-gray-200 dark:border-white/10',
+      'bg-gray-50 dark:bg-white/[0.04]',
+      'group/details',
+      'shadow-sm dark:shadow-md dark:shadow-black/20',
+    ].join(' ')
   }, children)
 }
 
 function Summary({ children }: { children?: React.ReactNode }) {
   return createElement('summary', {
-    className: 'px-5 py-4 text-lg font-semibold text-gray-900 dark:text-gray-100 cursor-pointer select-none list-none flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors duration-150 [&::-webkit-details-marker]:hidden'
+    className: [
+      'px-5 py-4',
+      'text-lg font-semibold text-gray-900 dark:text-gray-100',
+      'cursor-pointer select-none list-none',
+      'flex items-center gap-3',
+      'bg-gray-100/80 dark:bg-white/[0.06]',
+      'hover:bg-gray-200/80 dark:hover:bg-white/[0.10]',
+      'transition-colors duration-150',
+      '[&::-webkit-details-marker]:hidden',
+      'group-open/details:border-b group-open/details:border-gray-200 group-open/details:dark:border-white/10',
+    ].join(' ')
   },
-    createElement('span', { className: 'text-gray-400 dark:text-gray-500 transition-transform duration-200 group-open:rotate-90 text-sm' }, '▶'),
+    createElement('span', {
+      className: [
+        'flex items-center justify-center w-6 h-6 rounded-md shrink-0',
+        'bg-coinbase-blue/10 dark:bg-coinbase-blue/20',
+        'text-coinbase-blue dark:text-coinbase-cyan',
+        'transition-transform duration-200 group-open/details:rotate-90',
+        'text-xs',
+      ].join(' ')
+    }, '▶'),
     children
   )
 }

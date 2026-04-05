@@ -207,11 +207,15 @@ _Create, deploy, and distribute your custom ERC-20 token. (20 min)_
     forge script script/DeployToken.s.sol \
       --rpc-url https://sepolia.base.org \
       --account dev \
+      --sender YOUR_WALLET_ADDRESS \
       --broadcast \
       --verify \
       --verifier etherscan \
       --etherscan-api-key $ETHERSCAN_API_KEY
     ```
+
+    > [!TIP]
+    > Replace `YOUR_WALLET_ADDRESS` with the output of `cast wallet address --account dev`. Without `--sender`, Foundry uses a default address as `msg.sender`, so your tokens would mint to the wrong wallet.
 
 5. **Add Token to Wallet**
 

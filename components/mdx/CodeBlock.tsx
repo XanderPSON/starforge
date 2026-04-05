@@ -47,19 +47,44 @@ export function Code({ children, className }: CodeBlockProps) {
 
 function CopyPre({ children, className, raw }: PreProps) {
   const text = typeof raw === 'string' ? raw : extractTextContent(children)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = useCallback(async () => {
+    if (!text) return
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch { /* ignore */ }
+  }, [text])
 
   return (
     <InPreContext.Provider value={true}>
-      <div className="my-6 relative group">
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={handleCopy}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCopy() } }}
+        className={cn(
+          'my-6 group flex items-stretch cursor-pointer',
+          'bg-gray-900 dark:bg-coinbase-dark text-gray-200',
+          'rounded-xl',
+          'border border-gray-700/50 dark:border-coinbase-blue/20',
+          'shadow-sm dark:shadow-lg dark:shadow-coinbase-blue/10',
+          'focus:outline-none focus-visible:ring-2 focus-visible:ring-coinbase-blue',
+          copied && 'ring-2 ring-emerald-400/50',
+        )}
+        aria-label="Copy code"
+      >
+        <div className="flex items-center pl-4 shrink-0">
+          <CopyIndicator copied={copied} />
+        </div>
         <pre
           className={cn(
-            'bg-gray-900 dark:bg-coinbase-dark text-gray-200',
-            'p-6',
-            'rounded-xl',
+            'flex-1 min-w-0',
+            'p-6 pl-3',
             'overflow-x-auto',
             'font-mono text-sm leading-relaxed',
-            'border border-gray-700/50 dark:border-coinbase-blue/20',
-            'shadow-sm dark:shadow-lg dark:shadow-coinbase-blue/10',
             'whitespace-pre',
             'scroll-smooth',
             className
@@ -67,7 +92,6 @@ function CopyPre({ children, className, raw }: PreProps) {
         >
           {children}
         </pre>
-        <CopyButton text={text} />
       </div>
     </InPreContext.Provider>
   )
@@ -85,7 +109,34 @@ function extractTextContent(node: React.ReactNode): string {
   return ''
 }
 
-function CopyButton({ text }: { text: string }) {
+function CopyIndicator({ copied }: { copied: boolean }) {
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-1.5 shrink-0 self-center',
+        'text-gray-400',
+        'opacity-0 group-hover:opacity-100',
+        'transition-all duration-150',
+        copied && 'text-emerald-400 opacity-100'
+      )}
+      aria-hidden
+    >
+      {copied ? (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+          <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+        </svg>
+      ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+          <path d="M7 3.5A1.5 1.5 0 0 1 8.5 2h3.879a1.5 1.5 0 0 1 1.06.44l3.122 3.12a1.5 1.5 0 0 1 .439 1.061V14.5A1.5 1.5 0 0 1 15.5 16H8.5A1.5 1.5 0 0 1 7 14.5V3.5Z" />
+          <path d="M4.5 6A1.5 1.5 0 0 0 3 7.5v9A1.5 1.5 0 0 0 4.5 18h7a1.5 1.5 0 0 0 1.5-1.5v-2h-4.5A2.5 2.5 0 0 1 6 12V6H4.5Z" />
+        </svg>
+      )}
+    </div>
+  )
+}
+
+function StandardPre({ children, className, raw }: PreProps) {
+  const text = typeof raw === 'string' ? raw : extractTextContent(children)
   const [copied, setCopied] = useState(false)
 
   const handleCopy = useCallback(async () => {
@@ -98,49 +149,32 @@ function CopyButton({ text }: { text: string }) {
   }, [text])
 
   return (
-    <button
-      type="button"
-      onClick={handleCopy}
-      className={cn(
-        'absolute right-2 top-2',
-        'p-1.5 rounded-md',
-        'text-gray-500 hover:text-gray-200',
-        'opacity-0 group-hover:opacity-100',
-        'transition-all duration-150',
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-coinbase-blue focus-visible:opacity-100',
-        'cursor-pointer',
-        copied && 'text-emerald-400 opacity-100'
-      )}
-      aria-label="Copy code"
-    >
-      {copied ? (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-          <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
-        </svg>
-      ) : (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-          <path d="M7 3.5A1.5 1.5 0 0 1 8.5 2h3.879a1.5 1.5 0 0 1 1.06.44l3.122 3.12a1.5 1.5 0 0 1 .439 1.061V14.5A1.5 1.5 0 0 1 15.5 16H8.5A1.5 1.5 0 0 1 7 14.5V3.5Z" />
-          <path d="M4.5 6A1.5 1.5 0 0 0 3 7.5v9A1.5 1.5 0 0 0 4.5 18h7a1.5 1.5 0 0 0 1.5-1.5v-2h-4.5A2.5 2.5 0 0 1 6 12V6H4.5Z" />
-        </svg>
-      )}
-    </button>
-  )
-}
-
-function StandardPre({ children, className, raw }: PreProps) {
-  const text = typeof raw === 'string' ? raw : extractTextContent(children)
-
-  return (
     <InPreContext.Provider value={true}>
-      <div className="my-6 relative group">
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={handleCopy}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCopy() } }}
+        className={cn(
+          'my-6 group flex items-stretch cursor-pointer',
+          'bg-gray-900 dark:bg-coinbase-dark text-gray-200',
+          'rounded-xl',
+          'border border-gray-700/50 dark:border-coinbase-blue/20',
+          'shadow-sm dark:shadow-lg dark:shadow-coinbase-blue/10',
+          'focus:outline-none focus-visible:ring-2 focus-visible:ring-coinbase-blue',
+          copied && 'ring-2 ring-emerald-400/50',
+        )}
+        aria-label="Copy code"
+      >
+        <div className="flex items-center pl-4 shrink-0">
+          <CopyIndicator copied={copied} />
+        </div>
         <pre
           className={cn(
-            'bg-gray-900 dark:bg-coinbase-dark text-gray-200',
-            'p-6',
-            'rounded-xl',
+            'flex-1 min-w-0',
+            'p-6 pl-3',
+            'overflow-x-auto',
             'font-mono text-sm leading-relaxed',
-            'border border-gray-700/50 dark:border-coinbase-blue/20',
-            'shadow-sm dark:shadow-lg dark:shadow-coinbase-blue/10',
             'whitespace-pre-wrap',
             'break-words',
             className
@@ -148,7 +182,6 @@ function StandardPre({ children, className, raw }: PreProps) {
         >
           {children}
         </pre>
-        <CopyButton text={text} />
       </div>
     </InPreContext.Provider>
   )

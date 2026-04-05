@@ -4,65 +4,18 @@ _Get Your Development Environment Ready_
 
 ## 📋 Overview
 
-This quick setup ensures everyone has the necessary tools, API keys, and wallets ready.
+This quick setup ensures everyone has the necessary tools, API keys, and wallets ready. You'll create one dev wallet that works in both your terminal (for deploying contracts) and your browser (for the frontend in Part 3).
 
 ## ✅ Setup Checklist (15 minutes)
 
 > [!WARNING]
 > **Environment setup issues?** See our **[Environment Setup Troubleshooting Guide](./troubleshooting.md#-environment-setup)** for solutions.
 
----
-
-### 📱 Step 1: Set up a new work wallet
-
-> [!CAUTION]
-> Use a **fresh, test-only wallet**. Never reuse this wallet in production or for real funds.
-
-1. **Install [Coinbase Wallet](https://chromewebstore.google.com/detail/coinbase-wallet-extension/hnfanknocfeofbddgcijnmhnfnkdnaad) Chrome extension** and create a wallet if you don't have one already.
-2. **Enable testnets**: Click **Settings** (⚙️ gear icon) → **Networks** → select the **Testnets** tab and confirm **Base Sepolia** is listed. (You won't be able to switch to it yet — the network appears in your wallet's network selector once it has funds.)
-3. **Copy your wallet address** — you'll need it in Step 1b to fund your wallet.
-
-**✅ Verification**: After funding your wallet in Step 1c, Base Sepolia will appear in your network selector with a test ETH balance.
-
-> [!WARNING]
-> **Wallet issues?** Check our **[Wallet Troubleshooting](./troubleshooting.md#-wallet-issues)** section for connection and network problems.
-
----
-
-### 🔑 Step 1b: Get a CDP API Key
-
-You'll use the [Coinbase Developer Platform (CDP)](https://portal.cdp.coinbase.com/) faucet to get free testnet ETH — no wallet connection required.
-
-1. Go to [portal.cdp.coinbase.com](https://portal.cdp.coinbase.com/) and sign in (create a free account if needed).
-2. Navigate to [API Keys](https://portal.cdp.coinbase.com/projects/api-keys).
-3. Select the **Client API Key** tab and create a new key.
-4. Copy the **API Key ID** — you'll use this as your bearer token to request testnet ETH.
-
----
-
-### 💰 Step 1c: Fund your wallet with testnet ETH
-
-Run this command, replacing `YOUR_WALLET_ADDRESS` with your Coinbase Wallet address and `YOUR_CDP_API_KEY` with the key from Step 1b:
-
-```bash
-curl -X POST https://api.cdp.coinbase.com/platform/v2/evm/faucet \
-  -H "Authorization: Bearer YOUR_CDP_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"network":"base-sepolia","address":"YOUR_WALLET_ADDRESS","token":"eth"}'
-```
-
-You should get a JSON response with a `transactionHash`. Your testnet ETH will arrive within seconds.
-
-> [!TIP]
-> You can also fund your Foundry CLI wallet (Step 3) using the same command — just swap in that wallet's address.
-
-**✅ Verification**: Open Coinbase Wallet on Base Sepolia and confirm a test ETH balance.
-
 # 💻 Developer Tools
 
-_Install the development tools and get API keys for the workshop._
+_Install the development tools you'll need for the workshop._
 
-## 💻 Step 2: Install Node.js and npm
+## 💻 Step 1: Install Node.js and npm
 
 1. **Check if Already Installed**
 
@@ -71,7 +24,7 @@ _Install the development tools and get API keys for the workshop._
     npm --version   # Should show 9.x.x or higher
     ```
 
-    If Node is v18+ (prefer LTS like v20), skip to Step 3.
+    If Node is v18+ (prefer LTS like v20), skip to Step 2.
 
 2. **Install Node.js using nvm**
 
@@ -98,7 +51,7 @@ _Install the development tools and get API keys for the workshop._
 
 ---
 
-## 🔨 Step 3: Install Foundry
+## 🔨 Step 2: Install Foundry
 
 Foundry is the toolkit for smart contract development.
 
@@ -123,33 +76,103 @@ Foundry is the toolkit for smart contract development.
     anvil --version
     ```
 
-5. **Import your Coinbase Wallet into Foundry**
-    1. Copy your private key from Coinbase Wallet extension settings
-    2. Run `cast wallet import dev --interactive` and input your private key when prompted (`"dev"` is now your account name for this foundry wallet)
-    3. Enter a password into the prompt to encrypt your private key
-
-6. **Fund your Foundry wallet** (if it's a different address from your browser wallet)
-
-    Check your Foundry wallet address:
-    ```bash
-    cast wallet address --account dev
-    ```
-
-    Then fund it using the CDP faucet from Step 1c:
-    ```bash
-    curl -X POST https://api.cdp.coinbase.com/platform/v2/evm/faucet \
-      -H "Authorization: Bearer YOUR_CDP_API_KEY" \
-      -H "Content-Type: application/json" \
-      -d '{"network":"base-sepolia","address":"YOUR_FOUNDRY_WALLET_ADDRESS","token":"eth"}'
-    ```
-
-> [!CAUTION]
-> Never share your private key or paste it into websites. The `cast wallet import` command encrypts it locally — this is the safe way to use it with Foundry.
-
 > [!TIP]
 > If Foundry commands aren't found, ensure your PATH includes `~/.foundry/bin`. Restart your terminal or run `source ~/.zshrc`.
 
 ---
+
+# 🔐 Wallet Setup
+
+_Create a single dev wallet that works in your terminal and browser._
+
+> [!CAUTION]
+> This wallet is for **testing only**. Never send real funds to it or reuse it in production.
+
+## 🔑 Step 3: Create your dev wallet
+
+You'll create a wallet directly in your terminal using Foundry, then import it into your browser extension. One wallet, two interfaces.
+
+1. **Generate a new wallet with a recovery phrase**
+
+    ```bash
+    cast wallet new-mnemonic
+    ```
+
+    This outputs a **12-word recovery phrase** and an **Address**. Copy the recovery phrase — you'll need it for both the CLI and the browser extension.
+
+    > [!CAUTION]
+    > **Save your recovery phrase somewhere safe** (e.g., a password manager or a local note). You need it in Step 3 and Step 4. Do not share it or commit it to git.
+
+2. **Get your private key from the recovery phrase**
+
+    ```bash
+    cast wallet private-key "YOUR TWELVE WORD RECOVERY PHRASE GOES HERE"
+    ```
+
+    This outputs a hex private key starting with `0x`. Copy it.
+
+3. **Import the wallet into Foundry's keystore as `dev`**
+
+    ```bash
+    cast wallet import dev --interactive
+    ```
+
+    When prompted:
+    - **Paste your private key** from the previous step (must start with `0x`)
+    - **Enter a password** to encrypt the keystore (remember this — you'll type it when deploying contracts)
+
+4. **Verify it worked**
+
+    ```bash
+    cast wallet address --account dev
+    ```
+
+    This should print the same address from step 1.
+
+---
+
+## 💰 Step 3b: Fund your wallet with testnet ETH
+
+1. Go to the [CDP Faucet](https://portal.cdp.coinbase.com/products/faucet) and sign in (create a free account if needed).
+2. Select **Base Sepolia** as the network.
+3. Paste your wallet address from Step 3.
+4. Click **Give me ETH**.
+
+**✅ Verification**: Check your balance from the terminal:
+
+```bash
+cast balance $(cast wallet address --account dev) --rpc-url https://sepolia.base.org -e
+```
+
+You should see a non-zero ETH balance.
+
+> [!TIP]
+> If you need more testnet ETH later, just visit the faucet again with the same address.
+
+---
+
+## 📱 Step 4: Connect your wallet to Coinbase Wallet extension
+
+Your dev wallet lives in Foundry's keystore, but you also need it in your browser for the frontend in Part 3 and for interacting with contracts on BaseScan.
+
+1. **Install [Coinbase Wallet](https://chromewebstore.google.com/detail/coinbase-wallet-extension/hnfanknocfeofbddgcijnmhnfnkdnaad) Chrome extension** if you don't have it already.
+2. **Import your dev wallet**:
+    - Open the extension → **Settings** (⚙️ gear icon) → **Import recovery phrase**
+    - Paste the **12-word recovery phrase** you saved from Step 3
+    - Enter your Coinbase Wallet extension password when prompted
+3. **Enable testnets**: Click **Settings** (⚙️ gear icon) → **Developer Settings** → toggle on **Testnets**
+4. **Switch to Base Sepolia**: Use the network selector and pick **Base Sepolia**
+
+**✅ Verification**: The address shown in the Coinbase Wallet extension matches the address from `cast wallet address --account dev`, and your testnet ETH balance is visible.
+
+> [!WARNING]
+> **Wallet issues?** Check our **[Wallet Troubleshooting](./troubleshooting.md#-wallet-issues)** section for connection and network problems.
+
+---
+
+# 🔑 API Keys
+
+_Get the remaining API keys for the workshop._
 
 ## 🔑 Step 5: Get Etherscan API Key
 
@@ -158,7 +181,11 @@ _You'll use this for verifying Smart Contracts_
 1. Go to [Etherscan](https://etherscan.io/login) and create a free account.
 2. Go to the [API Dashboard](https://etherscan.io/apidashboard).
 3. Click "Add" to create a new API key. Name it "Onchain Workshop".
-4. Copy the API key.
+4. Copy the API key and export it in your terminal:
+
+    ```bash
+    export ETHERSCAN_API_KEY=your_api_key_here
+    ```
 
 > [!NOTE]
 > Etherscan multichain keys work automatically on BaseScan — no separate API key needed.
@@ -196,13 +223,22 @@ Let's verify everything works:
     anvil --version
     ```
 
-3. **Test Wallet and Testnet ETH**
+3. **Test Dev Wallet**
+
+    ```bash
+    cast wallet address --account dev
+    cast balance $(cast wallet address --account dev) --rpc-url https://sepolia.base.org -e
+    ```
+
+    You should see your address and a non-zero ETH balance.
+
+4. **Test Browser Wallet**
     - Open the Coinbase Wallet extension
     - Verify you're on Base Sepolia network
-    - Check you have some testnet ETH
+    - Confirm the address matches your CLI wallet
+    - Check you have testnet ETH
 
-4. **Check Your Keys**
-    - You have your CDP API Key saved.
+5. **Check Your Keys**
     - You have your Etherscan API Key saved.
     - You have your WalletConnect Project ID saved.
 
@@ -215,8 +251,8 @@ Let's verify everything works:
 Once your setup is complete:
 
 1. ✅ All tools installed and verified
-2. ✅ Testnet ETH in wallet
-3. ✅ CDP API key ready
+2. ✅ Dev wallet works in CLI (`cast wallet address --account dev`) and browser (Coinbase Wallet extension)
+3. ✅ Testnet ETH funded
 4. ✅ Etherscan API key ready
 5. ✅ WalletConnect Project ID ready
 

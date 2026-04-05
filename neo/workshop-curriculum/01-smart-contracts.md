@@ -199,7 +199,7 @@ Open `src/IPredictionMarket.sol` in your repo. This **interface** is your contra
 
 - **Events** your contract must emit (`MarketCreated`, `Voted`, `MarketResolved`)
 - **Custom errors** your contract must use (`NotOwner`, `MarketAlreadyResolved`, `AlreadyVoted`, `ZeroAmount`)
-- **Functions** your contract must implement (7 total: `owner`, `totalMarkets`, `getOdds`, `hasVoted`, `createMarket`, `vote`, `resolveMarket`)
+- **Functions** your contract must implement (8 total: `owner`, `totalMarkets`, `getOdds`, `getMarket`, `hasVoted`, `createMarket`, `vote`, `resolveMarket`)
 - **Struct fields** your `Market` must contain (`question`, `yesPool`, `noPool`, `resolved`, `outcome`)
 
 Your skeleton at `src/PredictionMarket.sol` already inherits this interface and has the struct + storage defined. Every function body says `revert("Not implemented")` — that's what you'll replace.
@@ -446,7 +446,7 @@ _Deploy, verify, and debug your contract on Base Sepolia. (20 min)_
 
 1. **Set Up Environment Variables**
 
-    Export your Etherscan API key (from [Step 4](./00-setup#-step-4-get-etherscan-api-key) of setup):
+    Export your Etherscan API key (from [Step 5](./00-setup#-step-5-get-etherscan-api-key) of setup):
 
     ```bash
     export ETHERSCAN_API_KEY=your_api_key_here
@@ -463,12 +463,16 @@ _Deploy, verify, and debug your contract on Base Sepolia. (20 min)_
     ```bash
     forge script Deploy \
         --account dev \
+        --sender YOUR_WALLET_ADDRESS \
         --rpc-url https://sepolia.base.org \
         --broadcast \
         --verify \
         --verifier etherscan \
         --etherscan-api-key $ETHERSCAN_API_KEY
     ```
+
+    > [!TIP]
+    > Replace `YOUR_WALLET_ADDRESS` with the output of `cast wallet address --account dev`. The `--sender` flag tells Foundry to use your wallet as `msg.sender` in the deploy script — without it, the contract's owner will be set to Foundry's default address instead of yours.
 
     > [!WARNING]
     > **Deployment issues?** Check our **[Deployment Troubleshooting](./troubleshooting#-deployment-issues)** for solutions to common errors like nonce mismatches, insufficient gas, and verification failures.
