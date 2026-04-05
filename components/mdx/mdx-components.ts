@@ -24,6 +24,8 @@ import { AIPrompt } from './AIPrompt'
 import { HumanStep } from './HumanStep'
 import { HybridStep } from './HybridStep'
 import { ChecklistReviewContract } from './ChecklistReviewContract'
+import { ChecklistReviewERC20 } from './ChecklistReviewERC20'
+import { ChecklistUpgradedMarket } from './ChecklistUpgradedMarket'
 import { QuizSmartContractBasics } from './QuizSmartContractBasics'
 import { QuizCEIPattern } from './QuizCEIPattern'
 import { QuizGas } from './QuizGas'
@@ -49,15 +51,30 @@ const ACTION_COLORS: Record<string, string> = {
   'LOCATE':   'dark:text-cyan-400',     // 🧭 compass — navigate
 }
 
-function Details({ children }: { children?: React.ReactNode }) {
+function Details({ children, className, class: classAttr }: { children?: React.ReactNode; className?: string; class?: string }) {
+  const cls = className ?? classAttr ?? ''
+  const isSpoiler = cls.includes('spoiler')
+
+  if (isSpoiler) {
+    return createElement('details', {
+      className: [
+        'my-6 rounded-xl overflow-hidden group',
+        'border border-amber-300/60 dark:border-amber-500/30',
+        'bg-amber-50/50 dark:bg-amber-500/[0.06]',
+        'shadow-sm',
+      ].join(' '),
+      'data-variant': 'spoiler',
+    }, children)
+  }
+
   return createElement('details', {
     className: [
-      'my-6 rounded-xl overflow-hidden',
+      'my-6 rounded-xl overflow-hidden group',
       'border border-gray-200 dark:border-white/10',
       'bg-gray-50 dark:bg-white/[0.04]',
-      'group/details',
       'shadow-sm dark:shadow-md dark:shadow-black/20',
-    ].join(' ')
+    ].join(' '),
+    'data-variant': 'section',
   }, children)
 }
 
@@ -65,23 +82,33 @@ function Summary({ children }: { children?: React.ReactNode }) {
   return createElement('summary', {
     className: [
       'px-5 py-4',
-      'text-lg font-semibold text-gray-900 dark:text-gray-100',
       'cursor-pointer select-none list-none',
       'flex items-center gap-3',
-      'bg-gray-100/80 dark:bg-white/[0.06]',
-      'hover:bg-gray-200/80 dark:hover:bg-white/[0.10]',
       'transition-colors duration-150',
       '[&::-webkit-details-marker]:hidden',
-      'group-open/details:border-b group-open/details:border-gray-200 group-open/details:dark:border-white/10',
+
+      'group-data-[variant=section]:text-lg group-data-[variant=section]:font-semibold',
+      'group-data-[variant=section]:text-gray-900 dark:group-data-[variant=section]:text-gray-100',
+      'group-data-[variant=section]:bg-gray-100/80 dark:group-data-[variant=section]:bg-white/[0.06]',
+      'group-data-[variant=section]:hover:bg-gray-200/80 dark:group-data-[variant=section]:hover:bg-white/[0.10]',
+      'group-open:group-data-[variant=section]:border-b group-open:group-data-[variant=section]:border-gray-200 dark:group-open:group-data-[variant=section]:border-white/10',
+
+      'group-data-[variant=spoiler]:text-base group-data-[variant=spoiler]:font-semibold',
+      'group-data-[variant=spoiler]:text-amber-700 dark:group-data-[variant=spoiler]:text-amber-400',
+      'group-data-[variant=spoiler]:hover:text-amber-900 dark:group-data-[variant=spoiler]:hover:text-amber-300',
+      'group-data-[variant=spoiler]:py-3 group-data-[variant=spoiler]:px-4',
     ].join(' ')
   },
     createElement('span', {
       className: [
-        'flex items-center justify-center w-6 h-6 rounded-md shrink-0',
-        'bg-coinbase-blue/10 dark:bg-coinbase-blue/20',
-        'text-coinbase-blue dark:text-coinbase-cyan',
-        'transition-transform duration-200 group-open/details:rotate-90',
-        'text-xs',
+        'shrink-0 text-xs transition-transform duration-200 group-open:rotate-90',
+
+        'group-data-[variant=section]:flex group-data-[variant=section]:items-center group-data-[variant=section]:justify-center',
+        'group-data-[variant=section]:w-6 group-data-[variant=section]:h-6 group-data-[variant=section]:rounded-md',
+        'group-data-[variant=section]:bg-coinbase-blue/10 dark:group-data-[variant=section]:bg-coinbase-blue/20',
+        'group-data-[variant=section]:text-coinbase-blue dark:group-data-[variant=section]:text-coinbase-cyan',
+
+        'group-data-[variant=spoiler]:text-amber-500 dark:group-data-[variant=spoiler]:text-amber-400',
       ].join(' ')
     }, '▶'),
     children
@@ -131,6 +158,8 @@ export const mdxComponents: MDXComponents = {
   ChecklistSetup,
   ChecklistSetupEnv,
   ChecklistReviewContract,
+  ChecklistReviewERC20,
+  ChecklistUpgradedMarket,
   ChecklistWorkshopActivity,
   SuggestedAnswer,
   SubmissionBox,

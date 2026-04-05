@@ -135,44 +135,21 @@ function CopyIndicator({ copied }: { copied: boolean }) {
   )
 }
 
-function StandardPre({ children, className, raw }: PreProps) {
-  const text = typeof raw === 'string' ? raw : extractTextContent(children)
-  const [copied, setCopied] = useState(false)
-
-  const handleCopy = useCallback(async () => {
-    if (!text) return
-    try {
-      await navigator.clipboard.writeText(text)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch { /* ignore */ }
-  }, [text])
-
+function StandardPre({ children, className }: PreProps) {
   return (
     <InPreContext.Provider value={true}>
       <div
-        role="button"
-        tabIndex={0}
-        onClick={handleCopy}
-        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCopy() } }}
         className={cn(
-          'my-6 group flex items-stretch cursor-pointer',
+          'my-6',
           'bg-gray-900 dark:bg-coinbase-dark text-gray-200',
           'rounded-xl',
           'border border-gray-700/50 dark:border-coinbase-blue/20',
           'shadow-sm dark:shadow-lg dark:shadow-coinbase-blue/10',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-coinbase-blue',
-          copied && 'ring-2 ring-emerald-400/50',
         )}
-        aria-label="Copy code"
       >
-        <div className="flex items-center pl-4 shrink-0">
-          <CopyIndicator copied={copied} />
-        </div>
         <pre
           className={cn(
-            'flex-1 min-w-0',
-            'p-6 pl-3',
+            'p-6',
             'overflow-x-auto',
             'font-mono text-sm leading-relaxed',
             'whitespace-pre-wrap',

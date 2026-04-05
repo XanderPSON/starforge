@@ -25,7 +25,7 @@ _How are you feeling right now?_
 
 **❌ "node: command not found"**
 
-```bash
+```copy
 ## Check if Node is installed
 which node
 
@@ -38,7 +38,7 @@ brew install node
 
 **❌ "npm install fails with permission errors"**
 
-```bash
+```copy
 ## Fix npm permissions (macOS/Linux)
 mkdir ~/.npm-global
 npm config set prefix '~/.npm-global'
@@ -48,7 +48,7 @@ source ~/.profile
 
 **❌ "Wrong Node version"**
 
-```bash
+```copy
 node --version  # Check current
 nvm install 20
 nvm use 20
@@ -58,7 +58,7 @@ nvm use 20
 
 **❌ "foundryup command not found"**
 
-```bash
+```copy
 curl -L https://foundry.paradigm.xyz | bash
 source ~/.zshrc  # or ~/.bashrc
 foundryup
@@ -66,7 +66,7 @@ foundryup
 
 **❌ "Permission denied" during installation**
 
-```bash
+```copy
 ## Ensure PATH includes ~/.foundry/bin
 echo 'export PATH="$HOME/.foundry/bin:$PATH"' >> ~/.zshrc
 source ~/.zshrc
@@ -88,7 +88,7 @@ source ~/.zshrc
 
 **❌ "Failed to get EIP-1559 fees"**
 
-```bash
+```copy
 ## RPC endpoint issue - the default RPC might be rate-limited.
 ## Try alternative RPC or legacy mode:
 export RPC_URL="https://base-sepolia.blockpi.network/v1/rpc/public"
@@ -103,7 +103,7 @@ forge script script/Deploy.s.sol:Deploy \
 
 **❌ "Insufficient funds for gas"**
 
-```bash
+```copy
 ## Check balance
 cast balance YOUR_WALLET --rpc-url https://sepolia.base.org
 
@@ -116,7 +116,7 @@ curl -X POST https://api.cdp.coinbase.com/platform/v2/evm/faucet \
 
 **❌ "Contract creation failed"**
 
-```bash
+```copy
 ## Verify build first
 forge build
 
@@ -133,7 +133,7 @@ forge script script/Deploy.s.sol:Deploy --rpc-url https://sepolia.base.org -vvvv
 
 **❌ "Contract verification failed" on BaseScan**
 
-```bash
+```copy
 ## 1. Did you source your .env file?
 source .env
 
@@ -146,7 +146,7 @@ forge script script/Deploy.s.sol:Deploy --rpc-url https://sepolia.base.org --bro
 
 **❌ "Contract verification failed" (general)**
 
-```bash
+```copy
 ## Try manual verification on BaseScan:
 ## Contract address → "Verify and Publish"
 ```
@@ -181,7 +181,7 @@ _Fixing wallet connections, network problems, and gas errors._
 **❌ "I don't see my custom ERC-20 token in my wallet!"**
 
 > [!TIP]
-> Tokens don't appear automatically — you must manually import them. Open Coinbase Wallet → "Assets" → "Import token" → paste your deployed Token Contract Address.
+> Coinbase Wallet auto-detects ERC-20 tokens — check the "Testnets" tab under "Assets". If your token doesn't appear, try refreshing or closing and reopening the extension. You can also verify the token exists by searching for your contract address on [sepolia.basescan.org](https://sepolia.basescan.org).
 
 ---
 
@@ -214,7 +214,7 @@ Common causes:
 
 Usually means the transaction would revert. Debug:
 
-```bash
+```copy
 ## Simulate the call
 cast call MARKET_ADDRESS "vote(uint256,bool,uint256)" 0 true 1000000000000000000 \
   --rpc-url https://sepolia.base.org
@@ -295,7 +295,7 @@ On BaseScan:
 const amount = 1000n * 10n ** 18n;  // 1000 tokens
 ```
 
-```bash
+```copy
 ## In cast:
 cast send TOKEN "transfer(address,uint256)" RECIPIENT 1000000000000000000000 --rpc-url ...
 ```
@@ -401,7 +401,7 @@ NEXT_PUBLIC_RPC_URL=https://sepolia.base.org
 
 **💰 High deployment costs**
 
-```bash
+```copy
 ## Check contract size
 forge build --sizes
 

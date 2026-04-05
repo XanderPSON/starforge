@@ -97,6 +97,7 @@ export function H1({ children, className }: HeadingProps) {
     <h1 id={id} className={cn(
       'group relative text-3xl font-bold mt-0 mb-6',
       'text-hub-text dark:text-gray-100',
+      'scroll-mt-16',
       className
     )}>
       <AnchorLink id={id} />
@@ -112,6 +113,7 @@ export function H2({ children, className }: HeadingProps) {
     <h2 id={id} className={cn(
       'group relative text-2xl font-bold mt-10 mb-4 pb-2',
       'text-hub-text dark:text-gray-100 border-b border-gray-200 dark:border-gray-700',
+      'scroll-mt-16',
       className
     )}>
       <AnchorLink id={id} />
@@ -125,7 +127,7 @@ export function H3({ children, className }: HeadingProps) {
   const { content, minutes } = extractDuration(children)
   const id = slugify(extractText(children))
   return (
-    <h3 id={id} className={cn('group relative text-xl font-semibold mt-8 mb-3 text-hub-text dark:text-gray-200', className)}>
+    <h3 id={id} className={cn('group relative text-xl font-semibold mt-8 mb-3 text-hub-text dark:text-gray-200 scroll-mt-16', className)}>
       <AnchorLink id={id} />
       {content}
       {minutes !== null && <DurationBadge minutes={minutes} />}
@@ -136,7 +138,7 @@ export function H3({ children, className }: HeadingProps) {
 export function H4({ children, className }: HeadingProps) {
   const id = slugify(extractText(children))
   return (
-    <h4 id={id} className={cn('group relative text-lg font-semibold mt-6 mb-3 text-hub-text dark:text-gray-200', className)}>
+    <h4 id={id} className={cn('group relative text-lg font-semibold mt-6 mb-3 text-hub-text dark:text-gray-200 scroll-mt-16', className)}>
       <AnchorLink id={id} />
       {children}
     </h4>
@@ -146,7 +148,7 @@ export function H4({ children, className }: HeadingProps) {
 export function H5({ children, className }: HeadingProps) {
   const id = slugify(extractText(children))
   return (
-    <h5 id={id} className={cn('group relative text-base font-semibold mt-4 mb-2 text-hub-muted dark:text-gray-300', className)}>
+    <h5 id={id} className={cn('group relative text-base font-semibold mt-4 mb-2 text-hub-muted dark:text-gray-300 scroll-mt-16', className)}>
       <AnchorLink id={id} />
       {children}
     </h5>
@@ -156,7 +158,7 @@ export function H5({ children, className }: HeadingProps) {
 export function H6({ children, className }: HeadingProps) {
   const id = slugify(extractText(children))
   return (
-    <h6 id={id} className={cn('group relative text-sm font-semibold uppercase tracking-wide mt-4 mb-2 text-hub-muted dark:text-gray-400', className)}>
+    <h6 id={id} className={cn('group relative text-sm font-semibold uppercase tracking-wide mt-4 mb-2 text-hub-muted dark:text-gray-400 scroll-mt-16', className)}>
       <AnchorLink id={id} />
       {children}
     </h6>

@@ -41,7 +41,7 @@ Smart contracts define functions which are like API routes. A service can expose
 
 Try this CLI command to call an `Echo` smart contract:
 
-```bash
+```copy
 cast call 0x80617f1058D431A7a8394761DE26C711ce5963D0 "echo(string)(string)" "gm" --rpc-url "https://sepolia.base.org"
 ```
 ![Offchain vs onchain echo call analogy](./assets/offchain-vs-onchain-echo.png)
@@ -162,7 +162,7 @@ _Read the spec and implement your PredictionMarket contract. (20 min)_
 
 Clone the [**neo-workshop-smart-contracts**](https://github.com/XanderPSON/neo-workshop-smart-contracts) repo (used for Parts 1 & 2):
 
-```bash
+```copy
 git clone -b prediction-market https://github.com/XanderPSON/neo-workshop-smart-contracts.git
 cd neo-workshop-smart-contracts
 forge build
@@ -179,7 +179,7 @@ The repo contains:
 
 ### 🧩 What Is an Interface, and Why It Matters?
 
-In Solidity, an interface is a **contract API definition**. It declares what functions, events, and errors exist, but does not include the implementation logic.
+In Solidity, an interface is a **contract API definition**. It declares what functions, events, and errors exist, but does not include the implementation logic. The `I` prefix in `IPredictionMarket.sol` is a Solidity convention meaning "interface" — it specifies *what* functions must exist, but not *how* they work.
 
 Why this is useful in Web3:
 
@@ -230,7 +230,7 @@ The **CEI Pattern (Checks, Effects, Interactions)** prevents reentrancy and keep
 
 Open `src/PredictionMarket.sol`. The struct, storage, and constructor are already wired up. Your job is to implement every function body. Feed the interface to your AI and prompt it:
 
-> *"Here is my Solidity interface `IPredictionMarket.sol` and my skeleton `PredictionMarket.sol`. Implement all the function bodies. The `vote()` function must follow the Checks-Effects-Interactions pattern. Use the custom errors defined in the interface (not require strings). The `createMarket` and `resolveMarket` functions should be restricted to the owner using an `onlyOwner` modifier."*
+<AIPrompt prompt="Here is my Solidity interface IPredictionMarket.sol and my skeleton PredictionMarket.sol. Implement all the function bodies. The vote() function must follow the Checks-Effects-Interactions pattern. Use the custom errors defined in the interface (not require strings). The createMarket and resolveMarket functions should be restricted to the owner using an onlyOwner modifier." />
 
 ### ✅ Review Checklist
 
@@ -448,7 +448,7 @@ _Deploy, verify, and debug your contract on Base Sepolia. (20 min)_
 
     Export your Etherscan API key (from [Step 5](./00-setup#-step-5-get-etherscan-api-key) of setup):
 
-    ```bash
+    ```copy
     export ETHERSCAN_API_KEY=your_api_key_here
     ```
 
@@ -460,7 +460,7 @@ _Deploy, verify, and debug your contract on Base Sepolia. (20 min)_
     Your `Deploy.s.sol` should deploy `PredictionMarket` with:
     - `owner_` = your address (or `msg.sender`)
 
-    ```bash
+    ```copy
     forge script Deploy \
         --account dev \
         --sender YOUR_WALLET_ADDRESS \

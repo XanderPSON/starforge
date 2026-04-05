@@ -140,7 +140,7 @@ You'll create a wallet directly in your terminal using Foundry, then import it i
 
 **✅ Verification**: Check your balance from the terminal:
 
-```bash
+```copy
 cast balance $(cast wallet address --account dev) --rpc-url https://sepolia.base.org -e
 ```
 

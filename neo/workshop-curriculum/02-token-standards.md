@@ -31,16 +31,16 @@ Check out the **[Troubleshooting Guide](./troubleshooting.md)** for solutions to
 
 ## 📖 Understanding Token Standards (5 min)
 
-### Why do we need standards?
+### 🤔 Why do we need standards?
 In Web2, if you want your app to talk to Stripe, you have to read Stripe's specific API documentation. If you switch to PayPal, you have to rewrite your entire backend because the API is different.
 
-In Web3, we use **Ethereum Request for Comments (ERCs)** to agree on universal API shapes. Because every fungible token (USDC, UNI, cbBTC) strictly follows the **ERC-20 Standard**, a decentralized exchange like Uniswap can support a brand new token the exact second it is deployed, without writing a single line of new code.
+In Web3, we use **[Ethereum Requests for Comments (ERCs)](https://eips.ethereum.org/erc)** to agree on universal API shapes. Because every fungible token (USDC, UNI, cbBTC) strictly follows the **ERC-20 Standard**, a decentralized exchange like Uniswap can support a brand new token the exact second it is deployed, without writing a single line of new code.
 
 > [!NOTE]
 > This is the power of standards-based composability — any app that supports ERC-20 automatically supports every ERC-20 token, present and future.
 
 
-### How Standards Are Proposed
+### 📝 How Standards Are Proposed
 
 An ERC is, at its core, **social consensus** — a group of developers getting together and agreeing: "Wouldn't it be cool if this thing worked this way, and we all built on the same interface?" ERCs are only as valuable as the adoption they get.
 
@@ -98,7 +98,7 @@ This mental model matters because it explains why `transfer` and `transferFrom` 
 
 ### 🧱 The Minimal ERC-20 Interface
 
-Read the [official ERC-20 specification](https://eips.ethereum.org/EIPS/eip-20). Below is `IERC20` — the **interface** that defines the required function signatures. The `I` prefix is a Solidity convention meaning "interface": it specifies *what* functions must exist, but not *how* they work. Your job is to write a concrete `ERC20` contract that implements this interface with real logic.
+Read the [official ERC-20 specification](https://eips.ethereum.org/EIPS/eip-20). Below is `IERC20` — the **interface** that defines the required function signatures (same `I` prefix convention you saw with `IPredictionMarket`). Your job is to write a concrete `ERC20` contract that implements this interface with real logic.
 
 ```solidity
 // ERC-20 Token Interface
@@ -141,11 +141,11 @@ interface IERC20 {
 
 _Create, deploy, and distribute your custom ERC-20 token. (20 min)_
 
-### Create Your Token
+### 🏗️ Create Your Token
 
 1. **Create New Token Project**
 
-    ```bash
+    ```copy
     forge init token-demo
     cd token-demo
     ```
@@ -156,13 +156,11 @@ _Create, deploy, and distribute your custom ERC-20 token. (20 min)_
 
     Reference the [official ERC-20 spec](https://eips.ethereum.org/EIPS/eip-20), then prompt AI:
 
-    > *"Write a Solidity ERC-20 token contract implementing the IERC20 interface with name [YourName]Coin, symbol [YNC], 18 decimals, and 1,000,000 initial supply minted to msg.sender. Include Transfer and Approval events."*
+    <AIPrompt prompt="Write a Solidity ERC-20 token contract implementing the IERC20 interface with name [YourName]Coin, symbol [YNC], 18 decimals, and 1,000,000 initial supply minted to msg.sender. Include Transfer and Approval events." />
 
     **✅ Review Checklist:**
-    - [ ] Does it implement all 9 required functions? (`name`, `symbol`, `decimals`, `totalSupply`, `balanceOf`, `transfer`, `approve`, `allowance`, `transferFrom`)
-    - [ ] Does `transfer` check that the sender has sufficient balance?
-    - [ ] Does it emit `Transfer` and `Approval` events?
-    - [ ] Does `forge build` succeed?
+
+    <ChecklistReviewERC20 id="checklist-review-erc20" />
 
     **💬 Top Questions to Ask Your AI:**
 
@@ -170,8 +168,8 @@ _Create, deploy, and distribute your custom ERC-20 token. (20 min)_
 
     <AIPrompt prompt="Why does OpenZeppelin's ERC-20 implementation have an _update() internal function instead of directly modifying balances in transfer()? What design problem does this solve?" />
 
-    <details>
-    <summary>📄 Reference Implementation (click to expand)</summary>
+    <details class="spoiler">
+    <summary>📄 Reference Implementation</summary>
 
     You can compare your AI-generated token against the starter from [neo-workshop-smart-contracts](https://github.com/XanderPSON/neo-workshop-smart-contracts/blob/prediction-market/src/ERC20.sol).
 
@@ -181,7 +179,7 @@ _Create, deploy, and distribute your custom ERC-20 token. (20 min)_
 
     Create `script/DeployToken.s.sol`:
 
-    ```solidity
+    ```copy
     // SPDX-License-Identifier: MIT
     pragma solidity ^0.8.13;
 
@@ -203,7 +201,7 @@ _Create, deploy, and distribute your custom ERC-20 token. (20 min)_
 
 4. **Deploy**
 
-    ```bash
+    ```copy
     forge script script/DeployToken.s.sol \
       --rpc-url https://sepolia.base.org \
       --account dev \
@@ -217,10 +215,9 @@ _Create, deploy, and distribute your custom ERC-20 token. (20 min)_
     > [!TIP]
     > Replace `YOUR_WALLET_ADDRESS` with the output of `cast wallet address --account dev`. Without `--sender`, Foundry uses a default address as `msg.sender`, so your tokens would mint to the wrong wallet.
 
-5. **Add Token to Wallet**
+5. **Verify Token in Wallet**
 
-    - Coinbase Wallet → "Assets" → "Import token" → Enter your contract address
-    - See your tokens appear!
+    Open Coinbase Wallet → "Assets" → "Testnets" tab. Your token should appear automatically. If it doesn't, try refreshing the extension or closing and reopening it — Coinbase Wallet auto-detects ERC-20 tokens once they're deployed.
 
 > [!CAUTION]
 > **Production warning:** Building an ERC-20 from scratch is a great learning exercise, but you should **never ship a hand-written token implementation** to production. Instead, use audited libraries like [OpenZeppelin](https://github.com/OpenZeppelin/openzeppelin-contracts), which provide battle-tested implementations of ERC-20, access control, and dozens of other patterns. These libraries have been through rigorous security audits and are used by virtually every major DeFi protocol. Check out their [ERC-20 implementation](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol) — it includes edge cases and protections you'd never think to add yourself.
@@ -232,14 +229,30 @@ _Create, deploy, and distribute your custom ERC-20 token. (20 min)_
 You are about to upgrade your Prediction Market to require tokens, but a market is no fun if you are the only one with the money.
 
 **📢 Pod Activity Flow**:
-1. **Share Addresses:** Drop your Wallet Address and your Token Contract Address in your pod's chat (e.g., *"I'm Alice, here is the address for AliceCoin: 0x..."*).
-2. **Import Everyone:** Add your pod-mates' custom tokens to your Coinbase Wallet.
-3. **Airdrop:** Use the "Send" button in your Coinbase Wallet to send 1,000 of your custom tokens to every person at your table.
+
+1. **Find your two addresses.** You need both:
+   - **Wallet Address** (your personal address that holds tokens): run `cast wallet address --account dev`
+   - **Token Contract Address** (the deployed contract): this was printed when you ran `forge script` in the previous step (look for `"Token deployed to: 0x..."` in the output)
+
+2. **Share with your pod.** Post both addresses in your pod's Slack channel or group chat. Format it so others can easily copy-paste:
+   > *"I'm Alice — Wallet: `0xabc...` / AliceCoin: `0xdef...`"*
+
+3. **Send tokens to each pod member.** For each person at your table:
+   - Open **Coinbase Wallet** browser extension
+   - Click **"Send"** at the top
+   - Select **your token** (e.g., "AliceCoin") from the asset list
+   - Enter **1,000** as the amount
+   - Paste their **Wallet Address** (not their token contract) as the recipient
+   - Confirm the transaction
+
+   Repeat for every person at your table. You're airdropping your custom currency to build a shared economy.
 
 > [!TIP]
-> Every person at the table should now hold each pod member's custom ERC-20 token. If you don't see tokens in your wallet, go to "Assets" → "Import token" and paste the contract address.
+> After everyone sends, each person should hold 1,000 of every pod member's token. Coinbase Wallet auto-detects ERC-20 tokens — check the "Testnets" tab under "Assets". If a token doesn't appear, try refreshing the extension.
 
-**✅ Success**: Everyone at your table has 1,000 of each other's tokens (or more, depending on initial supply).
+**✅ Success**: Everyone at your table has 1,000 of each other's tokens.
+
+<FlavorText id="ts-airdrop-complete" emoji="💸" text="Token airdrop complete. Your pod has a shared economy." />
 
 # 🔄 Upgrade Your Prediction Market
 
@@ -270,7 +283,7 @@ User Wallet  --vote-->    Market Contract --transferFrom--> Token Contract
 
 Prompt AI to upgrade your `PredictionMarket.sol`:
 
-> *"Upgrade this PredictionMarket contract to accept an ERC-20 token instead of ETH. Add an IERC20 token variable set in the constructor. Change vote() to accept an amount parameter and use transferFrom instead of msg.value. Add an allowance check before the transfer. Keep the CEI pattern."*
+<AIPrompt prompt="Upgrade this PredictionMarket contract to accept an ERC-20 token instead of ETH. Add an IERC20 token variable set in the constructor. Change vote() to accept an amount parameter and use transferFrom instead of msg.value. Add an allowance check before the transfer. Keep the CEI pattern." />
 
 **Key changes AI should make:**
 1. Add `IERC20 public token` and set it in the constructor
@@ -279,13 +292,11 @@ Prompt AI to upgrade your `PredictionMarket.sol`:
 4. Add an allowance check and use `transferFrom` to pull tokens
 
 **✅ Review Checklist:**
-- [ ] Does the constructor accept both `owner_` and `token_` addresses?
-- [ ] Does `vote()` still follow the CEI pattern? (`transferFrom` should be *after* state updates)
-- [ ] Is there an allowance check before the transfer?
-- [ ] Does `forge build` succeed?
 
-<details>
-<summary>📄 Reference: Upgraded vote() Function (click to expand)</summary>
+<ChecklistUpgradedMarket id="checklist-upgraded-market" />
+
+<details class="spoiler">
+<summary>📄 Reference: Upgraded vote() Function</summary>
 
 ```solidity
 function vote(uint256 marketId, bool side, uint256 amount) external {
@@ -353,6 +364,8 @@ It's time to test the V2 markets. This is where you will experience the two-step
 | 2 | **Market** | `vote(..., amount)` | Market calls `token.transferFrom(user, market, amount)` |
 
 <Scale id="ts-allowance-confidence" max={5} label="How well do you understand the approve → transferFrom flow?" />
+
+<FlavorText id="ts-allowance-unlocked" emoji="🔓" text="Allowance pattern mastered. You control the flow of tokens." />
 
 # 🪞 Wrap-Up & Reflection
 

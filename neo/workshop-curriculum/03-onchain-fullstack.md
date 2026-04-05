@@ -194,7 +194,7 @@ For example, `createMarket(string)` hashes to a 32-byte digest, but only the fir
 
 You can verify this yourself:
 
-```bash
+```copy
 ## Hash the function signature and see the full digest
 cast keccak "createMarket(string)"
 
@@ -380,15 +380,15 @@ Now that the core loop is working, choose one feature to build with AI and make 
 
 1. 🧮 **Calculate the Payout Odds (UI Polish)**:
     * Currently, the UI just shows raw token amounts (e.g., Yes: 50, No: 10).
-    * Prompt AI: *"Write a TypeScript helper function that takes yesPool and noPool as bigints and returns the yes/no percentages. Then create a React component that renders a dynamic red/green progress bar."*
+    <AIPrompt prompt="Write a TypeScript helper function that takes yesPool and noPool as bigints and returns the yes/no percentages. Then create a React component that renders a dynamic red/green progress bar." />
 
 2. 💰 **Show the User's Token Balance (Wagmi Read)**:
     * Display "Your Balance: X Tokens" on the Market Card so the user knows if they have enough money to bet.
-    * Prompt AI: *"Add a useReadContract hook that calls balanceOf on the ERC-20 token contract for the connected wallet address using useAccount(), and display the formatted result on the market card component."*
+    <AIPrompt prompt="Add a useReadContract hook that calls balanceOf on the ERC-20 token contract for the connected wallet address using useAccount(), and display the formatted result on the market card component." />
 
 3. 🏆 **The "Claim Winnings" Button (Conditional Rendering)**:
     * Once a market is resolved, winners need to get paid.
-    * Prompt AI: *"Add conditional rendering to the market card: if market.isResolved is true, hide the Vote buttons and show a Claim Winnings button using OnchainKit's Transaction component that calls claimWinnings() on the smart contract."*
+    <AIPrompt prompt="Add conditional rendering to the market card: if market.isResolved is true, hide the Vote buttons and show a Claim Winnings button using OnchainKit's Transaction component that calls claimWinnings() on the smart contract." />
 
 **🎯 Goal**: Successfully implement your chosen feature using the prompt template above!
 
