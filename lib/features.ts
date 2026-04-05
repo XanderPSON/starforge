@@ -20,3 +20,7 @@ export function isDbEnabled(): boolean {
 export function isAdminDashboardEnabled(): boolean {
   return process.env.NEXT_PUBLIC_ENABLE_ADMIN_DASHBOARD === 'true'
 }
+
+export function isNeoEnabled(): boolean {
+  return process.env.NEXT_PUBLIC_ENABLE_NEO !== 'false'
+}

@@ -9,10 +9,12 @@ interface ScaleProps {
   id: string
   max?: number
   label?: string
+  lowLabel?: string
+  highLabel?: string
   className?: string
 }
 
-export function Scale({ id, max = 5, label, className }: ScaleProps) {
+export function Scale({ id, max = 5, label, lowLabel, highLabel, className }: ScaleProps) {
   const params = useParams()
   const slug = params.slug as string || 'default'
 
@@ -29,16 +31,16 @@ export function Scale({ id, max = 5, label, className }: ScaleProps) {
 
   if (value === undefined) {
     return (
-      <div className={cn('my-8', className)}>
-        {label && <div className="mb-3 h-5 bg-gray-200 dark:bg-white/10 rounded w-1/3 animate-pulse" />}
-        <div className="flex gap-1">
-          {Array.from({ length: max }).map((_, i) => (
-            <div key={i} className="flex-1 h-10 bg-gray-100 dark:bg-white/5 rounded animate-pulse" />
-          ))}
-        </div>
+      <div className={cn('my-8 max-w-md', className)}>
+        {label && <div className="mb-3 h-5 bg-gray-200 dark:bg-white/10 rounded w-2/3 animate-pulse" />}
+        <div className="h-10 bg-gray-100 dark:bg-white/5 rounded-lg animate-pulse" />
       </div>
     )
   }
+
+  const effectiveLow = lowLabel ?? (max === 5 ? 'Not at all' : '1')
+  const effectiveHigh = highLabel ?? (max === 5 ? 'Very much' : String(max))
+  const options = Array.from({ length: max }, (_, i) => i + 1)
 
   const handleSelect = (rating: number) => {
     setValue(rating)
@@ -61,50 +63,46 @@ export function Scale({ id, max = 5, label, className }: ScaleProps) {
   }
 
   return (
-    <div className={cn('my-8', className)}>
+    <div className={cn('my-8 max-w-md', className)}>
       {label && (
-        <p className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-200">{label}</p>
+        <p className="mb-4 text-base font-medium text-gray-700 dark:text-gray-200">{label}</p>
       )}
-      <div
-        role="group"
-        aria-label={label || `Rate from 1 to ${max}`}
-        className="flex gap-1"
-      >
-        {Array.from({ length: max }, (_, i) => i + 1).map((rating) => {
-          const isFilled = value !== null && rating <= value
-          const isCurrent = value === rating
 
-          return (
-            <button
-              key={rating}
-              onClick={() => handleSelect(rating)}
-              onKeyDown={(e) => handleKeyDown(e, rating)}
-              aria-label={`Rate ${rating} out of ${max}`}
-              aria-current={isCurrent || undefined}
-              className={cn(
-                'flex-1 h-10 flex items-center justify-center',
-                'text-sm font-medium font-mono',
-                'border transition-all duration-100',
-                'focus:outline-none focus-visible:ring-2 focus-visible:ring-coinbase-blue focus-visible:z-10',
-                'first:rounded-l-lg last:rounded-r-lg',
-                isFilled
-                  ? cn(
-                      'bg-coinbase-blue/30 border-coinbase-blue text-white',
-                      isCurrent && 'bg-coinbase-blue/50 font-bold'
-                    )
-                  : 'bg-gray-100 dark:bg-white/5 border-gray-300 dark:border-white/15 text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-400 dark:hover:border-white/30'
-              )}
-            >
-              {rating}
-            </button>
-          )
-        })}
+      <div role="group" aria-label={label || `Rate from 1 to ${max}`}>
+        <div className="flex items-center justify-between gap-1">
+          {options.map((n) => {
+            const isSelected = value === n
+            return (
+              <button
+                key={n}
+                type="button"
+                role="button"
+                aria-label={`Rate ${n} out of ${max}`}
+                aria-current={isSelected ? 'true' : undefined}
+                onClick={() => handleSelect(n)}
+                onKeyDown={(e) => handleKeyDown(e, n)}
+                className={cn(
+                  'flex-1 py-2 text-sm font-medium rounded-lg border transition-all duration-150 cursor-pointer',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
+                  isSelected
+                    ? 'bg-blue-500 border-blue-500 text-white shadow-sm shadow-blue-500/25'
+                    : 'border-gray-300 dark:border-white/15 text-gray-500 dark:text-gray-400 hover:border-blue-400 hover:text-blue-500 dark:hover:border-blue-400 dark:hover:text-blue-400 bg-transparent',
+                )}
+              >
+                {n}
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="flex justify-between mt-2 px-1">
+          <span className="text-xs text-gray-400 dark:text-gray-500">{effectiveLow}</span>
+          {value !== null && (
+            <span className="text-xs font-semibold text-blue-400 tabular-nums">{value} / {max}</span>
+          )}
+          <span className="text-xs text-gray-400 dark:text-gray-500">{effectiveHigh}</span>
+        </div>
       </div>
-      {value !== null && (
-        <p className="mt-2 text-center text-xs text-gray-400">
-          {value} / {max}
-        </p>
-      )}
     </div>
   )
 }

@@ -9,16 +9,19 @@ export async function saveEvent(
   slug: string,
   eventType: string,
   pageIndex?: number,
-  metadata?: Record<string, unknown>
+  metadata?: Record<string, unknown>,
+  selfIdentifiedUserId?: string
 ): Promise<void> {
   if (!isDbEnabled()) return
 
-  let userId: string | undefined
-  try {
-    const { auth } = await import('@/lib/auth')
-    const session = await auth()
-    userId = session?.user?.id
-  } catch {
+  let userId: string | undefined = selfIdentifiedUserId
+  if (!userId) {
+    try {
+      const { auth } = await import('@/lib/auth')
+      const session = await auth()
+      userId = session?.user?.id
+    } catch {
+    }
   }
 
   const prisma = getPrisma()

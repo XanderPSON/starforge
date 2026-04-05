@@ -183,6 +183,7 @@ export default function TrainingViewer({
   const isLastPage = currentPageIndex === totalPages - 1
   const effectiveAllAnswered = adminMode || allAnswered
   const canGoNext = effectiveAllAnswered && !isLastPage
+  const canFinish = isLastPage && effectiveAllAnswered
   const canGoPrev = !isFirstPage
 
   const duration = frontmatter?.duration ?? null
@@ -428,12 +429,19 @@ export default function TrainingViewer({
           </div>
 
           <button
-            onClick={() => canGoNext && goToPage(currentPageIndex + 1, 'next')}
-            disabled={!canGoNext}
-            aria-disabled={!canGoNext}
+            onClick={() => {
+              if (canFinish) {
+                safeSetItem(`codelab:${slug}:__completed`, true)
+                router.push('/')
+              } else if (canGoNext) {
+                goToPage(currentPageIndex + 1, 'next')
+              }
+            }}
+            disabled={!canGoNext && !canFinish}
+            aria-disabled={!canGoNext && !canFinish}
             className={`
               px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150
-              ${canGoNext
+              ${canGoNext || canFinish
                 ? 'bg-hub-primary text-white hover:bg-hub-primary-dark shadow-sm hover:shadow'
                 : 'bg-gray-200 dark:bg-white/10 text-gray-400 dark:text-gray-600 cursor-not-allowed'
               }

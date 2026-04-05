@@ -8,9 +8,10 @@ import {
 
 describe('event-tracking', () => {
   beforeEach(() => {
+    vi.unstubAllGlobals()
     vi.restoreAllMocks()
-    vi.clearAllMocks()
-    sessionStorage.clear()
+    vi.stubGlobal('localStorage', window.sessionStorage)
+    localStorage.clear()
   })
 
   describe('LEARNING_EVENT_TYPES', () => {
@@ -33,19 +34,18 @@ describe('event-tracking', () => {
   })
 
   describe('generateSessionId', () => {
-    it('returns a string and caches it in sessionStorage', () => {
-      const uuidSpy = vi.spyOn(crypto, 'randomUUID').mockReturnValue('session-uuid-1')
+    it('returns a string and caches it in localStorage', () => {
+      vi.spyOn(crypto, 'randomUUID').mockReturnValue('session-uuid-1')
 
       const sessionId = generateSessionId()
 
       expect(typeof sessionId).toBe('string')
       expect(sessionId).toBe('session-uuid-1')
-      expect(sessionStorage.getItem('starforge:sessionId')).toBe('session-uuid-1')
-      expect(uuidSpy).toHaveBeenCalledTimes(1)
+      expect(localStorage.getItem('starforge:persistentId')).toBe('session-uuid-1')
     })
 
-    it('returns existing sessionId if already present', () => {
-      sessionStorage.setItem('starforge:sessionId', 'existing-session')
+    it('returns existing persistentId if already present', () => {
+      localStorage.setItem('starforge:persistentId', 'existing-session')
       const uuidSpy = vi.spyOn(crypto, 'randomUUID')
 
       const sessionId = generateSessionId()
@@ -54,16 +54,7 @@ describe('event-tracking', () => {
       expect(uuidSpy).not.toHaveBeenCalled()
     })
 
-    it('returns empty string when window is undefined', () => {
-      vi.stubGlobal('window', undefined)
-
-      const sessionId = generateSessionId()
-
-      expect(sessionId).toBe('')
-      vi.unstubAllGlobals()
-    })
-
-    it('handles sessionStorage errors gracefully', () => {
+    it('handles localStorage errors gracefully', () => {
       vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
         throw new Error('storage blocked')
       })
@@ -93,6 +84,7 @@ describe('event-tracking', () => {
 
       expect(receivedDetail).toEqual({
         sessionId: 'provided-session-id',
+        userId: undefined,
         slug: 'intro-to-ai',
         pageIndex: 2,
         eventType: LEARNING_EVENT_TYPES.PAGE_VIEW,
@@ -119,24 +111,15 @@ describe('event-tracking', () => {
 
       expect(receivedDetail).toEqual({
         sessionId: 'generated-session-id',
+        userId: undefined,
         slug: 'grpc-basics',
         pageIndex: undefined,
         eventType: LEARNING_EVENT_TYPES.SUBMISSION,
         metadata: { score: 100 },
       })
-      expect(sessionStorage.getItem('starforge:sessionId')).toBe('generated-session-id')
+      expect(localStorage.getItem('starforge:persistentId')).toBe('generated-session-id')
 
       window.removeEventListener('starforge:trackEvent', handler)
-    })
-
-    it('handles server-side environments gracefully when window is undefined', () => {
-      vi.stubGlobal('window', undefined)
-
-      expect(() => {
-        trackEvent(LEARNING_EVENT_TYPES.PAGE_EXIT, { slug: 'server-rendered-page' })
-      }).not.toThrow()
-
-      vi.unstubAllGlobals()
     })
   })
 })

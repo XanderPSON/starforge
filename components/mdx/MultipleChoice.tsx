@@ -23,7 +23,17 @@ export function MultipleChoice({
   const params = useParams()
   const slug = params.slug as string || 'default'
 
-  // Validate required props
+  // ALL hooks must be called unconditionally (React Rules of Hooks)
+  const storageKey = getStorageKey(slug, id || '__placeholder__')
+  const [selectedAnswer, setSelectedAnswer, isSaved] = useInteractive<string | null>(
+    storageKey,
+    null
+  )
+
+  const isCorrect = selectedAnswer === correctAnswer
+  const isAnswered = selectedAnswer !== null
+
+  // Validate required props (after all hooks)
   const missingProps: string[] = []
   if (!id) missingProps.push('id')
   if (!question) missingProps.push('question')
@@ -38,18 +48,6 @@ export function MultipleChoice({
     )
   }
 
-  // Use useInteractive hook with codelab-scoped key
-  const storageKey = getStorageKey(slug, id)
-  const [selectedAnswer, setSelectedAnswer, isSaved] = useInteractive<string | null>(
-    storageKey,
-    null
-  )
-
-  // Determine if answer is correct
-  const isCorrect = selectedAnswer === correctAnswer
-  const isAnswered = selectedAnswer !== null
-
-  // Show skeleton during hydration
   if (selectedAnswer === undefined) {
     return (
       <div className={cn('my-8', className)}>
@@ -87,7 +85,7 @@ export function MultipleChoice({
     <div className={cn('my-8', className)}>
       <h4
         id={`question-${id}`}
-        className="mb-4 text-lg font-medium text-gray-800 dark:text-gray-200"
+        className="mb-4 text-base font-medium text-gray-800 dark:text-gray-200"
       >
         {question}
       </h4>

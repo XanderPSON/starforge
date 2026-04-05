@@ -53,21 +53,37 @@ describe('CodeBlock components', () => {
     expect(code).toHaveClass('rounded-md', 'font-mono', 'whitespace-nowrap')
   })
 
-  it('Pre component renders code block', () => {
-    render(<Pre>const a = 1;</Pre>)
+  it('Pre renders a normal (non-copy) code block with no copy button', () => {
+    render(<Pre><code>{'line one\nline two'}</code></Pre>)
 
-    expect(screen.getByText('const a = 1;')).toBeInTheDocument()
     expect(document.querySelector('pre')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Copy code' })).not.toBeInTheDocument()
   })
 
-  it('copy button exists with aria-label', () => {
-    render(<Pre>console.log("x")</Pre>)
+  it('normal Pre wraps long lines (whitespace-pre-wrap)', () => {
+    render(<Pre><code>{'some long text'}</code></Pre>)
+
+    const pre = document.querySelector('pre')
+    expect(pre).toBeTruthy()
+    expect(pre?.className).toContain('whitespace-pre-wrap')
+  })
+
+  it('copy block (language-copy) renders copy button', () => {
+    render(
+      <Pre>
+        <code className="language-copy">{'console.log("x")'}</code>
+      </Pre>
+    )
 
     expect(screen.getByRole('button', { name: 'Copy code' })).toBeInTheDocument()
   })
 
-  it('click on pre copies text to clipboard', async () => {
-    render(<Pre raw="const copied = true;">const copied = true;</Pre>)
+  it('click on copy pre copies text to clipboard', async () => {
+    render(
+      <Pre raw="const copied = true;">
+        <code className="language-copy">{'const copied = true;'}</code>
+      </Pre>
+    )
 
     const pre = document.querySelector('pre')
     expect(pre).toBeTruthy()
@@ -81,7 +97,11 @@ describe('CodeBlock components', () => {
   })
 
   it('copy button click copies text', async () => {
-    render(<Pre raw="return 42;">return 42;</Pre>)
+    render(
+      <Pre raw="return 42;">
+        <code className="language-copy">{'return 42;'}</code>
+      </Pre>
+    )
 
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: 'Copy code' }))

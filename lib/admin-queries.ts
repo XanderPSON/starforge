@@ -3,6 +3,7 @@ import { readFile } from 'fs/promises'
 import path from 'path'
 import type { Prisma } from '@/lib/generated/prisma/client'
 import { fetchTrainingMarkdown } from '@/lib/github'
+import { isNeoEnabled } from '@/lib/features'
 
 export interface DashboardStats {
   totalUsers: number
@@ -255,6 +256,14 @@ function countInteractiveComponents(source: string): number {
 }
 
 async function getTrainingSource(slug: string): Promise<string | null> {
+  if (isNeoEnabled()) {
+    try {
+      return await readFile(path.join(process.cwd(), 'neo', 'workshop-curriculum', `${slug}.md`), 'utf-8')
+    } catch {
+      return null
+    }
+  }
+
   if (process.env.TRAINING_REPO_URL) {
     return fetchTrainingMarkdown(slug)
   }

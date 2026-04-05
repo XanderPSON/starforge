@@ -21,6 +21,14 @@ export function FlavorText({ id, emoji, text, className }: FlavorTextProps) {
   const params = useParams()
   const slug = params.slug as string || 'default'
 
+  // ALL hooks must be called unconditionally (React Rules of Hooks)
+  const storageKey = getStorageKey(slug, id || '__placeholder__')
+  const [value, setValue] = useInteractive<{ checked: boolean; timestamp: number | null }>(
+    storageKey,
+    { checked: false, timestamp: null }
+  )
+
+  // Validate required props (after all hooks)
   if (!id || !text) {
     return (
       <div className="my-6 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
@@ -29,13 +37,6 @@ export function FlavorText({ id, emoji, text, className }: FlavorTextProps) {
     )
   }
 
-  const storageKey = getStorageKey(slug, id)
-  const [value, setValue] = useInteractive<{ checked: boolean; timestamp: number | null }>(
-    storageKey,
-    { checked: false, timestamp: null }
-  )
-
-  // Skeleton during hydration
   if (value === undefined) {
     return (
       <div className={cn('my-6', className)}>
@@ -113,7 +114,7 @@ export function FlavorText({ id, emoji, text, className }: FlavorTextProps) {
         {/* Text */}
         <span
           className={cn(
-            'flex-1 text-sm italic transition-colors duration-200',
+            'flex-1 text-base italic transition-colors duration-200',
             value.checked
               ? 'text-emerald-700 dark:text-emerald-300/80'
               : 'text-gray-500 dark:text-gray-400',

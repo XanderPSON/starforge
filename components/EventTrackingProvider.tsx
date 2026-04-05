@@ -7,6 +7,7 @@ import { isDbEnabled } from '@/lib/features'
 import {
   LEARNING_EVENT_TYPES,
   generateSessionId,
+  getSelfIdentity,
   type LearningEventDetail,
 } from '@/lib/event-tracking'
 
@@ -59,7 +60,8 @@ export function EventTrackingProvider({ children }: { children: React.ReactNode 
         detail.slug,
         detail.eventType,
         detail.pageIndex,
-        detail.metadata
+        detail.metadata,
+        detail.userId
       ).catch((error: unknown) => {
         console.warn('Event tracking failed:', error)
       })
@@ -79,6 +81,7 @@ export function EventTrackingProvider({ children }: { children: React.ReactNode 
     const sessionId = sessionIdRef.current
     if (!sessionId) return
 
+    const selfUserId = getSelfIdentity()?.userId
     const now = Date.now()
     const getVisibleDuration = () => {
       let total = pageVisibleMsRef.current
@@ -102,7 +105,8 @@ export function EventTrackingProvider({ children }: { children: React.ReactNode 
           durationSeconds: Math.round(visibleDurationMs / 1000),
           reason,
           pathname,
-        }
+        },
+        selfUserId
       )
     }
 
@@ -125,7 +129,8 @@ export function EventTrackingProvider({ children }: { children: React.ReactNode 
           {
             pathname,
             referrer: document.referrer || null,
-          }
+          },
+          selfUserId
         )
       }
 
@@ -137,7 +142,8 @@ export function EventTrackingProvider({ children }: { children: React.ReactNode 
         {
           pathname,
           source: 'provider',
-        }
+        },
+        selfUserId
       )
     }
 
@@ -167,7 +173,8 @@ export function EventTrackingProvider({ children }: { children: React.ReactNode 
         {
           pathname,
           visibleDurationMs,
-        }
+        },
+        selfUserId
       )
     }, 5 * 60 * 1000)
 

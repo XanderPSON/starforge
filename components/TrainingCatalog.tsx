@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import type { TrainingFrontmatter } from '@/lib/mdx'
+import { safeGetItem } from '@/lib/storage'
 import { toTitleCase } from '@/lib/utils'
 
 interface Training {
@@ -45,6 +46,17 @@ export function TrainingCatalog({ trainings }: TrainingCatalogProps) {
   const [activeTag, setActiveTag] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(0)
+  const [completedSlugs, setCompletedSlugs] = useState<Set<string>>(new Set())
+
+  useEffect(() => {
+    const completed = new Set<string>()
+    for (const { slug } of trainings) {
+      if (safeGetItem(`codelab:${slug}:__completed`) === true) {
+        completed.add(slug)
+      }
+    }
+    setCompletedSlugs(completed)
+  }, [trainings])
 
   const allTags = useMemo(() => {
     const tagSet = new Set<string>()
@@ -127,9 +139,20 @@ export function TrainingCatalog({ trainings }: TrainingCatalogProps) {
             <a
               key={slug}
               href={`/training/${slug}`}
-              className="flex flex-col bg-hub-surface dark:bg-white/5 dark:backdrop-blur-sm rounded-2xl p-5 border border-black/[0.08] dark:border-white/10 shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-200 group"
+              className={`relative flex flex-col bg-hub-surface dark:bg-white/5 dark:backdrop-blur-sm rounded-2xl p-5 border shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-200 group ${
+                completedSlugs.has(slug)
+                  ? 'border-green-400/40 dark:border-green-500/30'
+                  : 'border-black/[0.08] dark:border-white/10'
+              }`}
             >
-              {/* Category tags */}
+              {completedSlugs.has(slug) && (
+                <span className="absolute top-3 right-3 flex items-center gap-1 text-[10px] font-semibold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-500/15 px-2 py-0.5 rounded-full">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path d="M2.5 6L5 8.5L9.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Done
+                </span>
+              )}
               {frontmatter.tags && frontmatter.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mb-3">
                   {frontmatter.tags.map((tag) => (

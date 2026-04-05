@@ -20,6 +20,14 @@ export function SubmissionBox({ id, label, placeholder }: SubmissionBoxProps) {
   const params = useParams()
   const slug = (params.slug as string) || 'default'
 
+  // ALL hooks must be called unconditionally (React Rules of Hooks)
+  const storageKey = getStorageKey(slug, id || '__placeholder__')
+  const [state, setState, isSaved] = useInteractive<SubmissionState>(storageKey, {
+    draft: '',
+    isSubmitted: false,
+  })
+
+  // Validate required props (after all hooks)
   if (!id) {
     return (
       <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
@@ -27,12 +35,6 @@ export function SubmissionBox({ id, label, placeholder }: SubmissionBoxProps) {
       </div>
     )
   }
-
-  const storageKey = getStorageKey(slug, id)
-  const [state, setState, isSaved] = useInteractive<SubmissionState>(storageKey, {
-    draft: '',
-    isSubmitted: false,
-  })
 
   if (state === undefined) {
     return (

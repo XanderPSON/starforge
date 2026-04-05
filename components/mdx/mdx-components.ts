@@ -14,6 +14,7 @@ import { Checklist } from './Checklist'
 import { QuizMath, QuizPlanet } from './QuizDemo'
 import { ChecklistDemo } from './ChecklistDemo'
 import { ChecklistSetup } from './ChecklistSetup'
+import { ChecklistSetupEnv } from './ChecklistSetupEnv'
 import { ChecklistWorkshopActivity } from './ChecklistWorkshopActivity'
 import { SuggestedAnswer } from './SuggestedAnswer'
 import { SubmissionBox } from './SubmissionBox'
@@ -22,11 +23,52 @@ import { FlavorText } from './FlavorText'
 import { AIPrompt } from './AIPrompt'
 import { HumanStep } from './HumanStep'
 import { HybridStep } from './HybridStep'
+import { ChecklistReviewContract } from './ChecklistReviewContract'
+import { QuizSmartContractBasics } from './QuizSmartContractBasics'
+import { QuizCEIPattern } from './QuizCEIPattern'
+import { QuizGas } from './QuizGas'
+import { QuizTokenStandards } from './QuizTokenStandards'
+import { QuizAllowancePattern } from './QuizAllowancePattern'
+import { QuizABI } from './QuizABI'
+import { QuizTransactionFlow } from './QuizTransactionFlow'
+import { GasFeeCalculator } from './GasFeeCalculator'
 
 import { createElement } from 'react'
 
 function HorizontalRule() {
   return createElement('hr', { className: 'my-10 border-t border-gray-200 dark:border-gray-700/50' })
+}
+
+const ACTION_COLORS: Record<string, string> = {
+  'CLICK':    'dark:text-gray-400',     // 🖱️ pointer — subtle UI action
+  'CALL':     'dark:text-violet-400',   // ⚙️ gear — invoke a function
+  'CONSIDER': 'dark:text-yellow-300',   // 🧠 brain — think/reason
+  'FIND':     'dark:text-emerald-400',  // 🔎 magnifying glass — search/inspect
+  'ACT':      'dark:text-orange-400',   // ✍️ writing hand — submit/do
+  'CHECK':    'dark:text-green-400',    // ✅ checkmark — verify
+  'LOCATE':   'dark:text-cyan-400',     // 🧭 compass — navigate
+}
+
+function Details({ children }: { children?: React.ReactNode }) {
+  return createElement('details', {
+    className: 'my-4 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-white/[0.03] overflow-hidden group'
+  }, children)
+}
+
+function Summary({ children }: { children?: React.ReactNode }) {
+  return createElement('summary', {
+    className: 'px-5 py-4 text-lg font-semibold text-gray-900 dark:text-gray-100 cursor-pointer select-none list-none flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors duration-150 [&::-webkit-details-marker]:hidden'
+  },
+    createElement('span', { className: 'text-gray-400 dark:text-gray-500 transition-transform duration-200 group-open:rotate-90 text-sm' }, '▶'),
+    children
+  )
+}
+
+function Strong({ children }: { children?: React.ReactNode }) {
+  const text = typeof children === 'string' ? children : ''
+  const match = text.match(/^.{0,3}(CLICK|CALL|CONSIDER|FIND|ACT|CHECK|LOCATE):/)
+  const color = match?.[1] ? ACTION_COLORS[match[1]] : 'dark:text-gray-200'
+  return createElement('strong', { className: `font-bold text-gray-900 ${color}` }, children)
 }
 
 export const mdxComponents: MDXComponents = {
@@ -51,6 +93,9 @@ export const mdxComponents: MDXComponents = {
   th: TH,
   td: TD,
   hr: HorizontalRule,
+  strong: Strong,
+  details: Details,
+  summary: Summary,
   FreeResponse,
   MultipleChoice,
   TemperatureCheck,
@@ -60,6 +105,8 @@ export const mdxComponents: MDXComponents = {
   QuizPlanet,
   ChecklistDemo,
   ChecklistSetup,
+  ChecklistSetupEnv,
+  ChecklistReviewContract,
   ChecklistWorkshopActivity,
   SuggestedAnswer,
   SubmissionBox,
@@ -68,4 +115,12 @@ export const mdxComponents: MDXComponents = {
   AIPrompt,
   HumanStep,
   HybridStep,
+  QuizSmartContractBasics,
+  QuizCEIPattern,
+  QuizGas,
+  QuizTokenStandards,
+  QuizAllowancePattern,
+  QuizABI,
+  QuizTransactionFlow,
+  GasFeeCalculator,
 }

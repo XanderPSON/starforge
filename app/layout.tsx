@@ -5,6 +5,8 @@ import { TopNav } from '@/components/TopNav'
 import { AuthProvider } from '@/components/AuthProvider'
 import { DbSyncProvider } from '@/components/DbSyncProvider'
 import { EventTrackingProvider } from '@/components/EventTrackingProvider'
+import { SelfIdentifyPrompt } from '@/components/SelfIdentifyPrompt'
+import { KonamiListener } from '@/components/KonamiListener'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -29,7 +31,11 @@ export default function RootLayout({
         <TopNav />
         <AuthProvider>
           <DbSyncProvider>
-            <EventTrackingProvider>{children}</EventTrackingProvider>
+            <EventTrackingProvider>
+              <SelfIdentifyPrompt />
+              <KonamiListener />
+              {children}
+            </EventTrackingProvider>
           </DbSyncProvider>
         </AuthProvider>
       </body>

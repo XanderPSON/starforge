@@ -127,6 +127,13 @@ function TopNavLocal() {
     try {
       setAdminMode(localStorage.getItem(ADMIN_KEY) === 'true')
     } catch (_) {}
+
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { enabled?: boolean } | undefined
+      setAdminMode(detail?.enabled ?? false)
+    }
+    window.addEventListener('starforge:adminModeChanged', handler)
+    return () => window.removeEventListener('starforge:adminModeChanged', handler)
   }, [])
 
   const toggleTheme = () => {
@@ -134,13 +141,6 @@ function TopNavLocal() {
     setDark(next)
     document.documentElement.classList.toggle('dark', next)
     try { localStorage.setItem('theme', next ? 'dark' : 'light') } catch (_) {}
-  }
-
-  const toggleAdmin = () => {
-    const next = !adminMode
-    setAdminMode(next)
-    try { localStorage.setItem(ADMIN_KEY, String(next)) } catch (_) {}
-    window.dispatchEvent(new CustomEvent('starforge:adminModeChanged', { detail: { enabled: next } }))
   }
 
   return (
@@ -153,29 +153,20 @@ function TopNavLocal() {
       </Link>
 
       <div className="flex items-center gap-2">
-        {/* Admin toggle */}
-        <button
-          onClick={toggleAdmin}
-          className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-150 ${
-            adminMode
-              ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300'
-              : 'text-hub-muted dark:text-gray-500 hover:text-hub-text dark:hover:text-gray-300'
-          }`}
-          aria-label={adminMode ? 'Disable admin mode' : 'Enable admin mode'}
-        >
-          {adminMode ? 'Admin' : 'Admin'}
-        </button>
-
         {adminMode && (
-          <Link
-            href="/admin"
-            className="px-2.5 py-1 rounded-md text-xs font-medium text-hub-muted dark:text-gray-300 hover:text-hub-text dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/10 transition-all duration-150"
-          >
-            Dashboard
-          </Link>
+          <>
+            <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300">
+              Admin
+            </span>
+            <Link
+              href="/admin"
+              className="px-2.5 py-1 rounded-md text-xs font-medium text-hub-muted dark:text-gray-300 hover:text-hub-text dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/10 transition-all duration-150"
+            >
+              Dashboard
+            </Link>
+          </>
         )}
 
-        {/* Theme toggle */}
         <button
           onClick={toggleTheme}
           aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}

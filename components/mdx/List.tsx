@@ -7,7 +7,7 @@ interface ListProps {
 
 export function UnorderedList({ children, className }: ListProps) {
   return (
-    <ul className={cn('list-disc list-outside ml-6 mb-6 space-y-2 marker:text-coinbase-blue', className)}>
+    <ul className={cn('list-disc list-outside ml-6 mb-6 space-y-2 marker:text-coinbase-blue dark:marker:text-blue-400', className)}>
       {children}
     </ul>
   )
@@ -15,7 +15,7 @@ export function UnorderedList({ children, className }: ListProps) {
 
 export function OrderedList({ children, className }: ListProps) {
   return (
-    <ol className={cn('list-decimal list-outside ml-6 mb-6 space-y-2 marker:text-coinbase-blue marker:font-semibold', className)}>
+    <ol className={cn('list-decimal list-outside ml-6 mb-6 space-y-2 marker:text-coinbase-blue dark:marker:text-blue-400 marker:font-semibold', className)}>
       {children}
     </ol>
   )

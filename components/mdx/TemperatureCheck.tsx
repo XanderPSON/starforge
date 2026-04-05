@@ -40,7 +40,7 @@ const TEMPERATURE_OPTIONS: {
   },
   {
     value: 2,
-    label: 'Skeptical',
+    label: 'Uncertain',
     icon: Annoyed,
     color: 'text-orange-500 dark:text-orange-400',
     hoverColor: 'hover:text-orange-500 dark:hover:text-orange-400',
@@ -67,7 +67,7 @@ const TEMPERATURE_OPTIONS: {
   },
   {
     value: 5,
-    label: 'Delighted',
+    label: 'Confident',
     icon: Laugh,
     color: 'text-emerald-500 dark:text-emerald-400',
     hoverColor: 'hover:text-emerald-500 dark:hover:text-emerald-400',
@@ -140,7 +140,7 @@ export function TemperatureCheck({ id, label, className }: TemperatureCheckProps
       )}>
         <div className="flex items-center gap-2.5 mb-5">
           <ThermometerSun className="w-4 h-4 text-hub-primary dark:text-coinbase-blue flex-shrink-0" />
-          <span className="text-sm font-semibold text-hub-text dark:text-gray-200">
+          <span className="text-base font-semibold text-hub-text dark:text-gray-200">
             {promptText}
           </span>
         </div>

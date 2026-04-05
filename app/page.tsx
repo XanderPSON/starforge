@@ -12,7 +12,7 @@ export default async function Home() {
           {/* Star icon */}
           <div className="relative flex-shrink-0 w-[72px] h-[72px]">
             {/* Glow blob */}
-            <div className="absolute inset-1 rounded-full bg-[#4c5bff] blur-xl opacity-40 dark:opacity-60" />
+            <div className="absolute inset-1 rounded-full bg-[#1447E0] blur-xl opacity-40 dark:opacity-60" />
             <svg
               width="72"
               height="72"
@@ -24,8 +24,8 @@ export default async function Home() {
             >
               <defs>
                 <linearGradient id="sfStarGrad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#4c5bff" />
-                  <stop offset="100%" stopColor="#7c3aed" />
+                  <stop offset="0%" stopColor="#1447E0" />
+                  <stop offset="100%" stopColor="#2E1F8F" />
                 </linearGradient>
               </defs>
               <polygon
@@ -58,7 +58,7 @@ export default async function Home() {
             >
               <path
                 d="M5 0 L6 4 L10 5 L6 6 L5 10 L4 6 L0 5 L4 4 Z"
-                fill="#4c5bff"
+                fill="#1447E0"
                 opacity="0.75"
               />
             </svg>
@@ -67,7 +67,7 @@ export default async function Home() {
           {/* Wordmark */}
           <div>
             <span
-              className="block text-5xl md:text-6xl font-black tracking-[0.08em] leading-none uppercase bg-gradient-to-r from-[#4c5bff] via-[#7c3aed] to-[#06B6D4] bg-clip-text text-transparent select-none"
+              className="block text-5xl md:text-6xl font-black tracking-[0.08em] leading-none uppercase bg-gradient-to-r from-[#1447E0] via-[#2E1F8F] to-[#06B6D4] bg-clip-text text-transparent select-none"
               aria-label="Starforge"
             >
               STARFORGE

@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 
 interface ChecklistProps {
   id: string
-  items: string[]
+  items: React.ReactNode[]
   className?: string
 }
 
@@ -63,7 +63,7 @@ export function Checklist({ id, items, className }: ChecklistProps) {
       metadata: {
         componentId: id,
         itemIndex: index,
-        itemText: items[index],
+        itemText: typeof items[index] === 'string' ? items[index] : `item-${index}`,
         checked: newCheckedItems[index],
         completedCount: newCompleted,
         totalCount: items.length,

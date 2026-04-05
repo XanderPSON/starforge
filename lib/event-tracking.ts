@@ -28,34 +28,64 @@ export interface TrackEventPayload {
 
 export interface LearningEventDetail {
   sessionId: string
+  userId?: string
   slug: string
   pageIndex?: number
   eventType: LearningEventType
   metadata?: Record<string, unknown>
 }
 
-const SESSION_STORAGE_KEY = 'starforge:sessionId'
+const PERSISTENT_ID_KEY = 'starforge:persistentId'
+const SELF_ID_KEY = 'starforge:selfIdentity'
 
 export function generateSessionId(): string {
   if (typeof window === 'undefined') return ''
 
   try {
-    const existing = sessionStorage.getItem(SESSION_STORAGE_KEY)
+    const existing = localStorage.getItem(PERSISTENT_ID_KEY)
     if (existing) return existing
 
-    const sessionId = crypto.randomUUID()
-    sessionStorage.setItem(SESSION_STORAGE_KEY, sessionId)
-    return sessionId
+    const persistentId = crypto.randomUUID()
+    localStorage.setItem(PERSISTENT_ID_KEY, persistentId)
+    return persistentId
   } catch {
     return crypto.randomUUID()
+  }
+}
+
+export interface SelfIdentity {
+  email: string
+  name?: string
+  userId?: string
+}
+
+export function getSelfIdentity(): SelfIdentity | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = localStorage.getItem(SELF_ID_KEY)
+    if (!raw) return null
+    return JSON.parse(raw) as SelfIdentity
+  } catch {
+    return null
+  }
+}
+
+export function setSelfIdentity(identity: SelfIdentity): void {
+  if (typeof window === 'undefined') return
+  try {
+    localStorage.setItem(SELF_ID_KEY, JSON.stringify(identity))
+  } catch {
   }
 }
 
 export function trackEvent(eventType: LearningEventType, payload: TrackEventPayload): void {
   if (typeof window === 'undefined') return
 
+  const identity = getSelfIdentity()
+
   const detail: LearningEventDetail = {
     sessionId: payload.sessionId ?? generateSessionId(),
+    userId: identity?.userId,
     slug: payload.slug,
     pageIndex: payload.pageIndex,
     eventType,

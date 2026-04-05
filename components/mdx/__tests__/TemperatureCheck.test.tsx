@@ -46,10 +46,10 @@ describe('TemperatureCheck', () => {
     render(<TemperatureCheck id="temp-1" />)
 
     expect(screen.getByRole('button', { name: 'Confused' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Skeptical' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Uncertain' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Neutral' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Content' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Delighted' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Confident' })).toBeInTheDocument()
   })
 
   it('renders custom label text', () => {

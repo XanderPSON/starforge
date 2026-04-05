@@ -19,7 +19,7 @@ const config: Config = {
         },
         hub: {
           bg: '#f7f8fb',
-          surface: '#ffffff',
+          surface: '#f0f4fa',
           'surface-alt': '#eef1f7',
           text: '#141621',
           muted: '#5b6270',
