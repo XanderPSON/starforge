@@ -2,7 +2,7 @@
 
 _Build an Aggregated Prediction Market Dashboard_
 
-### ⏱️ Time Allocation (105 min)
+### ⏱️ Time Allocation (1 hr 45 min)
 
 ### 🎯 Learning Goals
 
@@ -15,7 +15,13 @@ By the end of this part, you'll be able to:
 
 ### 🏗️ Module Blueprint: What We Provide vs. What You Build
 
-* **📦 Pre-Built:** A Next.js boilerplate with Tailwind CSS, OnchainKit, and Wagmi providers already configured.
+* **📦 Pre-Built:**
+    - Next.js boilerplate with Tailwind CSS, OnchainKit, and Wagmi providers
+    - Full card layout and odds bar visualization
+    - Wallet connection UI
+    - Chain auto-switching to Base Sepolia
+    - Conditional rendering for market states (resolved, already voted, wallet not connected)
+    - See the full list of scaffold decisions below
 * **🛠️ What You Will Build:** The React hooks (`useReadContracts`) to fetch the betting odds, and the UI buttons (`<Transaction>`) to execute the `approve` and `vote` flow.
 * **🤖 AI-Driven Development:** You will prompt AI to generate React components, Wagmi hooks, and OnchainKit integrations, then review the output against the app's architecture.
 * **🤝 Pod Collaboration:** **The Cross-Wire.** The app is designed to aggregate the entire table's markets. You can start with just your own addresses — the dashboard works with any number of markets — but the real experience comes from wiring in your pod-mates' contracts and seeing the full aggregator.
@@ -26,7 +32,7 @@ By the end of this part, you'll be able to:
 
 ### 🆘 Need Help?
 
-Check out the **[Troubleshooting Guide](./troubleshooting.md)** for wallet connections, multicall issues, and **[Module 3](./troubleshooting.md#module-3-app-issues)** specific issues.
+Check out the **[Troubleshooting Guide](./troubleshooting)** for wallet connections, multicall issues, and **[Module 3](./troubleshooting#module-3-app-issues)** specific issues.
 
 ---
 
@@ -112,6 +118,34 @@ Open `lib/podConfig.ts`. You will see an empty array. Start by adding your own a
 
 > [!TIP]
 > `npm install` can take a few minutes. Use this time to collect addresses from your pod if you haven't already.
+
+### 🧩 What the Scaffold Gives You (and What It Doesn't)
+
+When you first load the app, you'll see market cards showing **"Loading..."** with **50/50 odds** and **0 tokens**. This is expected — the scaffold provides the full UI shell, but the onchain data fetching is what **you** need to implement.
+
+**Already built for you (don't rewrite these):**
+
+| What | Where | Details |
+|------|-------|---------|
+| Market card layout & grid | `MarketCard` component | Responsive grid, owner label, question display, odds bar |
+| Odds bar visualization | `MarketCard` render | Green/red progress bar with percentage labels |
+| Wallet connection | Top-right `<Wallet>` component | OnchainKit's `ConnectWallet`, avatar, dropdown, disconnect |
+| Chain auto-switching | `useEffect` in `App` | Automatically switches to Base Sepolia if on wrong network |
+| Conditional rendering | Bottom of `MarketCard` | Shows "Market Resolved", "Already voted", "Connect wallet", or vote buttons depending on state |
+| Token amount formatting | `formatEther()` calls | Displays pool sizes in human-readable token amounts |
+
+**Scaffold assumptions (hardcoded decisions):**
+
+- **Vote amount is 10 tokens** — The TODO examples and button labels use `parseEther('10')`. This is a fixed amount to keep things simple.
+- **Market ID is always `0n`** — Each contract is assumed to have one market at index 0.
+- **Placeholder values** — `question = "Loading..."`, pools = 0 (which renders as 50/50), `resolved = false`, `hasVoted = false`. These are what you'll replace with real onchain data.
+
+**What you need to implement (the TODOs in `app/page.tsx`):**
+
+1. **Uncomment imports** — `useReadContracts`, `encodeFunctionData`, `parseEther`, ABIs
+2. **Wire up `useReadContracts`** — Replace the placeholder values with actual contract reads
+3. **Build vote call arrays** — Batched `approve` + `vote` using `encodeFunctionData`
+4. **Replace placeholder buttons** — Swap the disabled `<button>` elements with OnchainKit `<Transaction>` components
 
 <FlavorText id="fs-setup-complete" emoji="⚡" text="App scaffolded. Your pod's contracts are wired in." />
 

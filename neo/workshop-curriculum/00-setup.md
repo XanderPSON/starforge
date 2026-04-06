@@ -21,17 +21,14 @@ You're professional engineers, and AI coding tools are part of your toolkit. Use
 > [!IMPORTANT]
 > **We recommend Cursor for this workshop.** Onchain code is often surprisingly short and elegant. Seeing the inline diffs in Cursor is more conducive to learning a new language. Claude Code works great, but if you accept changes without reading them, Day 3 Build Day will be tougher.
 
-> [!NOTE]
-> **You're learning Solidity, smart contracts, and onchain architecture from scratch in the age of AI.** The bar for "understanding" here is whether you know enough to work with AI to build and debug what you want — can you read a contract and spot what's wrong, or evaluate whether the AI got it right? You build that intuition by reading the diffs and asking "why?" as you go, which is what makes build day go smoothly.
+💡 **A note on learning with AI:** Learning feels different when you're using AI. You may not feel the same sense of mastery as if you'd coded everything by hand, and that's okay. Knowing a language in 2026 is less about how well you perform on a quiz and more about how well you can use the tools available to you to develop and debug in that framework — to get yourself unstuck and learn enough to do the next thing.
 
-Ask your AI questions as you go — "What does this do?", "Why this pattern?", "What if I changed this?" Use it as a tutor, not just a code generator.
+The goal by the end of this workshop is to be able to read a contract, spot what's off, and evaluate whether the AI got it right. You get there by reading the diffs and asking your AI questions along the way: "What does this function do?", "Why this pattern?", "What if I changed this?"
 
 ---
 
-## ✅ Setup Checklist (15 minutes)
-
 > [!WARNING]
-> **Environment setup issues?** See our **[Environment Setup Troubleshooting Guide](./troubleshooting.md#-environment-setup)** for solutions.
+> **Environment setup issues?** See our **[Environment Setup Troubleshooting Guide](./troubleshooting#environment-setup)** for solutions.
 
 # 💻 Developer Tools
 
@@ -210,7 +207,7 @@ Your dev wallet lives in Foundry's keystore, but you also need it in your browse
 **✅ Verification**: The address shown in the Coinbase Wallet extension matches the address from `cast wallet address --account dev`, and your testnet ETH balance is visible.
 
 > [!WARNING]
-> **Wallet issues?** Check our **[Wallet Troubleshooting](./troubleshooting.md#-wallet-issues)** section for connection and network problems.
+> **Wallet issues?** Check our **[Wallet Troubleshooting](./troubleshooting#wallet-transaction-issues)** section for connection and network problems.
 
 ---
 
@@ -325,4 +322,4 @@ Once your setup is complete:
 
 <TemperatureCheck id="setup-confidence-check" />
 
-**Let's start [🔐 Part 1: Smart Contracts](./01-smart-contracts.md)**
+**Let's start [🔐 Part 1: Smart Contracts](./01-smart-contracts)**

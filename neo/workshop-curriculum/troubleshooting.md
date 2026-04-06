@@ -6,12 +6,12 @@ _Solutions to Common Issues in the Prediction Market Workshop_
 
 **🔥 Most Common Issues**:
 
-1. ⚙️ [Environment Setup Issues](#-environment-setup)
-2. 🚀 [Deployment Issues](#-deployment-issues)
-3. 👛 [Wallet Issues](#-wallet-issues)
-4. ⛽ [Gas and Transaction Errors](#-gas-and-transaction-errors)
-5. 🔌 [Prediction Market & Token Issues](#-prediction-market--token-issues)
-6. 📊 [Aggregator & Multicall Issues](#-aggregator--multicall-issues)
+1. ⚙️ [Environment Setup Issues](#environment-setup)
+2. 🚀 [Deployment Issues](#deployment-issues)
+3. 👛 [Wallet & Transaction Issues](#wallet-transaction-issues)
+4. ⛽ [Gas and Transaction Errors](#gas-and-transaction-errors)
+5. 🔌 [Smart Contract & Token Issues](#smart-contract-token-issues)
+6. 📊 [App Issues & Reference](#app-issues-reference)
 
 _How are you feeling right now?_
 
@@ -185,7 +185,7 @@ _Fixing wallet connections, network problems, and gas errors._
 Common causes:
 
 1. **Function requirements not met** – Check parameters, caller permissions
-2. **Insufficient balance/allowance** – See [Prediction Market & Token Issues](#-prediction-market--token-issues)
+2. **Insufficient balance/allowance** – See [Smart Contract & Token Issues](#smart-contract-token-issues)
 3. **Market already resolved** – Cannot vote on resolved markets
 4. **Already voted** – Each address can vote once per market
 5. **Voting:** Did you send `msg.value > 0`? (Part 1)

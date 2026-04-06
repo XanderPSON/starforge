@@ -24,7 +24,7 @@ By the end of this part, you'll be able to:
 > You **cannot** complete this module alone. You need pod-mates to send you their tokens and test your upgraded market contract.
 
 ### 🆘 Need Help?
-Check out the **[Troubleshooting Guide](./troubleshooting.md)** for solutions to common issues including deployment problems and gas errors.
+Check out the **[Troubleshooting Guide](./troubleshooting)** for solutions to common issues including deployment problems and gas errors.
 
 
 ---
@@ -294,7 +294,7 @@ Prompt AI to upgrade your `PredictionMarket.sol`:
 > [!IMPORTANT]
 > **Do I need to deploy a whole new contract?** Yes. Smart contracts are **immutable** — once deployed, their bytecode cannot change. Your V1 PredictionMarket (from Part 1) still lives at its original address, unchanged. The "upgrade" means deploying a **brand new contract** with the new ERC-20 logic to a **new address**. Your V1 markets and votes still exist on V1 — they don't carry over. You'll create fresh markets on V2.
 >
-> (Want to learn how production teams like Circle *actually* upgrade contracts in-place? See [Beyond This Workshop: Contract Upgradability](#-beyond-this-workshop-contract-upgradability) at the bottom of this page.)
+> (Want to learn how production teams like Circle *actually* upgrade contracts in-place? See [Beyond This Workshop: Contract Upgradability](#beyond-this-workshop-contract-upgradability) at the bottom of this page.)
 
 1. **Open the V2 Deploy Script**
 
@@ -425,4 +425,4 @@ To "upgrade," the owner deploys a new Implementation contract and points the Pro
 
 You've built a token economy and upgraded your prediction market. Now let's build an Aggregated Prediction Market Dashboard that shows all of your pod's markets at once.
 
-**Next: [🌐 Onchain Fullstack](./03-onchain-fullstack.md)**
+**Next: [🌐 Onchain Fullstack](./03-onchain-fullstack)**

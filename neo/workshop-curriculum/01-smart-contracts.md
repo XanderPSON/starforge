@@ -2,7 +2,7 @@
 
 *Learn to Read, Write, and Deploy an Onchain Prediction Market*
 
-### ⏱️ Time Allocation (90 min)
+### ⏱️ Time Allocation (1 hr 30 min)
 
 ### 🎯 Learning Goals
 
@@ -474,7 +474,7 @@ _Deploy, verify, and debug your contract on Base Sepolia. (20 min)_
     > The `--sender` flag tells Foundry to use your wallet as `msg.sender` in the deploy script — without it, the contract's owner will be set to Foundry's default address instead of yours.
 
     > [!WARNING]
-    > **Deployment issues?** Check our **[Deployment Troubleshooting](./troubleshooting#-deployment-issues)** for solutions to common errors like nonce mismatches, insufficient gas, and verification failures.
+    > **Deployment issues?** Check our **[Deployment Troubleshooting](./troubleshooting#deployment-issues)** for solutions to common errors like nonce mismatches, insufficient gas, and verification failures.
 
 3. **Create a Market**
 
@@ -615,4 +615,4 @@ You've deployed your first prediction market! Now let's create your own token an
 
 <FlavorText id="sc-part1-complete" emoji="🔐" text="Smart contract developer: activated" />
 
-**Next: [🪙 Token Standards](./02-token-standards.md)**
+**Next: [🪙 Token Standards](./02-token-standards)**
