@@ -124,9 +124,10 @@ export function splitIntoPages(rawSource: string): TrainingPage[] {
     // or in preceding content between the `---` separator and the H1
     const group = extractGroupFromContent(part) ?? extractGroupFromContent(precedingContent)
 
-    // Extract H1 heading text
+    // Extract H1 heading text (strip duration suffix so sidebar stays clean)
     const headingMatch = trimmed.match(/^# (.+)$/m)
-    const heading = headingMatch ? headingMatch[1]!.trim() : `Page ${pageIndex + 1}`
+    const rawHeading = headingMatch ? headingMatch[1]!.trim() : `Page ${pageIndex + 1}`
+    const heading = rawHeading.replace(/\s*\(\d+\s*min\)\s*$/, '')
 
     // Strip group comment from the page source before compiling MDX
     const cleanedPart = part.replace(/<!--\s*group:\s*.+?\s*-->\n?/, '')
