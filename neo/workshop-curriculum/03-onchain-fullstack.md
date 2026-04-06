@@ -255,8 +255,6 @@ const [marketResult, hasVotedResult] = data ?? [];
 
 <QuizMulticall id="fs-multicall" />
 
-<QuipMulticall id="fs-multicall" />
-
 ### 🛠️ Build It: `components/MarketCard.tsx`
 
 Open the stub at `components/MarketCard.tsx`. Right now it renders a yellow "🔧 Build me!" placeholder. Replace it with a real component that displays live market data.

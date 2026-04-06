@@ -400,8 +400,6 @@ This mirrors real Web3 workflow: verify what contract you are talking to, read o
 
 <FlavorText id="sc-explorer-done" emoji="🕵️" text="Block explorer mastery: unlocked" />
 
-<QuipBlockExplorer id="sc-block-explorer" />
-
 ---
 
 ## ⛽ Understanding Gas (10 min)

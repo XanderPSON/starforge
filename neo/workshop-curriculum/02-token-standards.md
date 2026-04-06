@@ -51,8 +51,6 @@ The process is open to anyone. **EIPs** (Ethereum Improvement Proposals) cover c
 
 For example, the Base team at Coinbase contributed [ERC-7846](https://eips.ethereum.org/EIPS/eip-7846) — a new wallet connection API standard. It started as a PR on a public repo and gained value as other wallets and SDKs adopted it. If you're working on the frontier of onchain development and have ideas for how things should work, you can propose a standard too.
 
-<QuipERCProcess id="ts-erc-process" />
-
 ### 🧾 Most Popular Token Standards
 
 **📂 Token standards** structure different types of asset models as smart contracts.
