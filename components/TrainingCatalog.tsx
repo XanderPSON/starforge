@@ -147,13 +147,13 @@ export function TrainingCatalog({ trainings }: TrainingCatalogProps) {
       {paginated.length === 0 ? (
         <p className="text-center text-hub-muted dark:text-gray-500 py-16">No trainings match your filters.</p>
       ) : (
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className={`grid gap-5 ${filtered.length <= 6 ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'}`}>
           {paginated.map(({ slug, frontmatter }) => (
             <a
               key={slug}
               href={`/training/${slug}`}
               onClick={(e) => handleCardClick(e, slug)}
-              className={`training-card-shimmer ${activatingSlug === slug ? 'card-launching' : ''} group relative isolate flex flex-col overflow-hidden rounded-2xl border p-5 bg-hub-surface dark:bg-[#0C172C]/75 dark:backdrop-blur-sm shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_32px_-18px_rgba(22,40,68,0.55)] dark:hover:shadow-[0_22px_40px_-20px_rgba(157,180,207,0.35)] ${
+              className={`training-card-shimmer ${activatingSlug === slug ? 'card-launching' : ''} group relative isolate flex flex-col overflow-hidden rounded-2xl border ${filtered.length <= 6 ? 'p-7 min-h-[200px]' : 'p-5'} bg-hub-surface dark:bg-[#0C172C]/75 dark:backdrop-blur-sm shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_32px_-18px_rgba(22,40,68,0.55)] dark:hover:shadow-[0_22px_40px_-20px_rgba(157,180,207,0.35)] ${
                 completedSlugs.has(slug)
                   ? 'border-green-400/40 dark:border-green-500/30'
                   : 'border-black/[0.08] dark:border-white/10 hover:border-[#335B86]/50 dark:hover:border-[#9DB4CF]/30'
@@ -196,14 +196,14 @@ export function TrainingCatalog({ trainings }: TrainingCatalogProps) {
                   )}
 
                   {/* Title */}
-                  <h3 className="text-base font-semibold tracking-[0.01em] text-hub-text dark:text-[#E3EDF8] leading-snug transition-all duration-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-[#E3EDF8] group-hover:to-[#9DB4CF] group-hover:bg-clip-text">
+                  <h3 className={`${filtered.length <= 6 ? 'text-lg' : 'text-base'} font-semibold tracking-[0.01em] text-hub-text dark:text-[#E3EDF8] leading-snug transition-all duration-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-[#E3EDF8] group-hover:to-[#9DB4CF] group-hover:bg-clip-text`}>
                     {frontmatter.title || toTitleCase(slug)}
                   </h3>
                 </div>
 
                 {/* Description */}
                 {frontmatter.description && (
-                  <p className="text-hub-muted dark:text-[#AFC2D8]/85 text-xs leading-relaxed flex-1 mb-4">
+                  <p className={`text-hub-muted dark:text-[#AFC2D8]/85 ${filtered.length <= 6 ? 'text-sm' : 'text-xs'} leading-relaxed flex-1 mb-4`}>
                     {frontmatter.description}
                   </p>
                 )}
