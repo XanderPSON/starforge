@@ -83,6 +83,8 @@ ERC-721 also has an approval system, but with a twist: you can approve someone f
 
 <QuizTokenStandards id="ts-token-standards-selection" />
 
+<QuizERCProcess id="ts-erc-process" />
+
 ---
 
 ### 💡 Mental Model: Tokens Are a Spreadsheet
@@ -99,9 +101,7 @@ When Alice "sends" 100 tokens to Bob, no object moves anywhere. The contract sim
 
 This mental model matters because it explains why `transfer` and `transferFrom` are just arithmetic operations on a mapping, and why the "approve" pattern exists: you're granting another address permission to update *your* row in the spreadsheet.
 
-<QuipTokenSpreadsheet id="ts-token-spreadsheet" />
-
-<FreeResponse id="ts-mental-model" label="Why is the 'spreadsheet' mental model important for understanding how transfer() and transferFrom() work?" />
+<QuizTokenMentalModel id="ts-token-mental-model" />
 
 ---
 

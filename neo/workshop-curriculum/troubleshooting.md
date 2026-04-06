@@ -457,4 +457,3 @@ export const POD_MARKETS: PodMarket[] = [
 - The "pod cross-play" sections (voting on each other's contracts, resolving markets) won't fully apply — skip those and focus on building and deploying your own contracts.
 - You can mint yourself WKSP tokens by asking the instructor, or focus on your own token for the approve→vote flow.
 
-<FreeResponse id="debug-resolution-feedback" label="What issue brought you here, and did you find a solution? If not, describe what you tried." />

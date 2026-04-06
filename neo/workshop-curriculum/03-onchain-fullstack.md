@@ -54,7 +54,7 @@ Instead of building an app that only shows **your** contract, you'll build an **
 1. **Market contract address** (their deployed PredictionMarket)
 2. **Token contract address** (their custom ERC-20)
 
-<FreeResponse id="fs-crosswire-expectation" label="What challenges do you anticipate with aggregating data from multiple pod members' contracts?" />
+
 
 ---
 
@@ -169,7 +169,7 @@ If you're a backend engineer, this is the paradigm shift:
 
 ### 🛠️ Build It: `app/api/markets/route.ts`
 
-<QuipBlockchainAsDB id="fs-blockchain-as-db" />
+<QuizBlockchainAsDB id="fs-blockchain-as-db" />
 
 Create a Next.js API route that reads market data from all contracts in your pod config and returns JSON. This is the same pattern you'd use to build any backend service that reads blockchain state — price feeds, leaderboards, analytics dashboards.
 
@@ -255,7 +255,7 @@ const [marketResult, hasVotedResult] = data ?? [];
 // Market result shape: [question, yesPool, noPool, resolved, outcome]
 ```
 
-<FreeResponse id="fs-multicall-benefit" label="Why is multicall more efficient than making separate RPC calls for each market?" />
+<QuizMulticall id="fs-multicall" />
 
 <QuipMulticall id="fs-multicall" />
 
@@ -317,6 +317,8 @@ This means your UI needs to handle intermediate states: signing, pending, confir
 > On Base, transactions are typically confirmed in ~2 seconds, but designing for the async flow is still important.
 
 <QuizTransactionFlow id="fs-transaction-flow" />
+
+<QuizAsyncUX id="fs-async-ux" />
 
 ### 🖋️ The Two-Step Vote Pattern
 
@@ -479,7 +481,7 @@ You went from zero onchain experience to a **deployed full-stack prediction mark
 
 <Scale id="fs-overall-workshop" max={10} label="Rate your overall workshop experience" />
 
-<FreeResponse id="fs-workshop-takeaway" label="What's the most valuable thing you learned in this workshop? How might you apply it at Coinbase?" />
+
 
 ### 🚀 Keep Building
 

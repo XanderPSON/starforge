@@ -157,9 +157,7 @@ Here are the Solidity building blocks you'll see in the contract. Don't memorize
 -   Not readable by contracts during execution, but can be viewed offchain
 -   Define with `event Name(...typed args)`, emit with `emit Name(args)`
 
-<QuipPariMutuel id="sc-pari-mutuel" />
-
-<FreeResponse id="sc-prediction-market-mental-model" label="In your own words, explain how a pari-mutuel market works. What determines the payout?" />
+<QuizPariMutuel id="sc-pari-mutuel" />
 
 # 🔍 Code Walkthrough: The Interface (20 min)
 
@@ -400,6 +398,8 @@ This mirrors real Web3 workflow: verify what contract you are talking to, read o
 
 </details>
 
+<QuizBlockExplorer id="sc-block-explorer" />
+
 <FlavorText id="sc-explorer-done" emoji="🕵️" text="Block explorer mastery: unlocked" />
 
 <QuipBlockExplorer id="sc-block-explorer" />
@@ -577,9 +577,7 @@ This is a well-known, fundamental challenge in blockchain called the **Oracle Pr
 
 In production, you would replace `msg.sender == owner` with a **decentralized oracle network** like [Chainlink](https://chain.link/) or [UMA](https://uma.xyz/) — systems where independent validators fetch real-world data from multiple sources, reach consensus on the answer, and push the verified result onchain. No single person controls the truth.
 
-<QuipOracleProblem id="sc-oracle-problem" />
-
-<FreeResponse id="sc-oracle-reflection" label="Why is a centralized oracle (like an 'owner') dangerous for a real prediction market? What could go wrong?" />
+<QuizOracleProblem id="sc-oracle-problem" />
 
 # 🤝 Pod Cross-Play & Wrap-Up (10 min)
 

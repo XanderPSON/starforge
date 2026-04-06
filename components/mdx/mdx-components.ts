@@ -33,6 +33,14 @@ import { QuizTokenStandards } from './QuizTokenStandards'
 import { QuizAllowancePattern } from './QuizAllowancePattern'
 import { QuizABI } from './QuizABI'
 import { QuizTransactionFlow } from './QuizTransactionFlow'
+import { QuizPariMutuel } from './QuizPariMutuel'
+import { QuizOracleProblem } from './QuizOracleProblem'
+import { QuizBlockExplorer } from './QuizBlockExplorer'
+import { QuizTokenMentalModel } from './QuizTokenMentalModel'
+import { QuizERCProcess } from './QuizERCProcess'
+import { QuizMulticall } from './QuizMulticall'
+import { QuizAsyncUX } from './QuizAsyncUX'
+import { QuizBlockchainAsDB } from './QuizBlockchainAsDB'
 import { GasFeeCalculator } from './GasFeeCalculator'
 import { Icon } from './Icon'
 import { QuipOracleProblem } from './QuipOracleProblem'
@@ -186,6 +194,14 @@ export const mdxComponents: MDXComponents = {
   QuizAllowancePattern,
   QuizABI,
   QuizTransactionFlow,
+  QuizPariMutuel,
+  QuizOracleProblem,
+  QuizBlockExplorer,
+  QuizTokenMentalModel,
+  QuizERCProcess,
+  QuizMulticall,
+  QuizAsyncUX,
+  QuizBlockchainAsDB,
   GasFeeCalculator,
   Icon,
   QuipOracleProblem,
