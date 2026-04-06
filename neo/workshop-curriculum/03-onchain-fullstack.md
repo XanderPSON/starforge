@@ -30,7 +30,7 @@ Check out the **[Troubleshooting Guide](./troubleshooting.md)** for wallet conne
 
 ---
 
-## 🔌 The Cross-Wire: Your App Depends on Your Pod (5 min)
+## 🔌 The Cross-Wire: Aggregate Your Pod (5 min)
 
 ### 🤝 What is the Cross-Wire?
 
@@ -257,11 +257,11 @@ const { data: marketData } = useReadContract({
     address: POD_MARKETS[0].marketAddress,
     abi: PredictionMarketABI,
     functionName: "markets",
-    args: [0], // Market ID 0
+    args: [0n], // Market ID 0
 });
 
 // The result maps directly to the Solidity Struct you wrote!
-// [ "Will it rain?", yesPool, noPool, isResolved ]
+// [ "Will it rain?", yesPool, noPool, resolved, outcome ]
 ```
 
 <FreeResponse id="fs-multicall-benefit" label="Why is multicall more efficient than making separate RPC calls for each market?" />
@@ -281,13 +281,13 @@ const voteCalls = [
             args: [marketAddress, parseEther("10")],
         }),
     },
-    // Call 2: Execute the Vote (1 = Yes)
+    // Call 2: Execute the Vote (true = Yes)
     {
         to: marketAddress,
         data: encodeFunctionData({
             abi: PredictionMarketABI,
             functionName: "vote",
-            args: [0, 1],
+            args: [0n, true, parseEther("10")],
         }),
     },
 ];
@@ -405,7 +405,7 @@ Now that the core loop is working, choose one feature to build with AI and make 
 
 3. 🏆 **The "Claim Winnings" Button (Conditional Rendering)**:
     * Once a market is resolved, winners need to get paid.
-    <AIPrompt prompt="Add conditional rendering to the market card: if market.isResolved is true, hide the Vote buttons and show a Claim Winnings button using OnchainKit's Transaction component that calls claimWinnings() on the smart contract." />
+    <AIPrompt prompt="Add conditional rendering to the market card: if market.isResolved is true, hide the Vote buttons and show a Withdraw Winnings button using OnchainKit's Transaction component that calls withdrawWinnings() on the smart contract." />
 
 **🎯 Goal**: Successfully implement your chosen feature using the prompt template above!
 
