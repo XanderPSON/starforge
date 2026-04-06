@@ -267,6 +267,8 @@ _You'll use this in Part 3 for OnchainKit (wallet connections, Smart Wallet feat
 > [!WARNING]
 > CDP has two key types — **Client** and **Secret**. You want **Client API Key**. Client keys are safe to use in frontend code (`NEXT_PUBLIC_` env vars). Secret keys are for server-side-only API calls and must never be exposed in browser code.
 
+<QuipAPIKeyTypes id="setup-api-key-types" />
+
 # ✅ Verification & Ready
 
 _Confirm everything works before starting the workshop._

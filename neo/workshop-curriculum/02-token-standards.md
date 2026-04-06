@@ -53,6 +53,8 @@ The process is open to anyone. **EIPs** (Ethereum Improvement Proposals) cover c
 
 For example, the Base team at Coinbase contributed [ERC-7846](https://eips.ethereum.org/EIPS/eip-7846) — a new wallet connection API standard. It started as a PR on a public repo and gained value as other wallets and SDKs adopted it. If you're working on the frontier of onchain development and have ideas for how things should work, you can propose a standard too.
 
+<QuipERCProcess id="ts-erc-process" />
+
 ### 🧾 Most Popular Token Standards
 
 **📂 Token standards** structure different types of asset models as smart contracts.
@@ -96,6 +98,8 @@ A common misconception is that tokens are "objects" that move between wallets �
 When Alice "sends" 100 tokens to Bob, no object moves anywhere. The contract simply updates two rows: Alice's balance goes down by 100, Bob's goes up by 100. That's it — it's all storage at a single address on the blockchain.
 
 This mental model matters because it explains why `transfer` and `transferFrom` are just arithmetic operations on a mapping, and why the "approve" pattern exists: you're granting another address permission to update *your* row in the spreadsheet.
+
+<QuipTokenSpreadsheet id="ts-token-spreadsheet" />
 
 <FreeResponse id="ts-mental-model" label="Why is the 'spreadsheet' mental model important for understanding how transfer() and transferFrom() work?" />
 
@@ -429,6 +433,7 @@ To "upgrade," the owner deploys a new Implementation contract and points the Pro
 
 **Real-world example:** [USDC on BaseScan](https://basescan.org/token/0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913#readProxyContract) — notice the "Read as Proxy" and "Write as Proxy" tabs. USDC is upgradeable because Circle operates under evolving regulatory requirements and needs the ability to update the contract's logic over time. [OpenZeppelin's proxy contracts](https://docs.openzeppelin.com/contracts/5.x/api/proxy) provide the standard implementations.
 
+<QuipProxyPattern id="ts-proxy-pattern" />
 
 ### 📢 Share with Your Pod
 

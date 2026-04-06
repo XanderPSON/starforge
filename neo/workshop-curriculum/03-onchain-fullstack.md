@@ -169,6 +169,8 @@ If you're a backend engineer, this is the paradigm shift:
 
 ### 🛠️ Build It: `app/api/markets/route.ts`
 
+<QuipBlockchainAsDB id="fs-blockchain-as-db" />
+
 Create a Next.js API route that reads market data from all contracts in your pod config and returns JSON. This is the same pattern you'd use to build any backend service that reads blockchain state — price feeds, leaderboards, analytics dashboards.
 
 **What your API route should do:**
@@ -254,6 +256,8 @@ const [marketResult, hasVotedResult] = data ?? [];
 ```
 
 <FreeResponse id="fs-multicall-benefit" label="Why is multicall more efficient than making separate RPC calls for each market?" />
+
+<QuipMulticall id="fs-multicall" />
 
 ### 🛠️ Build It: `components/MarketCard.tsx`
 
@@ -374,6 +378,8 @@ Update your `MarketCard` component to replace the placeholder vote buttons with 
 1. Build `voteYesCalls` and `voteNoCalls` arrays using `encodeFunctionData` (same pattern, just `true` vs `false` for the `side` argument)
 2. Replace placeholder buttons with `<Transaction calls={...}>` wrapping a `<TransactionButton>`
 3. Import `ERC20ABI` from `@/lib/contracts` (you already have `PredictionMarketABI`)
+
+<QuipJSONRPC id="fs-json-rpc" />
 
 <AIPrompt prompt="Update my MarketCard component to add voting. I need two call arrays (voteYesCalls and voteNoCalls) that each batch an ERC-20 approve call and a PredictionMarket vote call using encodeFunctionData and parseEther from viem. The approve call goes to pod.tokenAddress, approving pod.marketAddress for parseEther('10'). The vote call goes to pod.marketAddress with args [0n, true/false, parseEther('10')]. Replace the placeholder vote buttons with OnchainKit Transaction components: <Transaction calls={voteYesCalls}><TransactionButton text='Vote Yes (10 Tokens)' /><TransactionSponsor /><TransactionStatus><TransactionStatusLabel /><TransactionStatusAction /></TransactionStatus></Transaction>. Import Transaction components from @coinbase/onchainkit/transaction and ERC20ABI from @/lib/contracts." />
 

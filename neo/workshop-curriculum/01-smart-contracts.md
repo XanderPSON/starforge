@@ -157,6 +157,8 @@ Here are the Solidity building blocks you'll see in the contract. Don't memorize
 -   Not readable by contracts during execution, but can be viewed offchain
 -   Define with `event Name(...typed args)`, emit with `emit Name(args)`
 
+<QuipPariMutuel id="sc-pari-mutuel" />
+
 <FreeResponse id="sc-prediction-market-mental-model" label="In your own words, explain how a pari-mutuel market works. What determines the payout?" />
 
 # 🔍 Code Walkthrough: The Interface (20 min)
@@ -230,6 +232,8 @@ The **CEI Pattern (Checks, Effects, Interactions)** prevents reentrancy and keep
 
 > [!WARNING]
 > If you reverse the order and call an external contract **before** updating storage, a malicious contract could re-enter your function and exploit it (e.g., drain all funds). Always update state before making external calls.
+
+<QuizCEIPattern id="sc-cei-pattern" />
 
 ### 🤖 Implement Your Contract with AI
 
@@ -397,6 +401,8 @@ This mirrors real Web3 workflow: verify what contract you are talking to, read o
 </details>
 
 <FlavorText id="sc-explorer-done" emoji="🕵️" text="Block explorer mastery: unlocked" />
+
+<QuipBlockExplorer id="sc-block-explorer" />
 
 ---
 
@@ -570,6 +576,8 @@ This is a well-known, fundamental challenge in blockchain called the **Oracle Pr
 > If you were building Polymarket for real, having a human "owner" is a **massive security flaw** — they could lie, resolve every market in their favor, and steal everyone's funds.
 
 In production, you would replace `msg.sender == owner` with a **decentralized oracle network** like [Chainlink](https://chain.link/) or [UMA](https://uma.xyz/) — systems where independent validators fetch real-world data from multiple sources, reach consensus on the answer, and push the verified result onchain. No single person controls the truth.
+
+<QuipOracleProblem id="sc-oracle-problem" />
 
 <FreeResponse id="sc-oracle-reflection" label="Why is a centralized oracle (like an 'owner') dangerous for a real prediction market? What could go wrong?" />
 

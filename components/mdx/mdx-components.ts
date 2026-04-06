@@ -35,6 +35,16 @@ import { QuizABI } from './QuizABI'
 import { QuizTransactionFlow } from './QuizTransactionFlow'
 import { GasFeeCalculator } from './GasFeeCalculator'
 import { Icon } from './Icon'
+import { QuipOracleProblem } from './QuipOracleProblem'
+import { QuipPariMutuel } from './QuipPariMutuel'
+import { QuipBlockExplorer } from './QuipBlockExplorer'
+import { QuipTokenSpreadsheet } from './QuipTokenSpreadsheet'
+import { QuipERCProcess } from './QuipERCProcess'
+import { QuipProxyPattern } from './QuipProxyPattern'
+import { QuipBlockchainAsDB } from './QuipBlockchainAsDB'
+import { QuipMulticall } from './QuipMulticall'
+import { QuipJSONRPC } from './QuipJSONRPC'
+import { QuipAPIKeyTypes } from './QuipAPIKeyTypes'
 
 import { createElement } from 'react'
 
@@ -178,4 +188,14 @@ export const mdxComponents: MDXComponents = {
   QuizTransactionFlow,
   GasFeeCalculator,
   Icon,
+  QuipOracleProblem,
+  QuipPariMutuel,
+  QuipBlockExplorer,
+  QuipTokenSpreadsheet,
+  QuipERCProcess,
+  QuipProxyPattern,
+  QuipBlockchainAsDB,
+  QuipMulticall,
+  QuipJSONRPC,
+  QuipAPIKeyTypes,
 }

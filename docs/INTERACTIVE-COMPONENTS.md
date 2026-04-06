@@ -13,6 +13,44 @@ The Interactive Component Library provides 5 specialized React components that e
 4. **Scale** - Volume-bar style rating (1-N)
 5. **Checklist** - Task list with checkbox persistence
 
+### Quips
+
+A **Quip** is a single-question `MultipleChoice` wrapper component used as a lightweight section-completion signal. Quips are placed at the end of conceptual sections to confirm the learner absorbed the key idea before moving on.
+
+**Characteristics:**
+- Exactly **one question** per component (no multi-question quizzes)
+- Wrong answers should be **plausible but slightly funny** — humor helps it feel like a checkpoint, not an exam
+- Named `Quip<TopicName>` (e.g., `QuipOracleProblem`, `QuipMulticall`)
+- Legacy quips use the `Quiz` prefix (e.g., `QuizGas`) — both conventions are supported
+
+**Creating a new Quip:**
+```tsx
+// components/mdx/QuipMyTopic.tsx
+'use client'
+import { MultipleChoice } from './MultipleChoice'
+
+export function QuipMyTopic({ id }: { id: string }) {
+  return (
+    <MultipleChoice
+      id={id}
+      question="What's the key insight about this topic?"
+      options={[
+        "A plausible-sounding wrong answer",
+        "The correct answer, stated clearly",
+        "A funny but obviously wrong answer",
+        "Another plausible distractor"
+      ]}
+      correctAnswer="The correct answer, stated clearly"
+    />
+  )
+}
+```
+
+Then register in `mdx-components.ts` and use in MDX:
+```mdx
+<QuipMyTopic id="section-topic-check" />
+```
+
 **Key Features**:
 - ✅ Auto-save with 500ms debounce
 - ✅ Cross-tab real-time synchronization
