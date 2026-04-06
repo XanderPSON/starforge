@@ -338,47 +338,6 @@ export default function TrainingViewer({
 
       {/* Main content */}
       <main className="flex-1 min-w-0 pb-24">
-        {showHeader && frontmatter && (
-          <div className="max-w-4xl mx-auto px-6 pt-12 pb-0">
-            <header className="mb-10 bg-hub-surface dark:bg-white/5 dark:backdrop-blur-sm rounded-2xl border border-black/[0.08] dark:border-white/10 shadow-sm p-8">
-              {frontmatter.title && (
-                <h1 className="text-4xl font-bold text-hub-text dark:text-gray-100 mb-3">
-                  {frontmatter.title}
-                </h1>
-              )}
-
-              {frontmatter.description && (
-                <p className="text-lg text-hub-muted dark:text-gray-400 mb-5 leading-relaxed">
-                  {frontmatter.description}
-                </p>
-              )}
-
-              <div className="flex flex-wrap items-center gap-3 text-sm text-hub-muted dark:text-gray-400 mb-4">
-                {frontmatter.duration && <span>{frontmatter.duration} min</span>}
-                {frontmatter.author && <span>{frontmatter.author}</span>}
-                {frontmatter.difficulty && (
-                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${difficultyColors[frontmatter.difficulty]}`}>
-                    {toTitleCase(frontmatter.difficulty)}
-                  </span>
-                )}
-              </div>
-
-              {frontmatter.tags && frontmatter.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {frontmatter.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${getTagColor(tag)}`}
-                    >
-                      {toTitleCase(tag)}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </header>
-          </div>
-        )}
-
         <ComponentRegistryProvider>
           <article className="max-w-4xl mx-auto px-6 py-8 prose prose-lg max-w-none dark:prose-invert">
             {children}

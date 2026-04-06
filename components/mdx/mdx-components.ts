@@ -34,6 +34,7 @@ import { QuizAllowancePattern } from './QuizAllowancePattern'
 import { QuizABI } from './QuizABI'
 import { QuizTransactionFlow } from './QuizTransactionFlow'
 import { GasFeeCalculator } from './GasFeeCalculator'
+import { Icon } from './Icon'
 
 import { createElement } from 'react'
 
@@ -176,4 +177,5 @@ export const mdxComponents: MDXComponents = {
   QuizABI,
   QuizTransactionFlow,
   GasFeeCalculator,
+  Icon,
 }

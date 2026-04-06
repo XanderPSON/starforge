@@ -103,8 +103,9 @@ export function splitIntoPages(rawSource: string): TrainingPage[] {
     : rawSource
 
   // Split on H1 headings outside fenced code blocks.
-  // Blank out fenced blocks so `# ` comments inside them aren't treated as headings.
-  const masked = content.replace(/^```[\s\S]*?^```/gm, (m) => m.replace(/^/gm, '  '))
+  // Replace each character in fenced blocks with a space so `# ` inside them
+  // isn't detected as H1, while preserving string length for index alignment.
+  const masked = content.replace(/^```[\s\S]*?^```/gm, (m) => m.replace(/[^\n]/g, ' '))
   const splitIndices: number[] = []
   const h1Re = /^# /gm
   let h1Match: RegExpExecArray | null
