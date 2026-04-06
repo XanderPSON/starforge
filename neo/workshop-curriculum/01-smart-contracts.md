@@ -1,3 +1,8 @@
+---
+description: Write Solidity, deploy a Prediction Market to Base Sepolia, and explore it on BaseScan.
+duration: 90
+---
+
 # 🔐 Part 1: Smart Contracts
 
 *Learn to Read, Write, and Deploy an Onchain Prediction Market*

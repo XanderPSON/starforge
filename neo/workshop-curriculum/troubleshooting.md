@@ -1,3 +1,7 @@
+---
+description: Solutions for environment setup, deployment, wallet, gas, contract, and app issues.
+---
+
 # 🛠️ Troubleshooting Guide
 
 _Solutions to Common Issues in the Prediction Market Workshop_

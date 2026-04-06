@@ -1,3 +1,8 @@
+---
+description: Install Foundry, set up your wallet, get testnet ETH, and configure your AI coding assistant.
+duration: 15
+---
+
 # ⚙️ Part 0: Environment Setup
 
 _Get Your Development Environment Ready_

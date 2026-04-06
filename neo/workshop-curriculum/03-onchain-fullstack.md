@@ -1,3 +1,8 @@
+---
+description: Build a React dashboard that reads from your pod's smart contracts using Wagmi and OnchainKit.
+duration: 105
+---
+
 # 🌐 Part 3: Onchain Fullstack
 
 _Build an Aggregated Prediction Market Dashboard_
@@ -346,11 +351,11 @@ One pattern you'll see in every onchain app is a **higher degree of asynchronici
 
 In Web3, when a user clicks "Vote," here's what actually happens:
 
-1. **Prepare** — The app builds the transaction data (function selector + encoded args)
-2. **Sign** — The user's wallet prompts them to sign the transaction with their private key
-3. **Send** — The signed transaction is sent to a node (e.g., Base's sequencer at `sepolia.base.org`)
-4. **Wait for inclusion** — You get back a **transaction hash** immediately, but this is NOT confirmation. The transaction is in the mempool, waiting to be included in a block.
-5. **Wait for finality** — Once included in a block, you wait for enough subsequent blocks to consider it final
+1. <Icon name="Package" size={18} /> **Prepare** — The app builds the transaction data (function selector + encoded args)
+2. <Icon name="PenTool" size={18} /> **Sign** — The user's wallet prompts them to sign the transaction with their private key
+3. <Icon name="Send" size={18} /> **Send** — The signed transaction is sent to a node (e.g., Base's sequencer at `sepolia.base.org`)
+4. <Icon name="Clock" size={18} /> **Wait for inclusion** — You get back a **transaction hash** immediately, but this is NOT confirmation. The transaction is in the mempool, waiting to be included in a block.
+5. <Icon name="ShieldCheck" size={18} /> **Wait for finality** — Once included in a block, you wait for enough subsequent blocks to consider it final
 
 This means your UI needs to handle intermediate states: signing, pending, confirmed, and potentially failed. This is exactly what OnchainKit's `<Transaction>` component handles for you — loading spinners, confirmation toasts, and error states, all out of the box.
 

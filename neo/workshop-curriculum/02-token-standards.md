@@ -1,3 +1,8 @@
+---
+description: Build an ERC-20 token from scratch, master the Allowance Pattern, and upgrade your market to use token-based wagers.
+duration: 60
+---
+
 # 🪙 Part 2: Token Standards
 
 _Create Your Own ERC-20 Token and Upgrade the Prediction Market_
