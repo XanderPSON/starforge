@@ -89,19 +89,23 @@ Instead of building an app that only shows **your** contract, you'll build an **
 
 Open `lib/podConfig.ts`. You will see an empty array. Start by adding your own addresses, then add pod-mates' as you collect them. Each entry becomes a card on the dashboard.
 
+Your contract addresses are saved in your Part 1/2 project's `.env`. Grab them:
+
+```copy
+# Run this from your smart contracts project directory
+source .env && echo "Market: $PREDICTION_MARKET_ADDRESS" && echo "Token: $WORKSHOP_TOKEN_ADDRESS"
+```
+
+Then paste them into `podConfig.ts`:
+
 ```copy
     export const POD_MARKETS = [
       {
-        owner: "Alice",
-        marketAddress: "0x123...", // Alice's V2 Prediction Market
-        tokenAddress: "0xabc...", // AliceCoin Address
+        owner: "YourName",
+        marketAddress: "0x...", // Your V2 Prediction Market
+        tokenAddress: "0x...", // Your Token
       },
-      {
-        owner: "Bob",
-        marketAddress: "0x456...", // Bob's V2 Prediction Market
-        tokenAddress: "0xdef...", // BobCoin Address
-      }
-      // Add yourself and the rest of the table!
+      // Add pod-mates as you collect their addresses!
     ];
 ```
 
@@ -149,9 +153,9 @@ When you first load the app, you'll see market cards showing **"Loading..."** wi
 
 <FlavorText id="fs-setup-complete" emoji="⚡" text="App scaffolded. Your pod's contracts are wired in." />
 
-# 🔙 Backend: Data Layer
+# 🔙 Backend: Data Layer (10 min)
 
-_Server-side patterns for reading and writing onchain data. (10 min)_
+_Server-side patterns for reading and writing onchain data._
 
 ### 🏗️ How the Backend Works
 
@@ -172,8 +176,17 @@ The app uses Next.js file-based routing with server-side configuration:
 -   `app/page.tsx` – Main entry point that renders the aggregator dashboard
 -   `.env.local` – Server-side secrets like `PRIVATE_KEY` for admin operations (e.g., creating markets programmatically)
 
-> [!NOTE]
-> **Backend engineers:** Your mental model here is that the blockchain itself is the database. Instead of querying Postgres, you're querying smart contracts via RPC calls. Viem is your ORM — it handles ABI encoding, type safety, and transport.
+### 🧠 The Mental Model: Blockchain as Database
+
+If you're a backend engineer, this is the paradigm shift:
+
+- **The blockchain is your database.** Contract storage replaces Postgres tables. State lives onchain, not in your infrastructure.
+- **RPC calls replace SQL queries.** Instead of `SELECT * FROM markets`, you call `contract.read.getMarket(id)` over an RPC endpoint.
+- **Viem is your ORM.** It handles ABI encoding, type safety, and transport — the same role Prisma or TypeORM plays in a traditional stack.
+- **ABIs are your schema.** A contract's ABI defines what functions exist and what types they accept/return. It's the equivalent of your database schema + API contract in one.
+- **No migrations.** Once a contract is deployed, its code is immutable. You deploy a new contract instead of altering a table.
+
+Everything else in this section builds on this mental model — reading state with Viem, writing state with transactions, and aggregating data across multiple contracts.
 
 ### 📖 Reading Onchain Data with Viem
 
@@ -252,9 +265,9 @@ This is what `encodeFunctionData` does under the hood — it looks up the functi
 
 <FlavorText id="fs-backend-complete" emoji="🔙" text="Backend unlocked. You can read and write the blockchain from Node.js." />
 
-# 📱 Frontend: UI & Onchain Interactions
+# 📱 Frontend: UI & Onchain Interactions (25 min)
 
-_React hooks, multicall, and OnchainKit for blockchain UX. (25 min)_
+_React hooks, multicall, and OnchainKit for blockchain UX._
 
 ### 🏗️ How the Frontend Works
 
@@ -386,9 +399,9 @@ You'll rarely need to interact with JSON-RPC directly, but understanding this la
 
 <FlavorText id="fs-frontend-complete" emoji="📱" text="Frontend wired. Wagmi reads, OnchainKit writes." />
 
-# ⚒️ Build & Deploy
+# ⚒️ Build & Deploy (50 min)
 
-_Test your aggregator, deploy to Vercel, and enhance your app. (50 min)_
+_Test your aggregator, deploy to Vercel, and enhance your app._
 
 ### 🧪 Test Your Aggregator (8 min)
 
@@ -453,9 +466,9 @@ Now that the core loop is working, choose one feature to build with AI and make 
 
 <FlavorText id="fs-enhance-complete" emoji="✨" text="Feature shipped. Your dashboard is production-grade." />
 
-# 🪞 Wrap-Up & Reflection
+# 🪞 Wrap-Up & Reflection (5 min)
 
-_Celebrate what you built and plan your next steps. (5 min)_
+_Celebrate what you built and plan your next steps._
 
 ### ✅ What You Accomplished
 

@@ -154,9 +154,9 @@ Here are the Solidity building blocks you'll see in the contract. Don't memorize
 
 <FreeResponse id="sc-prediction-market-mental-model" label="In your own words, explain how a pari-mutuel market works. What determines the payout?" />
 
-# 🔍 Code Walkthrough: The Interface
+# 🔍 Code Walkthrough: The Interface (20 min)
 
-_Read the spec and implement your PredictionMarket contract. (20 min)_
+_Read the spec and implement your PredictionMarket contract._
 
 ### 📥 Get the Code
 
@@ -436,9 +436,9 @@ Gas prices aren't fixed — they adjust dynamically based on demand. **EIPs** (E
 
 <QuizGas id="sc-gas-purpose" />
 
-# 🚀 Deploy Your Prediction Market
+# 🚀 Deploy Your Prediction Market (20 min)
 
-_Deploy, verify, and debug your contract on Base Sepolia. (20 min)_
+_Deploy, verify, and debug your contract on Base Sepolia._
 
 **🎯 Goal:** Contract deployed, verified, and at least one market created. Pod members have read odds and placed bets.
 
@@ -476,7 +476,17 @@ _Deploy, verify, and debug your contract on Base Sepolia. (20 min)_
     > [!WARNING]
     > **Deployment issues?** Check our **[Deployment Troubleshooting](./troubleshooting#deployment-issues)** for solutions to common errors like nonce mismatches, insufficient gas, and verification failures.
 
-3. **Create a Market**
+3. **Save your contract address**
+
+    Copy the `deployed to:` address from the output and save it to your `.env`:
+
+    ```copy
+    # ✏️ Replace 0xYOUR_CONTRACT_ADDRESS with the address from the deploy output
+    sed -i '' 's/^PREDICTION_MARKET_ADDRESS=.*/PREDICTION_MARKET_ADDRESS=0xYOUR_CONTRACT_ADDRESS/' .env
+    source .env && echo "✅ Saved: $PREDICTION_MARKET_ADDRESS"
+    ```
+
+4. **Create a Market**
 
     - Go to your contract on BaseScan → "Write Contract" → Connect wallet
     - Call `createMarket("Will it rain tomorrow?")` (or your own question)
@@ -558,9 +568,9 @@ In production, you would replace `msg.sender == owner` with a **decentralized or
 
 <FreeResponse id="sc-oracle-reflection" label="Why is a centralized oracle (like an 'owner') dangerous for a real prediction market? What could go wrong?" />
 
-# 🤝 Pod Cross-Play & Wrap-Up
+# 🤝 Pod Cross-Play & Wrap-Up (10 min)
 
-_Test your contracts together and reflect on what you built. (10 min)_
+_Test your contracts together and reflect on what you built._
 
 Let's test our Web3 infrastructure and watch the Pari-Mutuel math in action!
 

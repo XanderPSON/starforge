@@ -137,9 +137,9 @@ interface IERC20 {
 - 🌉 **Works on Base** – These same standards work on Base (and all EVM chains), not just Ethereum mainnet
 - 🔗 **Connects to your work** – You'll integrate tokens with your PredictionMarket contract from Part 1 (token wagers instead of ETH!)
 
-# 🛠️ Build and Deploy Your Token
+# 🛠️ Build and Deploy Your Token (20 min)
 
-_Create, deploy, and distribute your custom ERC-20 token. (20 min)_
+_Create, deploy, and distribute your custom ERC-20 token._
 
 ### 🏗️ Implement Your Token
 
@@ -201,7 +201,17 @@ _Create, deploy, and distribute your custom ERC-20 token. (20 min)_
     > [!TIP]
     > If you're in a new terminal, run `source .env` to reload all your keys and addresses.
 
-5. **Verify Token in Wallet**
+5. **Save your token address**
+
+    Copy the `deployed to:` address from the output and save it to your `.env`:
+
+    ```copy
+    # ✏️ Replace 0xYOUR_TOKEN_ADDRESS with the address from the deploy output
+    sed -i '' 's/^WORKSHOP_TOKEN_ADDRESS=.*/WORKSHOP_TOKEN_ADDRESS=0xYOUR_TOKEN_ADDRESS/' .env
+    source .env && echo "✅ Saved: $WORKSHOP_TOKEN_ADDRESS"
+    ```
+
+6. **Verify Token in Wallet**
 
     Open Coinbase Wallet → "Assets" → "Testnets" tab. Your token should appear automatically. If it doesn't, try refreshing the extension or closing and reopening it — Coinbase Wallet auto-detects ERC-20 tokens once they're deployed.
 
@@ -240,9 +250,9 @@ You are about to upgrade your Prediction Market to require tokens, but a market 
 
 <FlavorText id="ts-airdrop-complete" emoji="💸" text="Token airdrop complete. Your pod has a shared economy." />
 
-# 🔄 Upgrade Your Prediction Market
+# 🔄 Upgrade Your Prediction Market (20 min)
 
-_Integrate your token using the Allowance Pattern. (20 min)_
+_Integrate your token using the Allowance Pattern._
 
 You are going to integrate `IERC20` into your `PredictionMarket.sol` from Part 1 so that users must wager custom tokens instead of testnet ETH.
 
@@ -336,7 +346,17 @@ Prompt AI to upgrade your `PredictionMarket.sol`:
     > [!TIP]
     > If you're in a new terminal, run `source .env` to reload all your keys and addresses.
 
-3. **Create a Market & Test**
+3. **Save your V2 contract address**
+
+    This is the address you'll use in Part 3. Save it to `.env` (overwriting the V1 address):
+
+    ```copy
+    # ✏️ Replace 0xYOUR_V2_ADDRESS with the V2 address from the deploy output
+    sed -i '' 's/^PREDICTION_MARKET_ADDRESS=.*/PREDICTION_MARKET_ADDRESS=0xYOUR_V2_ADDRESS/' .env
+    source .env && echo "✅ Saved: $PREDICTION_MARKET_ADDRESS"
+    ```
+
+4. **Create a Market & Test**
 
     - Go to your **new** V2 contract on [sepolia.basescan.org](https://sepolia.basescan.org) → "Write Contract" → Connect wallet
     - Call `createMarket("Will Base hit 100M txns?")` (or your own question)
@@ -374,9 +394,9 @@ It's time to test the V2 markets. This is where you will experience the two-step
 
 <FlavorText id="ts-allowance-unlocked" emoji="🔓" text="Allowance pattern mastered. You control the flow of tokens." />
 
-# 🪞 Wrap-Up & Reflection
+# 🪞 Wrap-Up & Reflection (5 min)
 
-_Review what you built and prepare for Part 3. (5 min)_
+_Review what you built and prepare for Part 3._
 
 ### ✅ What You Accomplished
 
