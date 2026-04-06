@@ -1,4 +1,4 @@
-# ⚙️ Environment Setup
+# ⚙️ Part 0: Environment Setup
 
 _Get Your Development Environment Ready_
 
