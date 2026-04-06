@@ -2,7 +2,7 @@
 
 _Build an Aggregated Prediction Market Dashboard_
 
-### ⏱️ Time Allocation: 1 hr 45 min
+### ⏱️ Time Allocation (105 min)
 
 ### 🎯 Learning Goals
 
@@ -51,7 +51,7 @@ Instead of building an app that only shows **your** contract, you'll build an **
 
 1. **Clone and Install** — this is a separate repo ([**neo-workshop-fullstack**](https://github.com/XanderPSON/neo-workshop-fullstack)) from the contracts repo you used in Parts 1 & 2.
 
-    ```bash
+    ```copy
     git clone -b xander/prediction-market-starter https://github.com/XanderPSON/neo-workshop-fullstack.git
     cd neo-workshop-fullstack
     npm install
@@ -59,13 +59,16 @@ Instead of building an app that only shows **your** contract, you'll build an **
 
 2. **Configure Environment**
 
-    Create `.env.local`:
+    Create `.env.local` in the project root:
 
-    ```bash
-    # WalletConnect Project ID (from 00-setup)
-    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here
+    ```copy
+    # OnchainKit API Key (optional but recommended — enables Smart Wallet features).
+    # Get one at https://portal.cdp.coinbase.com/ (you already have an account from the faucet step).
+    NEXT_PUBLIC_ONCHAINKIT_API_KEY=your_cdp_api_key_here
 
-    # Your wallet private key (Can use Coinbase Wallet from Part 1). This must be represented as a hex (prefix your private key with "0x")
+    # Your dev wallet private key (the same one from Parts 1 & 2).
+    # Used server-side only for admin operations like creating markets programmatically.
+    # Get it with: cast wallet private-key "YOUR TWELVE WORD RECOVERY PHRASE"
     PRIVATE_KEY=0x..your_private_key_here..
 
     # RPC
@@ -80,7 +83,7 @@ Instead of building an app that only shows **your** contract, you'll build an **
 
 Open `lib/podConfig.ts`. You will see an empty array. You must ask your pod-mates for their deployed Market and Token addresses and fill this out.
 
-```typescript
+```copy
     export const POD_MARKETS = [
       {
         owner: "Alice",
@@ -101,7 +104,7 @@ Open `lib/podConfig.ts`. You will see an empty array. You must ask your pod-mate
 
 4. **Start the App**
 
-    ```bash
+    ```copy
     npm run dev
     ```
 
@@ -110,11 +113,13 @@ Open `lib/podConfig.ts`. You will see an empty array. You must ask your pod-mate
 > [!TIP]
 > `npm install` can take a few minutes. Use this time to collect addresses from your pod if you haven't already.
 
+<FlavorText id="fs-setup-complete" emoji="⚡" text="App scaffolded. Your pod's contracts are wired in." />
+
 # 🔙 Backend: Data Layer
 
 _Server-side patterns for reading and writing onchain data. (10 min)_
 
-### How the Backend Works
+### 🏗️ How the Backend Works
 
 The server-side data layer connects your app to the blockchain. It handles RPC configuration, contract ABIs, and admin operations like creating markets programmatically.
 
@@ -181,7 +186,7 @@ const txHash = await walletClient.writeContract({
 });
 ```
 
-### How ABIs Work Under the Hood
+### 🧬 How ABIs Work Under the Hood
 
 You've been using ABIs throughout this workshop — they're in `lib/contracts.ts`, and Viem/Wagmi use them for every contract call. But what's actually happening when you call `encodeFunctionData`?
 
@@ -209,11 +214,15 @@ This is what `encodeFunctionData` does under the hood — it looks up the functi
 
 <QuizABI id="fs-abi-selector" />
 
+<Scale id="fs-backend-confidence" max={5} label="How confident are you in reading/writing onchain data from a server?" />
+
+<FlavorText id="fs-backend-complete" emoji="🔙" text="Backend unlocked. You can read and write the blockchain from Node.js." />
+
 # 📱 Frontend: UI & Onchain Interactions
 
 _React hooks, multicall, and OnchainKit for blockchain UX. (25 min)_
 
-### How the Frontend Works
+### 🏗️ How the Frontend Works
 
 In Web2, a React frontend talks to a centralized database via a REST API. In Web3, your React frontend talks directly to the blockchain via RPC (Remote Procedure Call). We use **Wagmi** and **OnchainKit** to make this incredibly easy.
 
@@ -303,6 +312,8 @@ This means your UI needs to handle intermediate states: signing, pending, confir
 
 <QuizTransactionFlow id="fs-transaction-flow" />
 
+<FreeResponse id="fs-async-mental-model" label="How does the async nature of blockchain transactions change the way you think about UX compared to Web2?" />
+
 ### 🧰 OnchainKit Components
 
 [OnchainKit](https://www.base.org/build/onchainkit) is Coinbase's React component library that turns complex blockchain interactions into beautiful, one-line UI components.
@@ -337,6 +348,10 @@ Viem, Wagmi, and OnchainKit are all abstractions over the [Ethereum JSON-RPC API
 
 You'll rarely need to interact with JSON-RPC directly, but understanding this layer helps when debugging RPC errors, timeouts, or rate limits. The full method list is at [ethereum.org/developers/docs/apis/json-rpc](https://ethereum.org/en/developers/docs/apis/json-rpc/).
 
+<Scale id="fs-frontend-confidence" max={5} label="How confident are you in using Wagmi hooks and OnchainKit components?" />
+
+<FlavorText id="fs-frontend-complete" emoji="📱" text="Frontend wired. Wagmi reads, OnchainKit writes." />
+
 # ⚒️ Build & Deploy
 
 _Test your aggregator, deploy to Vercel, and enhance your app. (50 min)_
@@ -360,7 +375,7 @@ _Test your aggregator, deploy to Vercel, and enhance your app. (50 min)_
 *Vercel deploys typically complete in 1–2 minutes.*
 
 1. **Push to GitHub** – Create a repo and push your `neo-workshop-fullstack` clone
-2. **Deploy to Vercel** – [vercel.com](https://vercel.com) → Import project → Add env vars (`NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`, `NEXT_PUBLIC_RPC_URL`)
+2. **Deploy to Vercel** – [vercel.com](https://vercel.com) → Import project → Add env vars (`NEXT_PUBLIC_ONCHAINKIT_API_KEY`, `NEXT_PUBLIC_RPC_URL`)
 
 > [!WARNING]
 > Only add `NEXT_PUBLIC_*` env vars to Vercel. **Never** add `PRIVATE_KEY` to a public deployment — it would be accessible to anyone.
@@ -371,6 +386,8 @@ _Test your aggregator, deploy to Vercel, and enhance your app. (50 min)_
 > **Finished early?** Add a loading skeleton for the odds, or style the market cards with a theme of your choice.
 
 <Scale id="fs-fullstack-confidence" max={5} label="How confident are you in building a fullstack onchain app?" />
+
+<FlavorText id="fs-deployed" emoji="🚀" text="App deployed. Your prediction market is live on the internet." />
 
 ---
 
@@ -399,6 +416,8 @@ Now that the core loop is working, choose one feature to build with AI and make 
 <AIPrompt prompt="My batch transaction does approve+vote in two calls. What happens if the user's wallet processes the approve but the vote fails — do they have a dangling approval? How would a production app handle this?" />
 
 <AIPrompt prompt="Compare how Uniswap's frontend handles optimistic UI updates after a swap vs. waiting for block confirmation. Which approach should I use for my vote button, and what are the failure modes?" />
+
+<FlavorText id="fs-enhance-complete" emoji="✨" text="Feature shipped. Your dashboard is production-grade." />
 
 # 🪞 Wrap-Up & Reflection
 
@@ -446,6 +465,8 @@ Here's where to go next:
 - **Deploy to Mainnet** — Everything you did on Base Sepolia works identically on Base mainnet. The only difference: real money.
 
 ---
+
+<FlavorText id="fs-part3-complete" emoji="🌐" text="Fullstack onchain engineer: certified" />
 
 **🎉 Congratulations on completing the Intro to Onchain Development workshop!**
 

@@ -2,7 +2,7 @@
 
 *Learn to Read, Write, and Deploy an Onchain Prediction Market*
 
-### ⏱️ Time Allocation: 90 min
+### ⏱️ Time Allocation (90 min)
 
 ### 🎯 Learning Goals
 
@@ -446,14 +446,18 @@ _Deploy, verify, and debug your contract on Base Sepolia. (20 min)_
 
 1. **Set Up Environment Variables**
 
-    Export your Etherscan API key (from [Step 5](./00-setup#-step-5-get-etherscan-api-key) of setup):
+    Export your API key and wallet address (from [Steps 4–5](./00-setup#-step-4-create-a-dev-wallet) of setup):
 
     ```copy
     export ETHERSCAN_API_KEY=your_api_key_here
+    export WALLET_ADDRESS=$(cast wallet address --account dev)
     ```
 
     > [!CAUTION]
     > Never commit API keys or private keys to git. If you prefer to store them in a `.env` file, make sure to add `.env` to your `.gitignore` and run `source .env` before deploying.
+
+    > [!TIP]
+    > `WALLET_ADDRESS` auto-derives your address from the `dev` keystore. You'll reuse `$WALLET_ADDRESS` in every deploy command throughout the workshop — no more copy-pasting addresses.
 
 2. **Deploy Script**
 
@@ -463,7 +467,7 @@ _Deploy, verify, and debug your contract on Base Sepolia. (20 min)_
     ```copy
     forge script Deploy \
         --account dev \
-        --sender YOUR_WALLET_ADDRESS \
+        --sender $WALLET_ADDRESS \
         --rpc-url https://sepolia.base.org \
         --broadcast \
         --verify \
@@ -472,7 +476,7 @@ _Deploy, verify, and debug your contract on Base Sepolia. (20 min)_
     ```
 
     > [!TIP]
-    > Replace `YOUR_WALLET_ADDRESS` with the output of `cast wallet address --account dev`. The `--sender` flag tells Foundry to use your wallet as `msg.sender` in the deploy script — without it, the contract's owner will be set to Foundry's default address instead of yours.
+    > The `--sender` flag tells Foundry to use your wallet as `msg.sender` in the deploy script — without it, the contract's owner will be set to Foundry's default address instead of yours.
 
     > [!WARNING]
     > **Deployment issues?** Check our **[Deployment Troubleshooting](./troubleshooting#-deployment-issues)** for solutions to common errors like nonce mismatches, insufficient gas, and verification failures.

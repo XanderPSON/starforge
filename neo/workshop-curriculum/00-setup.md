@@ -183,22 +183,16 @@ _You'll use this for verifying Smart Contracts_
 3. Click "Add" to create a new API key. Name it "Onchain Workshop".
 4. Copy the API key and export it in your terminal:
 
-    ```bash
+    ```copy
     export ETHERSCAN_API_KEY=your_api_key_here
+    export WALLET_ADDRESS=$(cast wallet address --account dev)
     ```
+
+    > [!TIP]
+    > `WALLET_ADDRESS` auto-derives your address from the `dev` keystore you created in Step 4. You'll use `$WALLET_ADDRESS` in every deploy command — no more copy-pasting addresses.
 
 > [!NOTE]
 > Etherscan multichain keys work automatically on BaseScan — no separate API key needed.
-
----
-
-## 🔗 Step 6: Get WalletConnect Project ID
-
-_The frontend in Part 3 uses WalletConnect for wallet connections. You need a free Project ID._
-
-1. Go to [WalletConnect Cloud](https://cloud.walletconnect.com/) and sign up for a free account.
-2. Click "Create Project" and give it a name (e.g., "Prediction Market Workshop").
-3. From the project dashboard, copy the **Project ID** (a long hex string). Save it for Part 3 – you'll add it to `.env.local` as `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`
 
 # ✅ Verification & Ready
 
@@ -240,7 +234,6 @@ Let's verify everything works:
 
 5. **Check Your Keys**
     - You have your Etherscan API Key saved.
-    - You have your WalletConnect Project ID saved.
 
 <ChecklistSetupEnv id="setup-env-checklist" />
 
@@ -254,7 +247,6 @@ Once your setup is complete:
 2. ✅ Dev wallet works in CLI (`cast wallet address --account dev`) and browser (Coinbase Wallet extension)
 3. ✅ Testnet ETH funded
 4. ✅ Etherscan API key ready
-5. ✅ WalletConnect Project ID ready
 
 > [!IMPORTANT]
 > Proceed only when **all checks are green**. Missing tools or keys will block you in later modules.

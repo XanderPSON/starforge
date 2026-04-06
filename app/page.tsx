@@ -8,11 +8,11 @@ export default async function Home() {
     <main className="min-h-screen bg-hub-bg dark:bg-transparent">
       {/* Logo hero */}
       <div className="px-6 md:px-12 pt-10 pb-6">
-        <div className="flex items-center gap-5">
+        <div className="flex items-center justify-center gap-5">
           {/* Star icon */}
           <div className="relative flex-shrink-0 w-[72px] h-[72px]">
             {/* Glow blob */}
-            <div className="absolute inset-1 rounded-full bg-[#1447E0] blur-xl opacity-40 dark:opacity-60" />
+            <div className="absolute inset-1 rounded-full bg-[#27466A] blur-xl opacity-40 dark:opacity-60" />
             <svg
               width="72"
               height="72"
@@ -23,51 +23,59 @@ export default async function Home() {
               aria-hidden="true"
             >
               <defs>
-                <linearGradient id="sfStarGrad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#1447E0" />
-                  <stop offset="100%" stopColor="#2E1F8F" />
+                <linearGradient id="sfOrbitGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#2D4E76" />
+                  <stop offset="100%" stopColor="#9DB4CF" />
                 </linearGradient>
+                <linearGradient id="sfCoreGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#7F99BC" />
+                  <stop offset="100%" stopColor="#E3EDF8" />
+                </linearGradient>
+                <radialGradient id="sfHexCore" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(16 16) rotate(90) scale(8)">
+                  <stop offset="0%" stopColor="#162844" />
+                  <stop offset="100%" stopColor="#0C172C" />
+                </radialGradient>
               </defs>
+              <circle cx="16" cy="16" r="11.25" stroke="url(#sfOrbitGrad)" strokeWidth="1.35" opacity="0.75" />
+              <ellipse
+                cx="16"
+                cy="16"
+                rx="13"
+                ry="5.15"
+                transform="rotate(-28 16 16)"
+                stroke="url(#sfOrbitGrad)"
+                strokeWidth="1.1"
+                opacity="0.7"
+              />
+              <ellipse
+                cx="16"
+                cy="16"
+                rx="13"
+                ry="5.15"
+                transform="rotate(28 16 16)"
+                stroke="url(#sfOrbitGrad)"
+                strokeWidth="1.1"
+                opacity="0.55"
+              />
               <polygon
-                points="16,3 19.23,11.55 28.37,11.98 21.23,17.70 23.64,26.52 16,21.5 8.36,26.52 10.77,17.70 3.63,11.98 12.77,11.55"
-                fill="url(#sfStarGrad)"
+                points="16,9.2 21.2,12.2 21.2,18.2 16,21.2 10.8,18.2 10.8,12.2"
+                fill="url(#sfHexCore)"
+                stroke="#6283A8"
+                strokeWidth="1"
+                opacity="0.95"
               />
-            </svg>
-            {/* Cyan sparkle — top right */}
-            <svg
-              className="absolute -top-2 -right-2"
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              aria-hidden="true"
-            >
               <path
-                d="M7 0 L8.4 5.6 L14 7 L8.4 8.4 L7 14 L5.6 8.4 L0 7 L5.6 5.6 Z"
-                fill="#06B6D4"
+                d="M16 6.2L17.85 12.8L24.5 14.65L17.85 16.5L16 23.1L14.15 16.5L7.5 14.65L14.15 12.8Z"
+                fill="url(#sfCoreGrad)"
               />
-            </svg>
-            {/* Blue sparkle — bottom left */}
-            <svg
-              className="absolute -bottom-1 -left-1"
-              width="10"
-              height="10"
-              viewBox="0 0 10 10"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M5 0 L6 4 L10 5 L6 6 L5 10 L4 6 L0 5 L4 4 Z"
-                fill="#1447E0"
-                opacity="0.75"
-              />
+              <path d="M16 4.9V7.2M27.1 16H24.8M16 27.1V24.8M4.9 16H7.2" stroke="#AFC2D8" strokeWidth="1" strokeLinecap="round" opacity="0.82" />
             </svg>
           </div>
 
           {/* Wordmark */}
           <div>
             <span
-              className="block text-5xl md:text-6xl font-black tracking-[0.08em] leading-none uppercase bg-gradient-to-r from-[#1447E0] via-[#2E1F8F] to-[#06B6D4] bg-clip-text text-transparent select-none"
+              className="block text-5xl md:text-6xl font-black tracking-[0.08em] leading-none uppercase bg-gradient-to-r from-[#335B86] via-[#9CB5D1] to-[#E3EDF8] bg-clip-text text-transparent select-none"
               aria-label="Starforge"
             >
               STARFORGE

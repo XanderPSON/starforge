@@ -111,7 +111,7 @@ cast balance YOUR_WALLET --rpc-url https://sepolia.base.org
 curl -X POST https://api.cdp.coinbase.com/platform/v2/evm/faucet \
   -H "Authorization: Bearer YOUR_CDP_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"network":"base-sepolia","address":"YOUR_WALLET_ADDRESS","token":"eth"}'
+  -d '{"network":"base-sepolia","address":"'"$WALLET_ADDRESS"'","token":"eth"}'
 ```
 
 **❌ "Contract creation failed"**

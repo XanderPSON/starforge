@@ -43,3 +43,62 @@ body {
   background-attachment: fixed;
   background-size: cover;
 }
+
+/* Silver shimmer sweep for training catalog cards */
+@keyframes shimmer-sweep {
+  0% {
+    transform: translateX(-100%) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-15deg);
+  }
+}
+
+.training-card-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(157, 180, 207, 0.08) 25%,
+    rgba(227, 237, 248, 0.18) 50%,
+    rgba(175, 194, 216, 0.08) 75%,
+    transparent 100%
+  );
+  transform: translateX(-100%) skewX(-15deg);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.training-card-shimmer:hover::after {
+  opacity: 1;
+  animation: shimmer-sweep 0.8s ease-in-out;
+}
+
+.training-card-shimmer:active::after {
+  opacity: 1;
+  animation: shimmer-sweep 0.5s ease-in-out;
+}
+
+@keyframes chevron-rumble {
+  0%, 100% { transform: translate(0, 0); }
+  15% { transform: translate(1.5px, -0.5px); }
+  30% { transform: translate(-1px, 0.5px); }
+  45% { transform: translate(1px, 0.5px); }
+  60% { transform: translate(-1.5px, -0.5px); }
+  75% { transform: translate(0.5px, 1px); }
+  90% { transform: translate(-0.5px, -1px); }
+}
+
+.group:hover .chevron-rumble svg {
+  animation: chevron-rumble 0.4s ease-in-out infinite;
+}
+
+.training-card-shimmer.card-launching::after {
+  opacity: 1;
+  animation: shimmer-sweep 0.6s ease-in-out 0.2s both;
+}

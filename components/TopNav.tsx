@@ -12,6 +12,80 @@ export function TopNav() {
   return <TopNavLocal />
 }
 
+function BrandHomeLink() {
+  return (
+    <Link
+      href="/"
+      className="group inline-flex items-center gap-2 rounded-md px-1.5 py-1 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/10"
+      aria-label="Starforge home"
+    >
+      <span className="relative inline-flex h-5 w-5 items-center justify-center">
+        <span className="absolute inset-0 rounded-full bg-[#27466A] blur-[6px] opacity-45 dark:opacity-60" aria-hidden="true" />
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="relative"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient id="sfNavOrbitGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#2D4E76" />
+              <stop offset="100%" stopColor="#9DB4CF" />
+            </linearGradient>
+            <linearGradient id="sfNavCoreGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#7F99BC" />
+              <stop offset="100%" stopColor="#E3EDF8" />
+            </linearGradient>
+            <radialGradient id="sfNavHexCore" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(16 16) rotate(90) scale(8)">
+              <stop offset="0%" stopColor="#162844" />
+              <stop offset="100%" stopColor="#0C172C" />
+            </radialGradient>
+          </defs>
+          <circle cx="16" cy="16" r="11.25" stroke="url(#sfNavOrbitGrad)" strokeWidth="1.35" opacity="0.75" />
+          <ellipse
+            cx="16"
+            cy="16"
+            rx="13"
+            ry="5.15"
+            transform="rotate(-28 16 16)"
+            stroke="url(#sfNavOrbitGrad)"
+            strokeWidth="1.1"
+            opacity="0.7"
+          />
+          <ellipse
+            cx="16"
+            cy="16"
+            rx="13"
+            ry="5.15"
+            transform="rotate(28 16 16)"
+            stroke="url(#sfNavOrbitGrad)"
+            strokeWidth="1.1"
+            opacity="0.55"
+          />
+          <polygon
+            points="16,9.2 21.2,12.2 21.2,18.2 16,21.2 10.8,18.2 10.8,12.2"
+            fill="url(#sfNavHexCore)"
+            stroke="#6283A8"
+            strokeWidth="1"
+            opacity="0.95"
+          />
+          <path
+            d="M16 6.2L17.85 12.8L24.5 14.65L17.85 16.5L16 23.1L14.15 16.5L7.5 14.65L14.15 12.8Z"
+            fill="url(#sfNavCoreGrad)"
+          />
+          <path d="M16 4.9V7.2M27.1 16H24.8M16 27.1V24.8M4.9 16H7.2" stroke="#AFC2D8" strokeWidth="1" strokeLinecap="round" opacity="0.82" />
+        </svg>
+      </span>
+      <span className="text-sm font-bold tracking-[0.06em] leading-none uppercase bg-gradient-to-r from-[#335B86] via-[#9CB5D1] to-[#E3EDF8] bg-clip-text text-transparent select-none">
+        Starforge
+      </span>
+    </Link>
+  )
+}
+
 function TopNavWithAuth() {
   const { data: session } = useSession()
   const [dark, setDark] = useState(false)
@@ -32,12 +106,7 @@ function TopNavWithAuth() {
 
   return (
     <nav className="sticky top-0 z-50 h-12 flex items-center justify-between px-4 md:px-6 bg-hub-surface dark:bg-gray-900/80 dark:backdrop-blur border-b border-black/[0.08] dark:border-white/10">
-      <Link
-        href="/"
-        className="text-sm font-semibold text-hub-text dark:text-gray-100 hover:text-hub-primary dark:hover:text-blue-400 transition-colors"
-      >
-        Starforge
-      </Link>
+      <BrandHomeLink />
 
       <div className="flex items-center gap-2">
         {isAdmin && (
@@ -145,12 +214,7 @@ function TopNavLocal() {
 
   return (
     <nav className="sticky top-0 z-50 h-12 flex items-center justify-between px-4 md:px-6 bg-hub-surface dark:bg-gray-900/80 dark:backdrop-blur border-b border-black/[0.08] dark:border-white/10">
-      <Link
-        href="/"
-        className="text-sm font-semibold text-hub-text dark:text-gray-100 hover:text-hub-primary dark:hover:text-blue-400 transition-colors"
-      >
-        Starforge
-      </Link>
+      <BrandHomeLink />
 
       <div className="flex items-center gap-2">
         {adminMode && (

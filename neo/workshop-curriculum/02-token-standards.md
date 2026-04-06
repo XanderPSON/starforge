@@ -2,7 +2,7 @@
 
 _Create Your Own ERC-20 Token and Upgrade the Prediction Market_
 
-### ⏱️ Time Allocation: 60 min
+### ⏱️ Time Allocation (60 min)
 
 ### 🎯 Learning Goals
 
@@ -15,8 +15,8 @@ By the end of this part, you'll be able to:
 
 ### 🏗️ Module Blueprint: What We Provide vs. What You Build
 
-* **📦 Pre-Built:** A standard `IERC20.sol` interface file and a deployment script.
-* **🛠️ What You Will Build:** An ERC-20 token contract (implementing the interface) and an upgraded `PredictionMarket.sol` that accepts custom tokens instead of testnet ETH.
+* **📦 Pre-Built:** A standard `IERC20.sol` interface, an `ERC20.sol` skeleton (like Part 1's `PredictionMarket.sol`), and deployment script stubs (`DeployToken.s.sol`, `DeployV2.s.sol`).
+* **🛠️ What You Will Build:** Fill in the `ERC20.sol` stub to implement the interface, then upgrade `PredictionMarket.sol` to accept custom tokens instead of testnet ETH.
 * **🤖 AI-Driven Development:** You will prompt AI to generate your ERC-20 token and the upgraded PredictionMarket, then review the output against the interface spec and security requirements.
 * **🤝 Pod Collaboration:** You cannot test your upgraded Prediction Market alone. You must swap custom tokens with your pod-mates and manually approve their contracts to spend your funds.
 
@@ -141,16 +141,11 @@ interface IERC20 {
 
 _Create, deploy, and distribute your custom ERC-20 token. (20 min)_
 
-### 🏗️ Create Your Token
+### 🏗️ Implement Your Token
 
-1. **Create New Token Project**
+1. **Open the Token Stub**
 
-    ```copy
-    forge init token-demo
-    cd token-demo
-    ```
-
-2. **Implement ERC-20 with AI**
+    Open `src/ERC20.sol` in your repo. Like `PredictionMarket.sol` from Part 1, this is a skeleton — the state variables, constructor, and events are wired up, but the core functions (`transfer`, `approve`, `transferFrom`) return `false` or revert with "Not implemented".
 
     Your token **must** implement: `name`, `symbol`, `decimals`, `totalSupply`, `balanceOf`, `transfer`, `approve`, `allowance`, `transferFrom`
 
@@ -168,31 +163,22 @@ _Create, deploy, and distribute your custom ERC-20 token. (20 min)_
 
     <AIPrompt prompt="Why does OpenZeppelin's ERC-20 implementation have an _update() internal function instead of directly modifying balances in transfer()? What design problem does this solve?" />
 
-    <details class="spoiler">
-    <summary>📄 Reference Implementation</summary>
+3. **Open Deployment Script**:
 
-    You can compare your AI-generated token against the starter from [neo-workshop-smart-contracts](https://github.com/XanderPSON/neo-workshop-smart-contracts/blob/prediction-market/src/ERC20.sol).
-
-    </details>
-
-3. **Create Deployment Script**:
-
-    Create `script/DeployToken.s.sol`:
+    Open `script/DeployToken.s.sol` — this stub is ready for you to fill in your token deployment logic:
 
     ```copy
     // SPDX-License-Identifier: MIT
     pragma solidity ^0.8.13;
 
     import {Script, console} from "forge-std/Script.sol";
-    import {MyToken} from "../src/MyToken.sol";
+    import {ERC20} from "../src/ERC20.sol";
 
     contract DeployToken is Script {
         function run() external {
             vm.startBroadcast();
 
-            // TODO: Add deployment logic here
-            address token;
-            console.log("Token deployed to:", address(token));
+            // TODO: Deploy your token (ERC20, etc.)
 
             vm.stopBroadcast();
         }
@@ -205,7 +191,7 @@ _Create, deploy, and distribute your custom ERC-20 token. (20 min)_
     forge script script/DeployToken.s.sol \
       --rpc-url https://sepolia.base.org \
       --account dev \
-      --sender YOUR_WALLET_ADDRESS \
+      --sender $WALLET_ADDRESS \
       --broadcast \
       --verify \
       --verifier etherscan \
@@ -213,7 +199,7 @@ _Create, deploy, and distribute your custom ERC-20 token. (20 min)_
     ```
 
     > [!TIP]
-    > Replace `YOUR_WALLET_ADDRESS` with the output of `cast wallet address --account dev`. Without `--sender`, Foundry uses a default address as `msg.sender`, so your tokens would mint to the wrong wallet.
+    > `$WALLET_ADDRESS` was set in Part 1. If you're in a new terminal, re-export it: `export WALLET_ADDRESS=$(cast wallet address --account dev)`
 
 5. **Verify Token in Wallet**
 
@@ -231,7 +217,7 @@ You are about to upgrade your Prediction Market to require tokens, but a market 
 **📢 Pod Activity Flow**:
 
 1. **Find your two addresses.** You need both:
-   - **Wallet Address** (your personal address that holds tokens): run `cast wallet address --account dev`
+   - **Wallet Address** (your personal address that holds tokens): run `echo $WALLET_ADDRESS`
    - **Token Contract Address** (the deployed contract): this was printed when you ran `forge script` in the previous step (look for `"Token deployed to: 0x..."` in the output)
 
 2. **Share with your pod.** Post both addresses in your pod's Slack channel or group chat. Format it so others can easily copy-paste:
@@ -295,37 +281,6 @@ Prompt AI to upgrade your `PredictionMarket.sol`:
 
 <ChecklistUpgradedMarket id="checklist-upgraded-market" />
 
-<details class="spoiler">
-<summary>📄 Reference: Upgraded vote() Function</summary>
-
-```solidity
-function vote(uint256 marketId, bool side, uint256 amount) external {
-    Market storage m = markets[marketId];
-
-    // CHECKS
-    if (m.resolved) revert MarketAlreadyResolved(marketId);
-    if (hasVoted[marketId][msg.sender]) revert AlreadyVoted(marketId, msg.sender);
-    if (amount == 0) revert ZeroAmount();
-    uint256 allowance = token.allowance(msg.sender, address(this));
-    if (allowance < amount) revert InsufficientAllowance(amount, allowance);
-
-    // EFFECTS
-    hasVoted[marketId][msg.sender] = true;
-    if (side) {
-        m.yesPool += amount;
-    } else {
-        m.noPool += amount;
-    }
-
-    // INTERACTIONS (external call last)
-    token.transferFrom(msg.sender, address(this), amount);
-
-    emit Voted(marketId, msg.sender, side, amount);
-}
-```
-
-</details>
-
 **💬 Top Questions to Ask Your AI:**
 
 <AIPrompt prompt="If a malicious ERC-20 token has a transferFrom() that calls back into my PredictionMarket contract, can it exploit the vote() function? Show me the exact call sequence." />
@@ -334,9 +289,61 @@ function vote(uint256 marketId, bool side, uint256 amount) external {
 
 <AIPrompt prompt="Uniswap V2 uses a 'pull' pattern where users transfer tokens first, then call the contract. My contract uses approve+transferFrom. Compare the tradeoffs of each approach." />
 
-**Deploy the Upgraded Contract:**
-   - Pass `owner_` and `token_` (your ERC-20 address) to the constructor
-   - Create a market, then test voting with tokens
+### 🚀 Deploy the Upgraded Contract
+
+> [!IMPORTANT]
+> **Do I need to deploy a whole new contract?** Yes. Smart contracts are **immutable** — once deployed, their bytecode cannot change. Your V1 PredictionMarket (from Part 1) still lives at its original address, unchanged. The "upgrade" means deploying a **brand new contract** with the new ERC-20 logic to a **new address**. Your V1 markets and votes still exist on V1 — they don't carry over. You'll create fresh markets on V2.
+>
+> (Want to learn how production teams like Circle *actually* upgrade contracts in-place? See [Beyond This Workshop: Contract Upgradability](#-beyond-this-workshop-contract-upgradability) at the bottom of this page.)
+
+1. **Open the V2 Deploy Script**
+
+    Open `script/DeployV2.s.sol`. The upgraded constructor takes two parameters: `owner_` (you) and `token_` (your ERC-20 address from earlier).
+
+    ```copy
+    // SPDX-License-Identifier: MIT
+    pragma solidity ^0.8.13;
+
+    import {Script, console} from "forge-std/Script.sol";
+    import {PredictionMarket} from "../src/PredictionMarket.sol";
+
+    contract DeployV2 is Script {
+        function run() external {
+            vm.startBroadcast();
+
+            // TODO: Deploy with your wallet as owner and your token address
+            // PredictionMarket market = new PredictionMarket(msg.sender, IERC20(YOUR_TOKEN_ADDRESS));
+            // console.log("PredictionMarket V2 deployed to:", address(market));
+
+            vm.stopBroadcast();
+        }
+    }
+    ```
+
+2. **Deploy**
+
+    ```copy
+    forge script script/DeployV2.s.sol \
+      --rpc-url https://sepolia.base.org \
+      --account dev \
+      --sender $WALLET_ADDRESS \
+      --broadcast \
+      --verify \
+      --verifier etherscan \
+      --etherscan-api-key $ETHERSCAN_API_KEY
+    ```
+
+    > [!TIP]
+    > If you're in a new terminal, re-export your env vars: `export WALLET_ADDRESS=$(cast wallet address --account dev)` and `export ETHERSCAN_API_KEY=your_key`
+
+3. **Create a Market & Test**
+
+    - Go to your **new** V2 contract on [sepolia.basescan.org](https://sepolia.basescan.org) → "Write Contract" → Connect wallet
+    - Call `createMarket("Will Base hit 100M txns?")` (or your own question)
+    - Don't try to vote yet — you'll hit the allowance wall. That's the next section!
+
+    > [!WARNING]
+    > This is a **new contract address** — don't confuse it with your V1 address from Part 1. Save this V2 address; you'll need it for Part 3.
 
 ---
 

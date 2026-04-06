@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import type { TrainingFrontmatter } from '@/lib/mdx'
 import { safeGetItem } from '@/lib/storage'
 import { toTitleCase } from '@/lib/utils'
@@ -47,6 +48,18 @@ export function TrainingCatalog({ trainings }: TrainingCatalogProps) {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(0)
   const [completedSlugs, setCompletedSlugs] = useState<Set<string>>(new Set())
+  const [activatingSlug, setActivatingSlug] = useState<string | null>(null)
+  const router = useRouter()
+
+  const handleCardClick = (e: React.MouseEvent, slug: string) => {
+    if (e.metaKey || e.ctrlKey || e.button !== 0) return
+    e.preventDefault()
+    if (activatingSlug) return
+    setActivatingSlug(slug)
+    setTimeout(() => {
+      router.push(`/training/${slug}`)
+    }, 700)
+  }
 
   useEffect(() => {
     const completed = new Set<string>()
@@ -139,57 +152,84 @@ export function TrainingCatalog({ trainings }: TrainingCatalogProps) {
             <a
               key={slug}
               href={`/training/${slug}`}
-              className={`relative flex flex-col bg-hub-surface dark:bg-white/5 dark:backdrop-blur-sm rounded-2xl p-5 border shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-200 group ${
+              onClick={(e) => handleCardClick(e, slug)}
+              className={`training-card-shimmer ${activatingSlug === slug ? 'card-launching' : ''} group relative isolate flex flex-col overflow-hidden rounded-2xl border p-5 bg-hub-surface dark:bg-[#0C172C]/75 dark:backdrop-blur-sm shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_32px_-18px_rgba(22,40,68,0.55)] dark:hover:shadow-[0_22px_40px_-20px_rgba(157,180,207,0.35)] ${
                 completedSlugs.has(slug)
                   ? 'border-green-400/40 dark:border-green-500/30'
-                  : 'border-black/[0.08] dark:border-white/10'
+                  : 'border-black/[0.08] dark:border-white/10 hover:border-[#335B86]/50 dark:hover:border-[#9DB4CF]/30'
               }`}
             >
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-px rounded-[15px] border border-white/40 dark:border-white/[0.06] transition-colors duration-300 group-hover:border-[#9DB4CF]/45 dark:group-hover:border-[#AFC2D8]/25"
+              />
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_88%_8%,rgba(157,180,207,0.22),transparent_52%)] dark:bg-[radial-gradient(circle_at_85%_5%,rgba(45,78,118,0.45),transparent_52%)] opacity-80"
+              />
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-y-4 left-0 w-[3px] rounded-r-full bg-gradient-to-b from-[#9DB4CF] via-[#335B86] to-[#2D4E76] opacity-80 transition-opacity duration-300 group-hover:opacity-100"
+              />
+
               {completedSlugs.has(slug) && (
-                <span className="absolute top-3 right-3 flex items-center gap-1 text-[10px] font-semibold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-500/15 px-2 py-0.5 rounded-full">
+                <span className="absolute top-3 right-3 z-20 flex items-center gap-1 text-[10px] font-semibold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-500/15 px-2 py-0.5 rounded-full">
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                     <path d="M2.5 6L5 8.5L9.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   Done
                 </span>
               )}
-              {frontmatter.tags && frontmatter.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mb-3">
-                  {frontmatter.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className={`text-xs px-2 py-0.5 rounded-full border font-medium ${getTagColor(tag)}`}
-                    >
-                      {toTitleCase(tag)}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              {/* Title */}
-              <h3 className="text-sm font-semibold text-hub-text dark:text-gray-200 group-hover:text-hub-primary dark:group-hover:text-blue-400 transition-colors leading-snug mb-2">
-                {frontmatter.title || toTitleCase(slug)}
-              </h3>
-
-              {/* Description */}
-              {frontmatter.description && (
-                <p className="text-hub-muted dark:text-gray-400 text-xs leading-relaxed flex-1 mb-4">
-                  {frontmatter.description}
-                </p>
-              )}
-
-              {/* Footer */}
-              <div className="flex items-center justify-between text-xs text-hub-muted dark:text-gray-500 mt-auto pt-3 border-t border-black/[0.05] dark:border-white/[0.05]">
-                <div className="flex items-center gap-2 flex-wrap">
-                  {frontmatter.difficulty && (
-                    <span className={`px-2 py-0.5 rounded-full border font-medium ${difficultyColors[frontmatter.difficulty]}`}>
-                      {toTitleCase(frontmatter.difficulty)}
-                    </span>
+              <div className="relative z-10 flex flex-1 flex-col">
+                <div className="mb-3 space-y-3">
+                  {frontmatter.tags && frontmatter.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {frontmatter.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className={`text-xs px-2 py-0.5 rounded-full border font-medium ${getTagColor(tag)}`}
+                        >
+                          {toTitleCase(tag)}
+                        </span>
+                      ))}
+                    </div>
                   )}
-                  {frontmatter.duration && <span>{frontmatter.duration} min</span>}
-                  {frontmatter.author && <span className="truncate max-w-[120px]">{frontmatter.author}</span>}
+
+                  {/* Title */}
+                  <h3 className="text-base font-semibold tracking-[0.01em] text-hub-text dark:text-[#E3EDF8] leading-snug transition-all duration-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-[#E3EDF8] group-hover:to-[#9DB4CF] group-hover:bg-clip-text">
+                    {frontmatter.title || toTitleCase(slug)}
+                  </h3>
                 </div>
-                <span className="text-hub-primary dark:text-blue-400 group-hover:translate-x-1 transition-transform">→</span>
+
+                {/* Description */}
+                {frontmatter.description && (
+                  <p className="text-hub-muted dark:text-[#AFC2D8]/85 text-xs leading-relaxed flex-1 mb-4">
+                    {frontmatter.description}
+                  </p>
+                )}
+
+                {/* Launch rail */}
+                <div className="mt-auto relative flex items-center overflow-hidden rounded-xl border border-black/[0.05] dark:border-white/[0.08] bg-black/[0.02] dark:bg-[#162844]/35 pl-12 pr-3 py-2 text-xs text-hub-muted dark:text-gray-400">
+                  <span
+                    className={`chevron-rumble absolute top-1/2 -translate-y-1/2 z-10 inline-flex items-center rounded-full border border-[#2D4E76]/30 bg-[#2D4E76]/10 px-2 py-1 text-[#335B86] dark:border-[#9DB4CF]/20 dark:bg-[#9DB4CF]/10 dark:text-[#AFC2D8] transition-[left,background-color,border-color,color] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:border-[#9DB4CF]/45 group-hover:bg-[#27466A]/30 group-hover:text-[#E3EDF8] ${
+                      activatingSlug === slug ? 'left-[calc(100%-2.5rem)]' : 'left-3'
+                    }`}
+                  >
+                    <svg className="h-3 w-3" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                      <path d="M4 3.5L7.5 7L4 10.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M7.5 3.5L11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                  <div className="flex items-center gap-2 flex-wrap ml-auto">
+                    {frontmatter.difficulty && (
+                      <span className={`px-2 py-0.5 rounded-full border font-medium ${difficultyColors[frontmatter.difficulty]}`}>
+                        {toTitleCase(frontmatter.difficulty)}
+                      </span>
+                    )}
+                    {frontmatter.duration && <span>{frontmatter.duration} min</span>}
+                    {frontmatter.author && <span className="truncate max-w-[120px]">{frontmatter.author}</span>}
+                  </div>
+                </div>
               </div>
             </a>
           ))}
