@@ -43,6 +43,29 @@ export function extractRequiredIds(pageSource: string): string[] {
 }
 
 /**
+ * Extract ALL component IDs from MDX source — any JSX element with an id="..." prop.
+ * Returns array of { id, component, line } for duplicate detection and diagnostics.
+ */
+export function extractAllComponentIds(
+  source: string
+): { id: string; component: string; line: number }[] {
+  const results: { id: string; component: string; line: number }[] = []
+  const regex = /<([A-Z]\w*)\s+[^>]*?id=["']([^"']+)["'][^>]*?\/?>/g
+  const lines = source.split('\n')
+
+  for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
+    const line = lines[lineIdx]!
+    let match: RegExpExecArray | null
+    while ((match = regex.exec(line)) !== null) {
+      results.push({ id: match[2]!, component: match[1]!, line: lineIdx + 1 })
+    }
+    regex.lastIndex = 0
+  }
+
+  return results
+}
+
+/**
  * Extract H2, H3, H4 headings from page source and build a tree.
  */
 export function extractPageSubHeadings(pageSource: string): SidebarHeading[] {
