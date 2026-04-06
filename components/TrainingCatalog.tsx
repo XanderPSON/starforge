@@ -226,7 +226,7 @@ export function TrainingCatalog({ trainings }: TrainingCatalogProps) {
                         {toTitleCase(frontmatter.difficulty)}
                       </span>
                     )}
-                    {frontmatter.duration && <span>{frontmatter.duration} min</span>}
+
                     {frontmatter.author && <span className="truncate max-w-[120px]">{frontmatter.author}</span>}
                   </div>
                 </div>
