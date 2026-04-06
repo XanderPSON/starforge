@@ -134,7 +134,7 @@ The app uses Next.js file-based routing with server-side configuration:
 
 -   `lib/podConfig.ts` – Configuration file where you wire in your pod's contract and token addresses
 -   `lib/contracts.ts` – Shared contract ABIs for the PredictionMarket and ERC-20 interfaces
--   `app/layout.tsx` – Root layout that wraps the app in providers (Wagmi, OnchainKit, WalletConnect)
+-   `app/layout.tsx` – Root layout that wraps the app in providers (Wagmi, OnchainKit)
 -   `app/page.tsx` – Main entry point that renders the aggregator dashboard
 -   `.env.local` – Server-side secrets like `PRIVATE_KEY` for admin operations (e.g., creating markets programmatically)
 

@@ -72,14 +72,6 @@ echo 'export PATH="$HOME/.foundry/bin:$PATH"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
-### 🔗 WalletConnect Project ID
-
-**❌ "WalletConnect Project ID is required"**
-
-- Go to [WalletConnect Cloud](https://cloud.walletconnect.com/)
-- Create a project and copy the **Project ID**
-- Add to `.env.local`: `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_id`
-
 ---
 
 ## 🚀 Deployment Issues
@@ -163,7 +155,7 @@ _Fixing wallet connections, network problems, and gas errors._
 2. Check you're on **Base Sepolia** network
 3. Refresh the page and try again
 4. Clear browser cache or try incognito
-5. If the OnchainKit button spins forever, check your `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` in `.env.local`
+5. If the OnchainKit button spins forever, check your `NEXT_PUBLIC_ONCHAINKIT_API_KEY` in `.env.local`
 
 **❌ "Wrong network in wallet"**
 
@@ -353,7 +345,6 @@ import { getDefaultConfig } from '@coinbase/onchainkit/wagmi';
 
 const config = getDefaultConfig({
   appName: 'Prediction Market',
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
   chains: [baseSepolia],
 });
 ```
