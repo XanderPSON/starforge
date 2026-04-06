@@ -3,14 +3,18 @@
 import { useEffect, useRef } from 'react'
 import { activateAdminMode } from '@/lib/admin-access'
 
-const KONAMI_SEQUENCE = [
-  'ArrowUp', 'ArrowUp',
-  'ArrowDown', 'ArrowDown',
-  'ArrowLeft', 'ArrowRight',
-  'ArrowLeft', 'ArrowRight',
-  'b', 'a',
-  'Enter',
+const CHEAT_SEQUENCES: string[][] = [
+  // Konami code
+  ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
+   'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
+   'b', 'a', 'Enter'],
+  // Type "debug" + Enter
+  ['d', 'e', 'b', 'u', 'g', 'Enter'],
+  // Type "admin" + Enter
+  ['a', 'd', 'm', 'i', 'n', 'Enter'],
 ]
+
+const MAX_BUFFER = Math.max(...CHEAT_SEQUENCES.map(s => s.length))
 
 export function KonamiListener() {
   const bufferRef = useRef<string[]>([])
@@ -20,16 +24,19 @@ export function KonamiListener() {
       const buffer = bufferRef.current
       buffer.push(e.key)
 
-      if (buffer.length > KONAMI_SEQUENCE.length) {
+      if (buffer.length > MAX_BUFFER) {
         buffer.shift()
       }
 
-      if (
-        buffer.length === KONAMI_SEQUENCE.length &&
-        buffer.every((key, i) => key === KONAMI_SEQUENCE[i])
-      ) {
-        activateAdminMode()
-        bufferRef.current = []
+      for (const seq of CHEAT_SEQUENCES) {
+        if (buffer.length >= seq.length) {
+          const tail = buffer.slice(-seq.length)
+          if (tail.every((key, i) => key === seq[i])) {
+            activateAdminMode()
+            bufferRef.current = []
+            return
+          }
+        }
       }
     }
 

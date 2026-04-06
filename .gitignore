@@ -45,3 +45,4 @@ coverage/
 tdd-output.md
 
 /lib/generated/prisma
+.vercel

@@ -3,11 +3,9 @@ description: Build a React dashboard that reads from and writes to your pod's sm
 duration: 105
 ---
 
-# 🌐 Part 3: Onchain Fullstack
+# 🌐 Part 3: Onchain Fullstack (105 min)
 
 _Build an Aggregated Prediction Market Dashboard_
-
-### ⏱️ Time Allocation (1 hr 45 min)
 
 ### 🎯 Learning Goals
 

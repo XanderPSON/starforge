@@ -3,11 +3,9 @@ description: Write Solidity, deploy a Prediction Market to Base Sepolia, and exp
 duration: 90
 ---
 
-# 🔐 Part 1: Smart Contracts
+# 🔐 Part 1: Smart Contracts (90 min)
 
 *Learn to Read, Write, and Deploy an Onchain Prediction Market*
-
-### ⏱️ Time Allocation (1 hr 30 min)
 
 ### 🎯 Learning Goals
 
