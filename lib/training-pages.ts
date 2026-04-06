@@ -102,8 +102,27 @@ export function splitIntoPages(rawSource: string): TrainingPage[] {
     ? rawSource.slice(frontmatterMatch[0].length).trimStart()
     : rawSource
 
-  // Split on H1 headings (lines starting with "# " — not "## ")
-  const parts = content.split(/(?=^# )/m)
+  // Split on H1 headings outside fenced code blocks.
+  // Blank out fenced blocks so `# ` comments inside them aren't treated as headings.
+  const masked = content.replace(/^```[\s\S]*?^```/gm, (m) => m.replace(/^/gm, '  '))
+  const splitIndices: number[] = []
+  const h1Re = /^# /gm
+  let h1Match: RegExpExecArray | null
+  while ((h1Match = h1Re.exec(masked)) !== null) {
+    splitIndices.push(h1Match.index)
+  }
+
+  const parts: string[] = []
+  if (splitIndices.length === 0) {
+    parts.push(content)
+  } else {
+    if (splitIndices[0]! > 0) parts.push(content.slice(0, splitIndices[0]!))
+    for (let si = 0; si < splitIndices.length; si++) {
+      const start = splitIndices[si]!
+      const end = si + 1 < splitIndices.length ? splitIndices[si + 1]! : content.length
+      parts.push(content.slice(start, end))
+    }
+  }
 
   const pages: TrainingPage[] = []
   let pageIndex = 0
