@@ -1,5 +1,5 @@
 ---
-description: Build a React dashboard that reads from your pod's smart contracts using Wagmi and OnchainKit.
+description: Build a React dashboard that reads from and writes to your pod's smart contracts using Wagmi, Viem, and OnchainKit.
 duration: 105
 ---
 
@@ -13,27 +13,29 @@ _Build an Aggregated Prediction Market Dashboard_
 
 By the end of this part, you'll be able to:
 
-- ✅ Build apps that read from and write to blockchains
-- ✅ Create frontend interfaces with wallet connections
-- ✅ Integrate smart contracts with modern web applications
-- ✅ Handle real-time blockchain data updates
+- ✅ Build a server-side API route that reads smart contract data using Viem
+- ✅ Build a React component that fetches onchain data using Wagmi hooks
+- ✅ Batch multiple contract calls (approve + vote) into a single user action
+- ✅ Handle real-time blockchain data updates in a modern React app
 
 ### 🏗️ Module Blueprint: What We Provide vs. What You Build
 
-* **📦 Pre-Built:**
+* **📦 Pre-Built (scaffold — don't rewrite these):**
     - Next.js boilerplate with Tailwind CSS, OnchainKit, and Wagmi providers
-    - Full card layout and odds bar visualization
-    - Wallet connection UI
+    - Wallet connection UI (`<Wallet>` + `<ConnectWallet>`)
     - Chain auto-switching to Base Sepolia
-    - Conditional rendering for market states (resolved, already voted, wallet not connected)
-    - See the full list of scaffold decisions below
-* **🛠️ What You Will Build:** The React hooks (`useReadContracts`) to fetch the betting odds, and the UI buttons (`<Transaction>`) to execute the `approve` and `vote` flow.
-* **🤖 AI-Driven Development:** You will prompt AI to generate React components, Wagmi hooks, and OnchainKit integrations, then review the output against the app's architecture.
-* **🤝 Pod Collaboration:** **The Cross-Wire.** The app is designed to aggregate the entire table's markets. You can start with just your own addresses — the dashboard works with any number of markets — but the real experience comes from wiring in your pod-mates' contracts and seeing the full aggregator.
+    - Contract ABIs in `lib/contracts.ts`
+    - Pod configuration type in `lib/podConfig.ts`
+    - Page layout with card grid in `app/page.tsx`
+* **🛠️ What You Will Build:**
+    1. **Backend** — A Next.js API route that reads market data from the blockchain using Viem
+    2. **Frontend** — The `MarketCard` component that displays live odds and vote status using Wagmi
+    3. **Transactions** — Vote buttons that batch `approve` + `vote` using OnchainKit's `<Transaction>`
+* **🤖 AI-Driven Development:** You will prompt AI to generate the API route, React component, and transaction wiring, then review the output against the app's architecture.
+* **🤝 Pod Collaboration:** **The Cross-Wire.** The app aggregates your entire pod's markets. Start with your own addresses — the dashboard works with any number of markets — but it gets more interesting as you add pod-mates' contracts.
 
 > [!TIP]
-> The dashboard works with just your own Market and Token addresses, but it gets more interesting as you add more. Start collecting addresses from your pod-mates now so you can wire them in as you go.
-
+> When you first run the app, you'll see a setup checklist on screen. As you complete each task, the app progressively comes to life — from checklist → placeholder cards → live data → working vote buttons.
 
 ### 🆘 Need Help?
 
@@ -128,222 +130,170 @@ Then paste them into `podConfig.ts`:
 > [!TIP]
 > `npm install` can take a few minutes. Use this time to collect addresses from your pod if you haven't already.
 
-### 🧩 What the Scaffold Gives You (and What It Doesn't)
+### 🧩 What the Scaffold Gives You
 
-When you first load the app, you'll see market cards showing **"Loading..."** with **50/50 odds** and **0 tokens**. This is expected — the scaffold provides the full UI shell, but the onchain data fetching is what **you** need to implement.
+When you first load the app, you'll see a **setup checklist** showing what's done and what you need to build. Once you add addresses to `podConfig.ts`, you'll see yellow **"🔧 MarketCard not implemented yet"** placeholder cards — one for each pod member. This is your starting point.
 
 **Already built for you (don't rewrite these):**
 
 | What | Where | Details |
 |------|-------|---------|
-| Market card layout & grid | `MarketCard` component | Responsive grid, owner label, question display, odds bar |
-| Odds bar visualization | `MarketCard` render | Green/red progress bar with percentage labels |
 | Wallet connection | Top-right `<Wallet>` component | OnchainKit's `ConnectWallet`, avatar, dropdown, disconnect |
 | Chain auto-switching | `useEffect` in `App` | Automatically switches to Base Sepolia if on wrong network |
-| Conditional rendering | Bottom of `MarketCard` | Shows "Market Resolved", "Already voted", "Connect wallet", or vote buttons depending on state |
-| Token amount formatting | `formatEther()` calls | Displays pool sizes in human-readable token amounts |
+| Contract ABIs | `lib/contracts.ts` | PredictionMarket and ERC-20 function signatures |
+| Pod config type | `lib/podConfig.ts` | `PodMarket` type with `owner`, `marketAddress`, `tokenAddress` |
+| Card grid layout | `app/page.tsx` | Responsive grid that maps `POD_MARKETS` to `<MarketCard>` |
+| Setup checklist | `app/page.tsx` (empty state) | Shows progress when no markets are configured |
 
-**Scaffold assumptions (hardcoded decisions):**
+**What you need to build (3 tasks):**
 
-- **Vote amount is 10 tokens** — The TODO examples and button labels use `parseEther('10')`. This is a fixed amount to keep things simple.
-- **Market ID is always `0n`** — Each contract is assumed to have one market at index 0.
-- **Placeholder values** — `question = "Loading..."`, pools = 0 (which renders as 50/50), `resolved = false`, `hasVoted = false`. These are what you'll replace with real onchain data.
-
-**What you need to implement (the TODOs in `app/page.tsx`):**
-
-1. **Uncomment imports** — `useReadContracts`, `encodeFunctionData`, `parseEther`, ABIs
-2. **Wire up `useReadContracts`** — Replace the placeholder values with actual contract reads
-3. **Build vote call arrays** — Batched `approve` + `vote` using `encodeFunctionData`
-4. **Replace placeholder buttons** — Swap the disabled `<button>` elements with OnchainKit `<Transaction>` components
+1. **`app/api/markets/route.ts`** — Backend API route that reads market data using Viem
+2. **`components/MarketCard.tsx`** — Frontend component with live odds using Wagmi
+3. **Vote transaction wiring** — Batched approve + vote using OnchainKit (inside MarketCard)
 
 <FlavorText id="fs-setup-complete" emoji="⚡" text="App scaffolded. Your pod's contracts are wired in." />
 
-# 🔙 Backend: Data Layer (10 min)
+# 🔙 Backend: Build the Market Data API (15 min)
 
-_Server-side patterns for reading and writing onchain data._
-
-### 🏗️ How the Backend Works
-
-The server-side data layer connects your app to the blockchain. It handles RPC configuration, contract ABIs, and admin operations like creating markets programmatically.
-
-**🛠️ Key Technologies & Patterns:**
-
--   🔡 **TypeScript** – Type safety for blockchain addresses, function calls, and contract ABIs
--   ⚛️ [**Next.js**](https://nextjs.org/) – Full-stack React framework with file-based routing
--   🧵 [**Viem**](https://viem.sh/) – Utilities like `createPublicClient` and `createWalletClient` for reading and writing onchain data
-
-**🗂️ App Structure:**
-The app uses Next.js file-based routing with server-side configuration:
-
--   `lib/podConfig.ts` – Configuration file where you wire in your pod's contract and token addresses
--   `lib/contracts.ts` – Shared contract ABIs for the PredictionMarket and ERC-20 interfaces
--   `app/layout.tsx` – Root layout that wraps the app in providers (Wagmi, OnchainKit)
--   `app/page.tsx` – Main entry point that renders the aggregator dashboard
--   `.env.local` – Server-side secrets like `PRIVATE_KEY` for admin operations (e.g., creating markets programmatically)
+_Your first server-side blockchain endpoint._
 
 ### 🧠 The Mental Model: Blockchain as Database
 
 If you're a backend engineer, this is the paradigm shift:
 
 - **The blockchain is your database.** Contract storage replaces Postgres tables. State lives onchain, not in your infrastructure.
-- **RPC calls replace SQL queries.** Instead of `SELECT * FROM markets`, you call `contract.read.getMarket(id)` over an RPC endpoint.
+- **RPC calls replace SQL queries.** Instead of `SELECT * FROM markets`, you call `client.readContract({ functionName: 'markets', args: [0n] })` over an RPC endpoint.
 - **Viem is your ORM.** It handles ABI encoding, type safety, and transport — the same role Prisma or TypeORM plays in a traditional stack.
-- **ABIs are your schema.** A contract's ABI defines what functions exist and what types they accept/return. It's the equivalent of your database schema + API contract in one.
+- **ABIs are your schema.** A contract's ABI defines what functions exist and what types they accept/return. The ABI is already in `lib/contracts.ts` — take a look.
 - **No migrations.** Once a contract is deployed, its code is immutable. You deploy a new contract instead of altering a table.
 
-Everything else in this section builds on this mental model — reading state with Viem, writing state with transactions, and aggregating data across multiple contracts.
+### 🛠️ Build It: `app/api/markets/route.ts`
 
-### 📖 Reading Onchain Data with Viem
+Create a Next.js API route that reads market data from all contracts in your pod config and returns JSON. This is the same pattern you'd use to build any backend service that reads blockchain state — price feeds, leaderboards, analytics dashboards.
 
-On the server side, you can use Viem's `createPublicClient` to read contract state directly — no wallet required. This is how you'd fetch market data in an API route or server component:
+**What your API route should do:**
 
-```typescript
-import { createPublicClient, http } from 'viem';
-import { baseSepolia } from 'viem/chains';
+1. Create a Viem `publicClient` connected to Base Sepolia
+2. Loop through `POD_MARKETS` and call `markets(0)` on each contract
+3. Return a JSON response with each market's question, pool sizes, and resolved status
 
-const client = createPublicClient({
-    chain: baseSepolia,
-    transport: http(process.env.BASE_SEPOLIA_RPC),
-});
+**Key APIs:**
 
-const marketData = await client.readContract({
-    address: POD_MARKETS[0].marketAddress,
-    abi: PredictionMarketABI,
-    functionName: "markets",
-    args: [0n],
-});
-```
+| What | Import From | Does |
+|------|------------|------|
+| `createPublicClient` | `viem` | Creates a client to talk to the blockchain (like creating a DB connection) |
+| `http` | `viem` | Transport layer — connects to an RPC node via HTTP |
+| `baseSepolia` | `viem/chains` | Chain configuration (chain ID, RPC URLs) |
+| `client.readContract()` | (method) | Reads a function from a smart contract (like a SQL SELECT) |
+| `formatEther()` | `viem` | Converts BigInt pool amounts to human-readable strings |
+| `NextResponse.json()` | `next/server` | Returns a JSON response from an API route |
 
-### 🖋️ Writing Onchain Data with Viem
+**The contract function you're calling:**
 
-For admin operations (like creating markets programmatically), use `createWalletClient` with the server-side private key:
+`markets(0)` returns a tuple: `[question, yesPool, noPool, resolved, outcome]` — matching the `Market` struct you wrote in Part 1.
 
-```typescript
-import { createWalletClient, http } from 'viem';
-import { privateKeyToAccount } from 'viem/accounts';
-import { baseSepolia } from 'viem/chains';
+<AIPrompt prompt="Create a Next.js App Router API route at app/api/markets/route.ts. It should use Viem's createPublicClient with baseSepolia chain and the BASE_SEPOLIA_RPC env var to read market data from each contract in POD_MARKETS (imported from @/lib/podConfig). Call the 'markets' function with args [0n] using PredictionMarketABI from @/lib/contracts. Return JSON with each market's owner, addresses, question, formatted pool sizes, and resolved status. Handle errors with try/catch." />
 
-const account = privateKeyToAccount(process.env.PRIVATE_KEY as `0x${string}`);
-const walletClient = createWalletClient({
-    account,
-    chain: baseSepolia,
-    transport: http(process.env.BASE_SEPOLIA_RPC),
-});
-
-const txHash = await walletClient.writeContract({
-    address: marketAddress,
-    abi: PredictionMarketABI,
-    functionName: "createMarket",
-    args: ["Will it rain tomorrow?"],
-});
-```
-
-### 🧬 How ABIs Work Under the Hood
-
-You've been using ABIs throughout this workshop — they're in `lib/contracts.ts`, and Viem/Wagmi use them for every contract call. But what's actually happening when you call `encodeFunctionData`?
-
-A smart contract receives raw bytes — it has no idea what function you're trying to call unless the data follows a specific format. The **ABI** (Application Binary Interface) is the translation layer:
-
-1. **Function selector:** The function's name and parameter types are hashed with `keccak256`. The first 4 bytes of that hash become the **selector** — a unique ID for that function.
-2. **Encoded arguments:** The function arguments are ABI-encoded (padded to 32 bytes each) and appended after the selector.
-
-For example, `createMarket(string)` hashes to a 32-byte digest, but only the first 4 bytes (e.g., `0xa1234567`) are used as the selector. When the EVM receives a transaction, it reads those first 4 bytes to determine which function to execute.
-
-You can verify this yourself:
+**Verify it works:**
 
 ```copy
-## Hash the function signature and see the full digest
-cast keccak "createMarket(string)"
-
-## The first 4 bytes (8 hex chars) = the function selector
-## Compare this to the "Input Data" on any createMarket transaction on BaseScan
+curl http://localhost:3000/api/markets | npx json
 ```
 
-This is what `encodeFunctionData` does under the hood — it looks up the function in the ABI, computes the selector, encodes the arguments, and concatenates them into the raw bytes that get sent to the contract.
+You should see JSON with your market's question, pool sizes, and resolved status. If you see an error, check your `.env.local` RPC URL and `podConfig.ts` addresses.
 
-> [!TIP]
-> **Debugging tip:** If a transaction fails with mysterious bytecode errors, paste the input data's first 4 bytes into [openchain.xyz/signatures](https://openchain.xyz/signatures) to identify which function was called.
+> [!NOTE]
+> Reading onchain data is **free** — no gas, no wallet, no signature required. This is why your API route works without a private key. Writing data (transactions) costs gas and requires a wallet, which is what you'll do in the frontend voting section.
 
-<QuizABI id="fs-abi-selector" />
+<Scale id="fs-backend-confidence" max={5} label="How confident are you in reading onchain data from a server?" />
 
-<Scale id="fs-backend-confidence" max={5} label="How confident are you in reading/writing onchain data from a server?" />
+<FlavorText id="fs-backend-complete" emoji="🔙" text="Backend unlocked. You can read the blockchain from Node.js." />
 
-<FlavorText id="fs-backend-complete" emoji="🔙" text="Backend unlocked. You can read and write the blockchain from Node.js." />
+# 📱 Frontend: Build the MarketCard (25 min)
 
-# 📱 Frontend: UI & Onchain Interactions (25 min)
-
-_React hooks, multicall, and OnchainKit for blockchain UX._
+_A React component with live blockchain data._
 
 ### 🏗️ How the Frontend Works
 
-In Web2, a React frontend talks to a centralized database via a REST API. In Web3, your React frontend talks directly to the blockchain via RPC (Remote Procedure Call). We use **Wagmi** and **OnchainKit** to make this incredibly easy.
+In Web2, a React frontend talks to a centralized database via a REST API. In Web3, your React frontend talks directly to the blockchain via RPC. We use **Wagmi** and **OnchainKit** to make this easy.
 
-**🛠️ Key Technologies & Patterns:**
+**Key difference from the API route you just built:** Your API route used Viem directly on the server. The frontend uses **Wagmi hooks** — React wrappers around Viem that handle caching, refetching, and reactivity automatically. Think of Wagmi as "React Query for the blockchain."
 
--   🔡 **TypeScript** – Type safety for blockchain addresses, function calls, and contract ABIs
--   🧩 **React** – Component-based UI library with hooks for state management
--   ⚛️ [**Next.js**](https://nextjs.org/) – Full-stack React framework with file-based routing
--   🧵 [**Wagmi**](https://wagmi.sh/) – React hooks like `useAccount()`, `useReadContracts()` for wallet and onchain state management
--   🧰 [**OnchainKit**](https://www.base.org/build/onchainkit) – Coinbase's React component library for wallet connection and transaction batching
+**🛠️ Key Technologies:**
 
-**🗂️ App Structure:**
-The app follows a component-based architecture with two core features:
+-   🧵 [**Wagmi**](https://wagmi.sh/) — React hooks like `useAccount()`, `useReadContracts()` for wallet and onchain state management
+-   🧰 [**OnchainKit**](https://www.base.org/build/onchainkit) — Coinbase's React component library for wallet connection and transaction batching
+-   🔡 [**Viem**](https://viem.sh/) — Utilities like `formatEther`, `encodeFunctionData`, `parseEther`
 
--   **Odds Aggregator** – Reads all pod markets' odds using Wagmi's `useReadContracts` (multicall) and displays them in a dashboard grid
--   **Vote Interface** – Batches `approve` + `vote` into a single user action using OnchainKit's `<Transaction>` component
+### 📖 Reading Data: The Multicall Pattern
 
-> [!NOTE]
-> **Frontend engineers:** Think of Wagmi hooks as your data-fetching layer (like React Query for the blockchain). OnchainKit components handle the UX of wallet connection and transaction signing — similar to how a payments SDK abstracts Stripe integration.
-
-### 📖 Reading Data (The Multicall Radar)
-
-**Reading onchain data is free.** Unlike writing (which requires a transaction and costs gas), reading just queries the current state of the blockchain — no signature, no gas, no wallet popup. This is why BaseScan's "Read Contract" tab works instantly for free, while "Write Contract" requires connecting your wallet.
-
-However, free doesn't mean unlimited. Node providers protect against abuse by rate-limiting read requests (since there's no gas cost to deter spam). This is where **multicall** comes in.
-
-If you have several markets at your table, making separate RPC calls for each will cause lag and potentially hit rate limits. Instead, we use `useReadContracts` (a multicall) to fetch the data for *every single market in your pod* in one single, highly efficient network request.
+**Reading onchain data is free** (same as the API route). But if you make separate RPC calls for each market, you'll get rate-limited. Instead, use `useReadContracts` (a multicall) to fetch the data for *every single market in your pod* in one single, efficient network request.
 
 ```typescript
-// Example: Fetching the Market Struct from Alice's contract
-const { data: marketData } = useReadContract({
-    address: POD_MARKETS[0].marketAddress,
-    abi: PredictionMarketABI,
-    functionName: "markets",
-    args: [0n], // Market ID 0
+// Example: reading a single market's data
+const { data } = useReadContracts({
+  contracts: [
+    {
+      address: pod.marketAddress,
+      abi: PredictionMarketABI,
+      functionName: 'markets',
+      args: [0n],
+    },
+    {
+      address: pod.marketAddress,
+      abi: PredictionMarketABI,
+      functionName: 'hasVoted',
+      args: [0n, account.address!],
+    },
+  ],
 });
 
-// The result maps directly to the Solidity Struct you wrote!
-// [ "Will it rain?", yesPool, noPool, resolved, outcome ]
+// Results are in the same order as the contracts array:
+const [marketResult, hasVotedResult] = data ?? [];
+// Market result shape: [question, yesPool, noPool, resolved, outcome]
 ```
 
 <FreeResponse id="fs-multicall-benefit" label="Why is multicall more efficient than making separate RPC calls for each market?" />
 
-### 🖋️ Writing Data (The Action)
+### 🛠️ Build It: `components/MarketCard.tsx`
 
-In Part 2, you learned that voting requires TWO transactions: `approve` and `transferFrom`. We can batch these together in the UI using an array of calls!
+Open the stub at `components/MarketCard.tsx`. Right now it renders a yellow "🔧 Build me!" placeholder. Replace it with a real component that displays live market data.
+
+**What your MarketCard should do:**
+
+1. Use `useReadContracts` to fetch `markets(0)` and `hasVoted(0, address)` from the pod's contract
+2. Display the market question, an odds bar (green for Yes, red for No), and pool sizes in tokens
+3. Show conditional status: "Market Resolved" / "Already voted" / "Connect wallet" / vote buttons
+
+**Props already defined for you:** `{ pod: PodMarket, account: ReturnType<typeof useAccount> }`
+
+**Key APIs:**
+
+| What | Import From | Does |
+|------|------------|------|
+| `useReadContracts` | `wagmi` | Batches multiple contract reads into one RPC call (multicall) |
+| `formatEther()` | `viem` | Converts BigInt (e.g., `10000000000000000000n`) → `"10.0"` |
+| `PredictionMarketABI` | `@/lib/contracts` | ABI for the PredictionMarket — defines `markets`, `hasVoted`, `vote` |
+
+**Odds calculation:**
 
 ```typescript
-const voteCalls = [
-    // Call 1: Approve the Market to spend 10 tokens
-    {
-        to: tokenAddress,
-        data: encodeFunctionData({
-            abi: ERC20ABI,
-            functionName: "approve",
-            args: [marketAddress, parseEther("10")],
-        }),
-    },
-    // Call 2: Execute the Vote (true = Yes)
-    {
-        to: marketAddress,
-        data: encodeFunctionData({
-            abi: PredictionMarketABI,
-            functionName: "vote",
-            args: [0n, true, parseEther("10")],
-        }),
-    },
-];
+const totalPool = yesPool + noPool;
+const yesPercent = totalPool > 0n ? Number((yesPool * 100n) / totalPool) : 50;
+const noPercent = 100 - yesPercent;
 ```
+
+<AIPrompt prompt="Rewrite the MarketCard component in components/MarketCard.tsx. It receives {pod, account} props (types already imported). Use useReadContracts from wagmi to batch-read markets(0) and hasVoted(0, account.address) from pod.marketAddress using PredictionMarketABI from @/lib/contracts. Display: (1) pod.owner's name, (2) the market question, (3) a green/red odds bar with percentages, (4) pool sizes formatted with formatEther from viem. Add conditional rendering: if resolved show 'Market Resolved', if hasVoted show 'Already voted', if no wallet show 'Connect wallet', otherwise show placeholder vote buttons for now. Use Tailwind CSS for styling. Keep 'use client' directive." />
+
+**Verify it works:** Your app should now show live market questions and odds instead of the yellow "🔧" placeholders. If you see "Loading..." stuck, check your `podConfig.ts` addresses.
+
+<Scale id="fs-frontend-confidence" max={5} label="How confident are you in using Wagmi hooks to read blockchain data in React?" />
+
+<FlavorText id="fs-frontend-complete" emoji="📱" text="Frontend wired. Your MarketCard reads live data from the blockchain." />
+
+# 🗳️ Wire Up Voting (15 min)
+
+_Batch approve + vote into a single user action._
 
 ### ⏳ Transactions Are Asynchronous
 
@@ -351,60 +301,94 @@ One pattern you'll see in every onchain app is a **higher degree of asynchronici
 
 In Web3, when a user clicks "Vote," here's what actually happens:
 
-1. <Icon name="Package" size={18} /> **Prepare** — The app builds the transaction data (function selector + encoded args)
-2. <Icon name="PenTool" size={18} /> **Sign** — The user's wallet prompts them to sign the transaction with their private key
-3. <Icon name="Send" size={18} /> **Send** — The signed transaction is sent to a node (e.g., Base's sequencer at `sepolia.base.org`)
-4. <Icon name="Clock" size={18} /> **Wait for inclusion** — You get back a **transaction hash** immediately, but this is NOT confirmation. The transaction is in the mempool, waiting to be included in a block.
-5. <Icon name="ShieldCheck" size={18} /> **Wait for finality** — Once included in a block, you wait for enough subsequent blocks to consider it final
+1. 📦 **Prepare** — The app builds the transaction data (function selector + encoded args)
+2. ✍️ **Sign** — The user's wallet prompts them to sign the transaction with their private key
+3. 📡 **Send** — The signed transaction is sent to a node (e.g., Base's sequencer at `sepolia.base.org`)
+4. ⏳ **Wait for inclusion** — You get back a **transaction hash** immediately, but this is NOT confirmation. The transaction is in the mempool, waiting to be included in a block.
+5. 🛡️ **Wait for finality** — Once included in a block, you wait for enough subsequent blocks to consider it final
 
 This means your UI needs to handle intermediate states: signing, pending, confirmed, and potentially failed. This is exactly what OnchainKit's `<Transaction>` component handles for you — loading spinners, confirmation toasts, and error states, all out of the box.
 
 > [!NOTE]
-> Setting a higher gas price incentivizes faster inclusion by the sequencer, giving your users a better experience. On Base, transactions are typically confirmed in ~2 seconds, but designing for the async flow is still important.
+> On Base, transactions are typically confirmed in ~2 seconds, but designing for the async flow is still important.
 
 <QuizTransactionFlow id="fs-transaction-flow" />
 
-<FreeResponse id="fs-async-mental-model" label="How does the async nature of blockchain transactions change the way you think about UX compared to Web2?" />
+### 🖋️ The Two-Step Vote Pattern
 
-### 🧰 OnchainKit Components
+In Part 2, you learned that voting requires TWO transactions: `approve` (let the market spend your tokens) and `vote` (execute the bet). We batch these into a single user click using an array of encoded calls:
 
-[OnchainKit](https://www.base.org/build/onchainkit) is Coinbase's React component library that turns complex blockchain interactions into beautiful, one-line UI components.
-
-**💼 Wallet Connection**:
 ```typescript
-import { ConnectWallet, Wallet } from "@coinbase/onchainkit/wallet";
+import { encodeFunctionData, parseEther } from 'viem';
 
-<Wallet>
-    <ConnectWallet />
-</Wallet>
+const voteYesCalls = [
+  {
+    to: pod.tokenAddress,
+    data: encodeFunctionData({
+      abi: ERC20ABI,
+      functionName: 'approve',
+      args: [pod.marketAddress, parseEther('10')],
+    }),
+  },
+  {
+    to: pod.marketAddress,
+    data: encodeFunctionData({
+      abi: PredictionMarketABI,
+      functionName: 'vote',
+      args: [0n, true, parseEther('10')],
+    }),
+  },
+];
 ```
 
-**🔁 The Transaction Button**:
-Instead of writing complex state-management for loading spinners and error popups, you just pass your `voteCalls` array into the `<Transaction>` component. It handles the wallet pop-up, the block confirmation, and the UI state automatically.
+### 🧰 OnchainKit's `<Transaction>` Component
+
+Instead of writing complex state-management for loading spinners and error popups, you just pass your calls array into the `<Transaction>` component. It handles the wallet popup, block confirmation, and UI state automatically:
 
 ```typescript
-import { Transaction, TransactionButton } from "@coinbase/onchainkit/transaction";
+import {
+  Transaction,
+  TransactionButton,
+  TransactionSponsor,
+  TransactionStatus,
+  TransactionStatusAction,
+  TransactionStatusLabel,
+} from '@coinbase/onchainkit/transaction';
 
-<Transaction calls={voteCalls}>
-    <TransactionButton text="Vote Yes (10 Tokens)" />
+<Transaction calls={voteYesCalls}>
+  <TransactionButton text="Vote Yes (10 Tokens)" />
+  <TransactionSponsor />
+  <TransactionStatus>
+    <TransactionStatusLabel />
+    <TransactionStatusAction />
+  </TransactionStatus>
 </Transaction>
 ```
 
-### 🔧 Under the Hood: The JSON-RPC Layer
+### 🛠️ Build It: Add Voting to MarketCard
 
-Viem, Wagmi, and OnchainKit are all abstractions over the [Ethereum JSON-RPC API](https://ethereum.org/en/developers/docs/apis/json-rpc/) — a standard set of HTTP endpoints that every Ethereum node exposes. Under the hood:
+Update your `MarketCard` component to replace the placeholder vote buttons with real `<Transaction>` components.
 
-- Every `readContract` / `useReadContract` call is an **`eth_call`** request — a free, read-only simulation
-- Every transaction you sign and send is an **`eth_sendRawTransaction`** request
-- Gas estimation uses **`eth_estimateGas`** — the same call that causes the misleading "unable to estimate network fee" errors you saw in Part 1
+**What to add:**
 
-You'll rarely need to interact with JSON-RPC directly, but understanding this layer helps when debugging RPC errors, timeouts, or rate limits. The full method list is at [ethereum.org/developers/docs/apis/json-rpc](https://ethereum.org/en/developers/docs/apis/json-rpc/).
+1. Build `voteYesCalls` and `voteNoCalls` arrays using `encodeFunctionData` (same pattern, just `true` vs `false` for the `side` argument)
+2. Replace placeholder buttons with `<Transaction calls={...}>` wrapping a `<TransactionButton>`
+3. Import `ERC20ABI` from `@/lib/contracts` (you already have `PredictionMarketABI`)
 
-<Scale id="fs-frontend-confidence" max={5} label="How confident are you in using Wagmi hooks and OnchainKit components?" />
+<AIPrompt prompt="Update my MarketCard component to add voting. I need two call arrays (voteYesCalls and voteNoCalls) that each batch an ERC-20 approve call and a PredictionMarket vote call using encodeFunctionData and parseEther from viem. The approve call goes to pod.tokenAddress, approving pod.marketAddress for parseEther('10'). The vote call goes to pod.marketAddress with args [0n, true/false, parseEther('10')]. Replace the placeholder vote buttons with OnchainKit Transaction components: <Transaction calls={voteYesCalls}><TransactionButton text='Vote Yes (10 Tokens)' /><TransactionSponsor /><TransactionStatus><TransactionStatusLabel /><TransactionStatusAction /></TransactionStatus></Transaction>. Import Transaction components from @coinbase/onchainkit/transaction and ERC20ABI from @/lib/contracts." />
 
-<FlavorText id="fs-frontend-complete" emoji="📱" text="Frontend wired. Wagmi reads, OnchainKit writes." />
+**Verify it works:**
 
-# ⚒️ Build & Deploy (50 min)
+1. Connect your Coinbase Wallet (Base Sepolia)
+2. Click "Vote Yes" on a market
+3. Your wallet should pop up asking you to confirm TWO batched transactions
+4. After confirmation, refresh — the odds should update
+
+<FreeResponse id="fs-async-mental-model" label="How does the async nature of blockchain transactions change the way you think about UX compared to Web2?" />
+
+<FlavorText id="fs-voting-complete" emoji="🗳️" text="Voting wired. Approve + vote in one click." />
+
+# ⚒️ Build & Deploy (35 min)
 
 _Test your aggregator, deploy to Vercel, and enhance your app._
 
@@ -415,6 +399,7 @@ _Test your aggregator, deploy to Vercel, and enhance your app._
 3. **View** odds for all pod markets
 4. **Vote** on a pod-mate's market using the batch Approve & Vote button
 5. **Refresh** – odds should update after votes
+6. **Test your API** — `curl http://localhost:3000/api/markets` should return the same data
 
 ### 📢 Pod Challenge (7 min)
 
@@ -435,7 +420,7 @@ _Test your aggregator, deploy to Vercel, and enhance your app._
 4. **Verify** – Connect wallet, view odds, place a vote (ensure you're on Base Sepolia)
 
 > [!TIP]
-> **Finished early?** Add a loading skeleton for the odds, or style the market cards with a theme of your choice.
+> **Finished early?** Try the Enhance section below.
 
 <Scale id="fs-fullstack-confidence" max={5} label="How confident are you in building a fullstack onchain app?" />
 
@@ -443,31 +428,15 @@ _Test your aggregator, deploy to Vercel, and enhance your app._
 
 ---
 
-## 📊 Enhance Your App (25 min)
+## 📊 Enhance Your App (10 min)
 
 Now that the core loop is working, choose one feature to build with AI and make the dashboard look like a professional DeFi application.
 
-1. 🧮 **Calculate the Payout Odds (UI Polish)**:
-    * Currently, the UI just shows raw token amounts (e.g., Yes: 50, No: 10).
-    <AIPrompt prompt="Write a TypeScript helper function that takes yesPool and noPool as bigints and returns the yes/no percentages. Then create a React component that renders a dynamic red/green progress bar." />
+1. 💰 **Show the User's Token Balance** — Display "Your Balance: X Tokens" on the Market Card so the user knows if they have enough to bet. *(Hint: the ERC-20 ABI has a `balanceOf` function)*
 
-2. 💰 **Show the User's Token Balance (Wagmi Read)**:
-    * Display "Your Balance: X Tokens" on the Market Card so the user knows if they have enough money to bet.
-    <AIPrompt prompt="Add a useReadContract hook that calls balanceOf on the ERC-20 token contract for the connected wallet address using useAccount(), and display the formatted result on the market card component." />
+2. 🏆 **The "Claim Winnings" Button** — Once a market is resolved, winners need to get paid. Add conditional rendering to show a withdraw button instead of vote buttons.
 
-3. 🏆 **The "Claim Winnings" Button (Conditional Rendering)**:
-    * Once a market is resolved, winners need to get paid.
-    <AIPrompt prompt="Add conditional rendering to the market card: if market.isResolved is true, hide the Vote buttons and show a Withdraw Winnings button using OnchainKit's Transaction component that calls withdrawWinnings() on the smart contract." />
-
-**🎯 Goal**: Successfully implement your chosen feature using the prompt template above!
-
-**💬 Top Questions to Ask Your AI:**
-
-<AIPrompt prompt="My useReadContracts hook refetches on every block. If I have 20 markets across 5 contracts, how many RPC calls is that per block? Design a caching strategy that balances freshness vs. rate limits." />
-
-<AIPrompt prompt="My batch transaction does approve+vote in two calls. What happens if the user's wallet processes the approve but the vote fails — do they have a dangling approval? How would a production app handle this?" />
-
-<AIPrompt prompt="Compare how Uniswap's frontend handles optimistic UI updates after a swap vs. waiting for block confirmation. Which approach should I use for my vote button, and what are the failure modes?" />
+3. 🎨 **Style the Dashboard** — Make the market cards look like a professional DeFi app with gradients, hover effects, and animations.
 
 <FlavorText id="fs-enhance-complete" emoji="✨" text="Feature shipped. Your dashboard is production-grade." />
 
@@ -477,9 +446,10 @@ _Celebrate what you built and plan your next steps._
 
 ### ✅ What You Accomplished
 
-- ✅ Built an Aggregator Dashboard showing all pod markets
-- ✅ Used `useReadContracts` (multicall) to fetch odds in one request
+- ✅ Built a server-side API route that reads blockchain data using Viem
+- ✅ Built a `MarketCard` component with live odds using Wagmi's multicall
 - ✅ Batched `approve` + `vote` into a single button with OnchainKit
+- ✅ Deployed a fullstack onchain app to Vercel
 - ✅ Collaborated with your pod via the Cross-Wire
 
 ### 💡 Real-World Applications
@@ -495,7 +465,7 @@ Take a moment to appreciate what you've built across all three parts:
 
 1. **Part 1** — You started with an `Echo` contract and a `cast call` command. By the end, you understood Solidity fundamentals, the CEI pattern, gas mechanics, and the Oracle Problem — and you had a deployed, verified PredictionMarket contract on Base Sepolia.
 2. **Part 2** — You learned that tokens aren't objects but spreadsheets, built your own ERC-20 from scratch, and mastered the two-step Allowance Pattern that powers every DeFi protocol. You distributed a custom currency and upgraded your market to accept it.
-3. **Part 3** — You connected everything to a real frontend. You used Viem to read onchain state, Wagmi hooks for reactive data fetching, OnchainKit for transaction UX, and multicall for efficient data aggregation across your pod's entire infrastructure.
+3. **Part 3** — You connected everything to a real frontend. You built a server-side API route with Viem, a reactive MarketCard component with Wagmi hooks, and batched transactions with OnchainKit — the same stack used in production at Coinbase.
 
 You went from zero onchain experience to a **deployed full-stack prediction market** with custom tokens and an aggregator dashboard. These aren't toy patterns — they're the exact same architecture behind Uniswap, Aave, Polymarket, and Coinbase's own products.
 
