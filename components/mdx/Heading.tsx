@@ -92,6 +92,7 @@ function DurationBadge({ minutes }: { minutes: number }) {
 }
 
 export function H1({ children, className }: HeadingProps) {
+  const { content, minutes } = extractDuration(children)
   const id = slugify(extractText(children))
   return (
     <h1 id={id} className={cn(
@@ -101,7 +102,8 @@ export function H1({ children, className }: HeadingProps) {
       className
     )}>
       <AnchorLink id={id} />
-      {children}
+      {content}
+      {minutes !== null && <DurationBadge minutes={minutes} />}
     </h1>
   )
 }
