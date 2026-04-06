@@ -46,7 +46,7 @@ describe('SuggestedAnswer', () => {
     // @ts-expect-error testing runtime behavior for missing required children
     render(<SuggestedAnswer id="suggested-1" />)
 
-    expect(screen.getByRole('button', { name: /reveal suggested answer/i })).toBeInTheDocument()
+    expect(screen.getByText(/Missing required prop/)).toBeInTheDocument()
   })
 
   it('handles user interaction', () => {

@@ -52,8 +52,8 @@ describe('AIPrompt', () => {
     // @ts-expect-error testing runtime behavior for missing required prop
     render(<AIPrompt />)
 
-    expect(screen.getByText('AI Prompt')).toBeInTheDocument()
-    expect(screen.getByLabelText('Copy prompt')).toBeInTheDocument()
+    expect(screen.getByText(/Missing required prop/)).toBeInTheDocument()
+    expect(screen.queryByLabelText('Copy prompt')).not.toBeInTheDocument()
   })
 
   it('handles user interaction', async () => {

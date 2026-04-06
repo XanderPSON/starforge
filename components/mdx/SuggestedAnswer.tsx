@@ -43,7 +43,7 @@ export function SuggestedAnswer({ id, children, label = 'Suggested answer' }: Su
         onClick={handleToggle}
         className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-hub-primary dark:text-coinbase-cyan border border-hub-primary/20 dark:border-coinbase-blue/30 rounded-lg bg-hub-surface-alt dark:bg-white/5 hover:bg-hub-primary/10 dark:hover:bg-coinbase-blue/10 transition-colors"
         aria-expanded={isRevealed}
-        aria-label={isRevealed ? 'Hide suggested answer' : 'Reveal suggested answer'}
+        aria-label={isRevealed ? `Hide ${label}` : `Reveal ${label}`}
       >
         <span
           className="inline-block transition-transform duration-200"
