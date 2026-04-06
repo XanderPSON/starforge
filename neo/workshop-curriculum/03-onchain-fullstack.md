@@ -18,10 +18,10 @@ By the end of this part, you'll be able to:
 * **📦 Pre-Built:** A Next.js boilerplate with Tailwind CSS, OnchainKit, and Wagmi providers already configured.
 * **🛠️ What You Will Build:** The React hooks (`useReadContracts`) to fetch the betting odds, and the UI buttons (`<Transaction>`) to execute the `approve` and `vote` flow.
 * **🤖 AI-Driven Development:** You will prompt AI to generate React components, Wagmi hooks, and OnchainKit integrations, then review the output against the app's architecture.
-* **🤝 Pod Collaboration:** **The Cross-Wire.** The app is designed to aggregate the entire table's markets. Your UI will not work until you successfully gather the Market Addresses and Token Addresses from everyone in your pod and wire them into your config file.
+* **🤝 Pod Collaboration:** **The Cross-Wire.** The app is designed to aggregate the entire table's markets. You can start with just your own addresses — the dashboard works with any number of markets — but the real experience comes from wiring in your pod-mates' contracts and seeing the full aggregator.
 
-> [!IMPORTANT]
-> Your dashboard **will not work** until you collect every pod member's Market and Token addresses. Start gathering these now if you haven't already.
+> [!TIP]
+> The dashboard works with just your own Market and Token addresses, but it gets more interesting as you add more. Start collecting addresses from your pod-mates now so you can wire them in as you go.
 
 
 ### 🆘 Need Help?
@@ -34,7 +34,7 @@ Check out the **[Troubleshooting Guide](./troubleshooting.md)** for wallet conne
 
 ### 🤝 What is the Cross-Wire?
 
-Instead of building an app that only shows **your** contract, you'll build an **Aggregator Dashboard** that shows **all markets** from your pod.
+Instead of building an app that only shows **your** contract, you'll build an **Aggregator Dashboard** that shows **all markets** from your pod. The app works with just your own addresses — each market renders as its own card, and you can add more at any time. The more you add, the richer the dashboard.
 
 **You need from each podmate:**
 
@@ -81,7 +81,7 @@ Instead of building an app that only shows **your** contract, you'll build an **
 
 3. **Complete `podConfig.ts`**
 
-Open `lib/podConfig.ts`. You will see an empty array. You must ask your pod-mates for their deployed Market and Token addresses and fill this out.
+Open `lib/podConfig.ts`. You will see an empty array. Start by adding your own addresses, then add pod-mates' as you collect them. Each entry becomes a card on the dashboard.
 
 ```copy
     export const POD_MARKETS = [
@@ -100,7 +100,7 @@ Open `lib/podConfig.ts`. You will see an empty array. You must ask your pod-mate
 ```
 
 > [!CAUTION]
-> A single typo or missing `0x` prefix in this array will break the **entire dashboard**. Double-check every address you paste.
+> A typo or missing `0x` prefix in an address will cause that market card to fail. Double-check every address you paste.
 
 4. **Start the App**
 
