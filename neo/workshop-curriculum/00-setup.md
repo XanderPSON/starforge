@@ -132,6 +132,10 @@ You'll create a wallet directly in your terminal using Foundry, then import it i
     # API Keys (you'll fill these in during Steps 5 & 6)
     ETHERSCAN_API_KEY=
     NEXT_PUBLIC_ONCHAINKIT_API_KEY=
+
+    # Deployed Contracts (you'll fill these in as you deploy in Parts 1 & 2)
+    PREDICTION_MARKET_ADDRESS=
+    WORKSHOP_TOKEN_ADDRESS=
     ```
 
     > [!CAUTION]
