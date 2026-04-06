@@ -98,13 +98,9 @@ forge script script/Deploy.s.sol:Deploy \
 ```copy
 ## Check balance
 cast balance YOUR_WALLET --rpc-url https://sepolia.base.org
-
-## Get testnet ETH using the CDP faucet (see Step 1b-1c in 00-setup.md)
-curl -X POST https://api.cdp.coinbase.com/platform/v2/evm/faucet \
-  -H "Authorization: Bearer YOUR_CDP_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"network":"base-sepolia","address":"'"$WALLET_ADDRESS"'","token":"eth"}'
 ```
+
+Need more ETH? Use the [CDP Faucet web UI](https://portal.cdp.coinbase.com/products/faucet) — paste your wallet address, select Base Sepolia, and click "Give me ETH".
 
 **❌ "Contract creation failed"**
 

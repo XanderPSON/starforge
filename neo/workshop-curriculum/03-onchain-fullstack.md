@@ -62,9 +62,9 @@ Instead of building an app that only shows **your** contract, you'll build an **
     Create `.env.local` in the project root:
 
     ```copy
-    # OnchainKit API Key (optional but recommended — enables Smart Wallet features).
-    # Get one at https://portal.cdp.coinbase.com/ (you already have an account from the faucet step).
-    NEXT_PUBLIC_ONCHAINKIT_API_KEY=your_cdp_api_key_here
+    # OnchainKit API Key — use the CDP **Client API Key** from Step 6 of setup.
+    # (Not the Secret API Key — Client keys are safe for frontend code.)
+    NEXT_PUBLIC_ONCHAINKIT_API_KEY=your_client_api_key_here
 
     # Your dev wallet private key (the same one from Parts 1 & 2).
     # Used server-side only for admin operations like creating markets programmatically.

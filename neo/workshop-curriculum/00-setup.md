@@ -194,6 +194,22 @@ _You'll use this for verifying Smart Contracts_
 > [!NOTE]
 > Etherscan multichain keys work automatically on BaseScan — no separate API key needed.
 
+---
+
+## 🔑 Step 6: Create a CDP Client API Key
+
+_You'll use this in Part 3 for OnchainKit (wallet connections, Smart Wallet features)._
+
+1. Go to the [CDP Portal](https://portal.cdp.coinbase.com/) — you already have an account from the faucet step.
+2. Navigate to **API Keys** in the left sidebar.
+3. Click **Create API Key** and choose **Client API Key** (not Secret API Key).
+4. Name it "Onchain Workshop" and copy the key.
+
+> [!WARNING]
+> CDP has two key types — **Client** and **Secret**. You want **Client API Key**. Client keys are safe to use in frontend code (`NEXT_PUBLIC_` env vars). Secret keys are for server-side-only API calls and must never be exposed in browser code.
+
+Save this key — you'll add it to `.env.local` as `NEXT_PUBLIC_ONCHAINKIT_API_KEY` in Part 3.
+
 # ✅ Verification & Ready
 
 _Confirm everything works before starting the workshop._
@@ -234,6 +250,7 @@ Let's verify everything works:
 
 5. **Check Your Keys**
     - You have your Etherscan API Key saved.
+    - You have your CDP Client API Key saved.
 
 <ChecklistSetupEnv id="setup-env-checklist" />
 
@@ -247,6 +264,7 @@ Once your setup is complete:
 2. ✅ Dev wallet works in CLI (`cast wallet address --account dev`) and browser (Coinbase Wallet extension)
 3. ✅ Testnet ETH funded
 4. ✅ Etherscan API key ready
+5. ✅ CDP Client API key ready
 
 > [!IMPORTANT]
 > Proceed only when **all checks are green**. Missing tools or keys will block you in later modules.
