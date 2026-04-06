@@ -19,18 +19,12 @@ You're professional engineers, and AI coding tools are part of your toolkit. Use
 - **OpenCode** — Open-source terminal AI coding tool
 
 > [!IMPORTANT]
-> **We recommend Cursor for this workshop.** Here's why: you're about to learn Web3 — a new domain with new languages (Solidity) and new paradigms (onchain state, token allowances, contract interactions). Part of the magic of onchain development is seeing how *simple*, *elegant*, and often *surprisingly short* the code is. A 30-line smart contract can hold real money. A 5-line function can move tokens across the world.
->
-> Cursor's inline diffs make it easy to actually *see* what the AI generates. If you use a terminal-based AI tool and just accept changes without reading them, you'll miss that insight — and Day 3 (build day) will be tougher because of it.
+> **We recommend Cursor for this workshop.** Onchain code is often surprisingly short and elegant. Seeing the inline diffs in Cursor is more conducive to learning a new language. Claude Code works great, but if you accept changes without reading them, Day 3 Build Day will be tougher.
 
 > [!NOTE]
-> **A note on "understanding" in the age of AI.**
->
-> We're teaching you something brand new — Solidity, smart contracts, onchain architecture. What it means to "understand" these things is evolving. It's less about being able to answer quiz questions from memory and more about having a *working knowledge*: do you know enough to collaborate with AI to build and debug the thing you want to build? Can you read a contract and spot what's wrong? Can you describe what you want and evaluate whether the AI got it right?
->
-> That's the bar. To get there, **read the code the AI writes**. Read the diffs. Ask "why?" constantly. The more you engage with the code, the more intuition you build — and intuition is what makes you dangerous on build day.
+> **You're learning Solidity, smart contracts, and onchain architecture from scratch in the age of AI.** The bar for "understanding" here is whether you know enough to work with AI to build and debug what you want — can you read a contract and spot what's wrong, or evaluate whether the AI got it right? You build that intuition by reading the diffs and asking "why?" as you go, which is what makes build day go smoothly.
 
-**As you work through each module, ask your AI as many questions as you can.** "What does this function do?" "Why is this pattern used?" "What would happen if I changed this?" Treat your AI like a patient, infinitely available tutor. That's how you'll build real understanding, fast.
+Ask your AI questions as you go — "What does this do?", "Why this pattern?", "What if I changed this?" Use it as a tutor, not just a code generator.
 
 ---
 
