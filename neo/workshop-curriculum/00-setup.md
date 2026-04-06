@@ -6,6 +6,34 @@ _Get Your Development Environment Ready_
 
 This quick setup ensures everyone has the necessary tools, API keys, and wallets ready. You'll create one dev wallet that works in both your terminal (for deploying contracts) and your browser (for the frontend in Part 3).
 
+## 🤖 AI-First Development
+
+_This workshop is AI-first — just like Coinbase._
+
+You're professional engineers, and AI coding tools are part of your toolkit. Use them like the pros you are — generate boilerplate, ask questions, debug errors, explain concepts. That's the workflow, not a shortcut.
+
+**Set up your AI coding tool of choice before anything else:**
+
+- **[Cursor](https://cursor.com/)** — AI-native IDE with inline diffs and chat (recommended for this workshop)
+- **cbcode (Claude Code)** — Coinbase's internal Claude Code wrapper for terminal-based AI development
+- **OpenCode** — Open-source terminal AI coding tool
+
+> [!IMPORTANT]
+> **We recommend Cursor for this workshop.** Here's why: you're about to learn Web3 — a new domain with new languages (Solidity) and new paradigms (onchain state, token allowances, contract interactions). Part of the magic of onchain development is seeing how *simple*, *elegant*, and often *surprisingly short* the code is. A 30-line smart contract can hold real money. A 5-line function can move tokens across the world.
+>
+> Cursor's inline diffs make it easy to actually *see* what the AI generates. If you use a terminal-based AI tool and just accept changes without reading them, you'll miss that insight — and Day 3 (build day) will be tougher because of it.
+
+> [!NOTE]
+> **A note on "understanding" in the age of AI.**
+>
+> We're teaching you something brand new — Solidity, smart contracts, onchain architecture. What it means to "understand" these things is evolving. It's less about being able to answer quiz questions from memory and more about having a *working knowledge*: do you know enough to collaborate with AI to build and debug the thing you want to build? Can you read a contract and spot what's wrong? Can you describe what you want and evaluate whether the AI got it right?
+>
+> That's the bar. To get there, **read the code the AI writes**. Read the diffs. Ask "why?" constantly. The more you engage with the code, the more intuition you build — and intuition is what makes you dangerous on build day.
+
+**As you work through each module, ask your AI as many questions as you can.** "What does this function do?" "Why is this pattern used?" "What would happen if I changed this?" Treat your AI like a patient, infinitely available tutor. That's how you'll build real understanding, fast.
+
+---
+
 ## ✅ Setup Checklist (15 minutes)
 
 > [!WARNING]
