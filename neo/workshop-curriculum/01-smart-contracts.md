@@ -444,20 +444,15 @@ _Deploy, verify, and debug your contract on Base Sepolia. (20 min)_
 
 ### ⚙️ Configure and Deploy
 
-1. **Set Up Environment Variables**
+1. **Load Environment Variables**
 
-    Export your API key and wallet address (from [Steps 4–5](./00-setup#-step-4-create-a-dev-wallet) of setup):
+    If you haven't already in this terminal, source the `.env` file you created during setup:
 
     ```copy
-    export ETHERSCAN_API_KEY=your_api_key_here
-    export WALLET_ADDRESS=$(cast wallet address --account dev)
+    source .env
     ```
 
-    > [!CAUTION]
-    > Never commit API keys or private keys to git. If you prefer to store them in a `.env` file, make sure to add `.env` to your `.gitignore` and run `source .env` before deploying.
-
-    > [!TIP]
-    > `WALLET_ADDRESS` auto-derives your address from the `dev` keystore. You'll reuse `$WALLET_ADDRESS` in every deploy command throughout the workshop — no more copy-pasting addresses.
+    This loads `WALLET_ADDRESS`, `ETHERSCAN_API_KEY`, and all your other keys. Run `echo $WALLET_ADDRESS` to confirm it's set.
 
 2. **Deploy Script**
 

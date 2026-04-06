@@ -19,7 +19,7 @@ _Install the development tools you'll need for the workshop._
 
 1. **Check if Already Installed**
 
-    ```bash
+    ```copy
     node --version  # Should show v18.x.x or higher (prefer LTS like v20)
     npm --version   # Should show 9.x.x or higher
     ```
@@ -28,7 +28,7 @@ _Install the development tools you'll need for the workshop._
 
 2. **Install Node.js using nvm**
 
-    ```bash
+    ```copy
     # Install nvm
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 
@@ -40,7 +40,7 @@ _Install the development tools you'll need for the workshop._
     ```
 
 3. **Verify Installation**
-    ```bash
+    ```copy
     command -v nvm  # Should print 'nvm'
     node --version  # Should show v18.x.x or higher (prefer LTS like v20)
     npm --version   # Should show 9.x.x or higher
@@ -57,7 +57,7 @@ Foundry is the toolkit for smart contract development.
 
 1. **Install Foundryup**
 
-    ```bash
+    ```copy
     curl -L https://foundry.paradigm.xyz | bash
     ```
 
@@ -65,12 +65,12 @@ Foundry is the toolkit for smart contract development.
 
 3. **Install Foundry Toolchain**
 
-    ```bash
+    ```copy
     foundryup
     ```
 
 4. **Verify Installation**
-    ```bash
+    ```copy
     forge --version
     cast --version
     anvil --version
@@ -94,36 +94,58 @@ You'll create a wallet directly in your terminal using Foundry, then import it i
 
 1. **Generate a new wallet with a recovery phrase**
 
-    ```bash
+    ```copy
     cast wallet new-mnemonic
     ```
 
-    This outputs a **12-word recovery phrase** and an **Address**. Copy the recovery phrase — you'll need it for both the CLI and the browser extension.
+    This outputs a **12-word recovery phrase**, an **Address**, and a **Private key**. You'll save all three in the next sub-step.
 
-    > [!CAUTION]
-    > **Save your recovery phrase somewhere safe** (e.g., a password manager or a local note). You need it in Step 3 and Step 4. Do not share it or commit it to git.
+2. **Save your wallet info to a `.env` file**
 
-2. **Get your private key from the recovery phrase**
+    Create a `.env` file in your project root and paste in the values from the previous command. This file is your single source of truth for the entire workshop — every key and address goes here.
 
-    ```bash
-    cast wallet private-key "YOUR TWELVE WORD RECOVERY PHRASE GOES HERE"
+    ```copy
+    # Wallet (from cast wallet new-mnemonic — DO NOT COMMIT)
+    MNEMONIC="your twelve word recovery phrase goes here"
+    WALLET_ADDRESS=0xYourAddressHere
+    PRIVATE_KEY=0xYourPrivateKeyHere
+
+    # API Keys (you'll fill these in during Steps 5 & 6)
+    ETHERSCAN_API_KEY=
+    NEXT_PUBLIC_ONCHAINKIT_API_KEY=
     ```
 
-    This outputs a hex private key starting with `0x`. Copy it.
+    > [!CAUTION]
+    > **Never commit `.env` to git.** Foundry's default `.gitignore` already excludes it. If yours doesn't, run: `echo ".env" >> .gitignore`
 
-3. **Import the wallet into Foundry's keystore as `dev`**
+3. **Load your environment**
 
-    ```bash
+    ```copy
+    source .env
+    ```
+
+    > [!TIP]
+    > Run `source .env` every time you open a new terminal. All your keys and addresses load in one shot — no more re-exporting individual variables.
+
+4. **Import the wallet into Foundry's keystore as `dev`**
+
+    ```copy
+    cast wallet private-key "$MNEMONIC"
+    ```
+
+    This should print the same private key from step 1. Now import it:
+
+    ```copy
     cast wallet import dev --interactive
     ```
 
     When prompted:
-    - **Paste your private key** from the previous step (must start with `0x`)
+    - **Paste your private key** (must start with `0x`)
     - **Enter a password** to encrypt the keystore (remember this — you'll type it when deploying contracts)
 
-4. **Verify it worked**
+5. **Verify it worked**
 
-    ```bash
+    ```copy
     cast wallet address --account dev
     ```
 
@@ -181,15 +203,17 @@ _You'll use this for verifying Smart Contracts_
 1. Go to [Etherscan](https://etherscan.io/login) and create a free account.
 2. Go to the [API Dashboard](https://etherscan.io/apidashboard).
 3. Click "Add" to create a new API key. Name it "Onchain Workshop".
-4. Copy the API key and export it in your terminal:
+4. **Add it to your `.env` file** — open `.env` and fill in the `ETHERSCAN_API_KEY` line:
 
     ```copy
-    export ETHERSCAN_API_KEY=your_api_key_here
-    export WALLET_ADDRESS=$(cast wallet address --account dev)
+    ETHERSCAN_API_KEY=your_api_key_here
     ```
 
-    > [!TIP]
-    > `WALLET_ADDRESS` auto-derives your address from the `dev` keystore you created in Step 4. You'll use `$WALLET_ADDRESS` in every deploy command — no more copy-pasting addresses.
+5. Reload your environment:
+
+    ```copy
+    source .env
+    ```
 
 > [!NOTE]
 > Etherscan multichain keys work automatically on BaseScan — no separate API key needed.
@@ -203,12 +227,17 @@ _You'll use this in Part 3 for OnchainKit (wallet connections, Smart Wallet feat
 1. Go to the [CDP Portal](https://portal.cdp.coinbase.com/) — you already have an account from the faucet step.
 2. Navigate to **API Keys** in the left sidebar.
 3. Click **Create API Key** and choose **Client API Key** (not Secret API Key).
-4. Name it "Onchain Workshop" and copy the key.
+4. Name it "Onchain Workshop".
+5. **Add it to your `.env` file** — open `.env` and fill in the `NEXT_PUBLIC_ONCHAINKIT_API_KEY` line:
+
+    ```copy
+    NEXT_PUBLIC_ONCHAINKIT_API_KEY=your_client_api_key_here
+    ```
+
+6. Reload: `source .env`
 
 > [!WARNING]
 > CDP has two key types — **Client** and **Secret**. You want **Client API Key**. Client keys are safe to use in frontend code (`NEXT_PUBLIC_` env vars). Secret keys are for server-side-only API calls and must never be exposed in browser code.
-
-Save this key — you'll add it to `.env.local` as `NEXT_PUBLIC_ONCHAINKIT_API_KEY` in Part 3.
 
 # ✅ Verification & Ready
 
@@ -220,14 +249,14 @@ Let's verify everything works:
 
 1. **Test Node.js**
 
-    ```bash
+    ```copy
     node --version  # Should show v18.x.x or higher
     npm --version   # Should show 9.x.x or higher
     ```
 
 2. **Test Foundry**
 
-    ```bash
+    ```copy
     forge --version
     cast --version
     anvil --version
@@ -235,7 +264,7 @@ Let's verify everything works:
 
 3. **Test Dev Wallet**
 
-    ```bash
+    ```copy
     cast wallet address --account dev
     cast balance $(cast wallet address --account dev) --rpc-url https://sepolia.base.org -e
     ```
@@ -248,9 +277,13 @@ Let's verify everything works:
     - Confirm the address matches your CLI wallet
     - Check you have testnet ETH
 
-5. **Check Your Keys**
-    - You have your Etherscan API Key saved.
-    - You have your CDP Client API Key saved.
+5. **Check Your `.env` File**
+
+    ```copy
+    source .env && echo "WALLET=$WALLET_ADDRESS" && echo "ETHERSCAN=$ETHERSCAN_API_KEY" && echo "CDP=$NEXT_PUBLIC_ONCHAINKIT_API_KEY"
+    ```
+
+    All three values should print (no blanks).
 
 <ChecklistSetupEnv id="setup-env-checklist" />
 
@@ -263,8 +296,7 @@ Once your setup is complete:
 1. ✅ All tools installed and verified
 2. ✅ Dev wallet works in CLI (`cast wallet address --account dev`) and browser (Coinbase Wallet extension)
 3. ✅ Testnet ETH funded
-4. ✅ Etherscan API key ready
-5. ✅ CDP Client API key ready
+4. ✅ `.env` file has all keys: `WALLET_ADDRESS`, `ETHERSCAN_API_KEY`, `NEXT_PUBLIC_ONCHAINKIT_API_KEY`
 
 > [!IMPORTANT]
 > Proceed only when **all checks are green**. Missing tools or keys will block you in later modules.

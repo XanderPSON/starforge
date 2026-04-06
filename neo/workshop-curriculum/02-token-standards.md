@@ -199,7 +199,7 @@ _Create, deploy, and distribute your custom ERC-20 token. (20 min)_
     ```
 
     > [!TIP]
-    > `$WALLET_ADDRESS` was set in Part 1. If you're in a new terminal, re-export it: `export WALLET_ADDRESS=$(cast wallet address --account dev)`
+    > If you're in a new terminal, run `source .env` to reload all your keys and addresses.
 
 5. **Verify Token in Wallet**
 
@@ -334,7 +334,7 @@ Prompt AI to upgrade your `PredictionMarket.sol`:
     ```
 
     > [!TIP]
-    > If you're in a new terminal, re-export your env vars: `export WALLET_ADDRESS=$(cast wallet address --account dev)` and `export ETHERSCAN_API_KEY=your_key`
+    > If you're in a new terminal, run `source .env` to reload all your keys and addresses.
 
 3. **Create a Market & Test**
 
