@@ -389,8 +389,6 @@ Update your `MarketCard` component to replace the placeholder vote buttons with 
 3. Your wallet should pop up asking you to confirm TWO batched transactions
 4. After confirmation, refresh — the odds should update
 
-<FreeResponse id="fs-async-mental-model" label="How does the async nature of blockchain transactions change the way you think about UX compared to Web2?" />
-
 <FlavorText id="fs-voting-complete" emoji="🗳️" text="Voting wired. Approve + vote in one click." />
 
 # ⚒️ Build & Deploy (35 min)
