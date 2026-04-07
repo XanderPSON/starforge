@@ -654,4 +654,3 @@ You've deployed your first prediction market! Now let's create your own token an
 
 <FlavorText id="sc-part1-complete" emoji="🔐" text="Smart contract developer: activated" />
 
-**Next: [🪙 Token Standards](./02-token-standards)**

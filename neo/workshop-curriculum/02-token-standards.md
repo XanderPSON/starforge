@@ -451,4 +451,3 @@ To "upgrade," the owner deploys a new Implementation contract and points the Pro
 
 You've built a token economy and upgraded your prediction market. Now let's build an Aggregated Prediction Market Dashboard that shows all of your pod's markets at once.
 
-**Next: [🌐 Onchain Fullstack](./03-onchain-fullstack)**
