@@ -58,7 +58,7 @@ export function TrainingCatalog({ trainings }: TrainingCatalogProps) {
     setActivatingSlug(slug)
     setTimeout(() => {
       router.push(`/training/${slug}`)
-    }, 700)
+    }, 500)
   }
 
   useEffect(() => {
