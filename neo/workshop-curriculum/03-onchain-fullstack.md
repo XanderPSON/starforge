@@ -34,7 +34,7 @@ By the end of this part, you'll be able to:
 * **🤝 Pod Collaboration:** **The Cross-Wire.** The app aggregates your entire pod's markets. Start with your own addresses — the dashboard works with any number of markets — but it gets more interesting as you add pod-mates' contracts.
 
 > [!TIP]
-> When you first run the app, you'll see a setup checklist on screen. As you complete each task, the app progressively comes to life — from checklist → placeholder cards → live data → working vote buttons.
+> When you first run the app with no addresses configured, you'll see instructions to open `podConfig.ts`. Once you add addresses, you'll see yellow placeholder cards — one per market. As you complete each task, the app progressively comes to life — from placeholder cards → live data → working vote buttons.
 
 ### 🆘 Need Help?
 
@@ -131,7 +131,7 @@ Then paste them into `podConfig.ts`:
 
 ### 🧩 What the Scaffold Gives You
 
-When you first load the app, you'll see a **setup checklist** showing what's done and what you need to build. Once you add addresses to `podConfig.ts`, you'll see yellow **"🔧 MarketCard not implemented yet"** placeholder cards — one for each pod member. This is your starting point.
+When you first load the app with no addresses, you'll see a prompt to open `podConfig.ts`. Once you add addresses, you'll see yellow **🔧 placeholder cards** — one for each pod member — telling you to implement `components/MarketCard.tsx`. This is your starting point.
 
 **Already built for you (don't rewrite these):**
 
@@ -142,7 +142,7 @@ When you first load the app, you'll see a **setup checklist** showing what's don
 | Contract ABIs | `lib/contracts.ts` | PredictionMarket and ERC-20 function signatures |
 | Pod config type | `lib/podConfig.ts` | `PodMarket` type with `owner`, `marketAddress`, `tokenAddress` |
 | Card grid layout | `app/page.tsx` | Responsive grid that maps `POD_MARKETS` to `<MarketCard>` |
-| Setup checklist | `app/page.tsx` (empty state) | Shows progress when no markets are configured |
+| Empty state | `app/page.tsx` | Prompts you to add addresses when `POD_MARKETS` is empty |
 
 **What you need to build (3 tasks):**
 
@@ -170,7 +170,7 @@ If you're a backend engineer, this is the paradigm shift:
 
 <QuizBlockchainAsDB id="fs-blockchain-as-db" />
 
-Create a Next.js API route that reads market data from all contracts in your pod config and returns JSON. This is the same pattern you'd use to build any backend service that reads blockchain state — price feeds, leaderboards, analytics dashboards.
+Open the placeholder stub at `app/api/markets/route.ts`. Right now it returns a 501 "Not implemented" JSON response. Replace it with a real API route that reads market data from all contracts in your pod config and returns JSON. This is the same pattern you'd use to build any backend service that reads blockchain state — price feeds, leaderboards, analytics dashboards.
 
 **What your API route should do:**
 
@@ -193,7 +193,7 @@ Create a Next.js API route that reads market data from all contracts in your pod
 
 `markets(0)` returns a tuple: `[question, yesPool, noPool, resolved, outcome]` — matching the `Market` struct you wrote in Part 1.
 
-<AIPrompt prompt="Create a Next.js App Router API route at app/api/markets/route.ts. It should use Viem's createPublicClient with baseSepolia chain and the BASE_SEPOLIA_RPC env var to read market data from each contract in POD_MARKETS (imported from @/lib/podConfig). Call the 'markets' function with args [0n] using PredictionMarketABI from @/lib/contracts. Return JSON with each market's owner, addresses, question, formatted pool sizes, and resolved status. Handle errors with try/catch." />
+<AIPrompt prompt="Replace the placeholder stub in app/api/markets/route.ts with a real implementation. It should use Viem's createPublicClient with baseSepolia chain and the BASE_SEPOLIA_RPC env var to read market data from each contract in POD_MARKETS (imported from @/lib/podConfig). Call the 'markets' function with args [0n] using PredictionMarketABI from @/lib/contracts. Return JSON with each market's owner, addresses, question, formatted pool sizes, and resolved status. Handle errors with try/catch." />
 
 **Verify it works:**
 
@@ -201,7 +201,7 @@ Create a Next.js API route that reads market data from all contracts in your pod
 curl http://localhost:3000/api/markets | npx json
 ```
 
-You should see JSON with your market's question, pool sizes, and resolved status. If you see an error, check your `.env.local` RPC URL and `podConfig.ts` addresses.
+You should see JSON with your market's question, pool sizes, and resolved status. If you still see the "Not implemented yet" placeholder response, make sure you saved the file and restarted the dev server. If you see a contract read error, check your `.env.local` RPC URL and `podConfig.ts` addresses.
 
 > [!NOTE]
 > Reading onchain data is **free** — no gas, no wallet, no signature required. This is why your API route works without a private key. Writing data (transactions) costs gas and requires a wallet, which is what you'll do in the frontend voting section.
@@ -258,7 +258,7 @@ const [marketResult, hasVotedResult] = data ?? [];
 
 ### 🛠️ Build It: `components/MarketCard.tsx`
 
-Open the stub at `components/MarketCard.tsx`. Right now it renders a yellow "🔧 Build me!" placeholder. Replace it with a real component that displays live market data.
+Open the stub at `components/MarketCard.tsx`. Right now it renders a yellow 🔧 placeholder card showing the pod owner's name and a prompt to implement the component. Replace it with a real component that displays live market data.
 
 **What your MarketCard should do:**
 
@@ -286,7 +286,7 @@ const noPercent = 100 - yesPercent;
 
 <AIPrompt prompt="Rewrite the MarketCard component in components/MarketCard.tsx. It receives {pod, account} props (types already imported). Use useReadContracts from wagmi to batch-read markets(0) and hasVoted(0, account.address) from pod.marketAddress using PredictionMarketABI from @/lib/contracts. Display: (1) pod.owner's name, (2) the market question, (3) a green/red odds bar with percentages, (4) pool sizes formatted with formatEther from viem. Add conditional rendering: if resolved show 'Market Resolved', if hasVoted show 'Already voted', if no wallet show 'Connect wallet', otherwise show placeholder vote buttons for now. Use Tailwind CSS for styling. Keep 'use client' directive." />
 
-**Verify it works:** Your app should now show live market questions and odds instead of the yellow "🔧" placeholders. If you see "Loading..." stuck, check your `podConfig.ts` addresses.
+**Verify it works:** Your app should now show live market questions and odds instead of the yellow 🔧 placeholder cards. If you see "Loading..." stuck, check your `podConfig.ts` addresses.
 
 <Scale id="fs-frontend-confidence" max={5} label="How confident are you in using Wagmi hooks to read blockchain data in React?" />
 
