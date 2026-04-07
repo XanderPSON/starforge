@@ -12,8 +12,7 @@ export function ChecklistSetup({ id }: { id: string }) {
         "Node.js v18+ and npm working",
         "Foundry installed (forge, cast, anvil all verified)",
         "Wallet private key imported into Foundry (cast wallet import dev)",
-        "Etherscan API key saved",
-        "WalletConnect Project ID saved"
+        "Etherscan API key saved"
       ]}
     />
   )

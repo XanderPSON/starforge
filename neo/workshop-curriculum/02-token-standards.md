@@ -55,13 +55,13 @@ For example, the Base team at Coinbase contributed [ERC-7846](https://eips.ether
 
 **📂 Token standards** structure different types of asset models as smart contracts.
 
-**🔁 ERC-20 (Fungible Tokens)**:
+**🔁 [ERC-20 (Fungible Tokens)](https://eips.ethereum.org/EIPS/eip-20)**:
 
 - Every token is identical and interchangeable
 - Examples: USDC (Stablecoin from Coinbase and Circle), cbBTC (Coinbase custodied Bitcoin), UNI (Uniswap governance token)
 - Use cases: New currencies, wrapped securities, points, governance tokens
 
-**🖼️ ERC-721 (NFTs - Non-Fungible Tokens)**:
+**🖼️ [ERC-721 (NFTs - Non-Fungible Tokens)](https://eips.ethereum.org/EIPS/eip-721)**:
 
 - Each token is unique, non-interchangeable, and can have metadata
 - Examples: CryptoPunks, Basenames, Uniswap Liquidity Provider Positions

@@ -13,8 +13,7 @@ export function ChecklistSetupEnv({ id }: { id: string }) {
         "Node.js v18+ installed",
         "Foundry installed",
         "Wallet imported to Foundry",
-        "Etherscan API key saved",
-        "WalletConnect Project ID saved"
+        "Etherscan API key saved"
       ]}
     />
   )
