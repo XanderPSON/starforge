@@ -6,14 +6,14 @@ export function QuizPariMutuel({ id }: { id: string }) {
   return (
     <MultipleChoice
       id={id}
-      question="In a pari-mutuel market with yesPool = 100 tokens and noPool = 50 tokens, what happens when a YES voter wins?"
+      question="You deploy a prediction market contract and discover a bug in the payout logic. What can you do?"
       options={[
-        "They get exactly 1x their stake back",
-        "They split the losing pool proportionally, plus get their stake back",
-        "They get a fixed 2x payout regardless of pool sizes",
-        "The contract owner decides their payout amount"
+        "Push a hotfix to the contract and redeploy to the same address",
+        "Nothing — deployed contract code is immutable; you must deploy a new contract",
+        "Ask the network validators to approve an emergency patch",
+        "Use an admin function to swap out the contract bytecode"
       ]}
-      correctAnswer="They split the losing pool proportionally, plus get their stake back"
+      correctAnswer="Nothing — deployed contract code is immutable; you must deploy a new contract"
     />
   )
 }

@@ -206,6 +206,8 @@ You should see JSON with your market's question, pool sizes, and resolved status
 > [!NOTE]
 > Reading onchain data is **free** — no gas, no wallet, no signature required. This is why your API route works without a private key. Writing data (transactions) costs gas and requires a wallet, which is what you'll do in the frontend voting section.
 
+<QuizReadsVsWrites id="fs-reads-vs-writes" />
+
 <Scale id="fs-backend-confidence" max={5} label="How confident are you in reading onchain data from a server?" />
 
 <FlavorText id="fs-backend-complete" emoji="🔙" text="Backend unlocked. You can read the blockchain from Node.js." />
@@ -315,8 +317,6 @@ This means your UI needs to handle intermediate states: signing, pending, confir
 
 <QuizTransactionFlow id="fs-transaction-flow" />
 
-<QuizAsyncUX id="fs-async-ux" />
-
 ### 🖋️ The Two-Step Vote Pattern
 
 In Part 2, you learned that voting requires TWO transactions: `approve` (let the market spend your tokens) and `vote` (execute the bet). We batch these into a single user click using an array of encoded calls:
@@ -345,6 +345,8 @@ const voteYesCalls = [
 ```
 
 ### 🧰 OnchainKit's `<Transaction>` Component
+
+<QuizWalletSigning id="fs-wallet-signing" />
 
 Instead of writing complex state-management for loading spinners and error popups, you just pass your calls array into the `<Transaction>` component. It handles the wallet popup, block confirmation, and UI state automatically:
 
@@ -388,6 +390,8 @@ Update your `MarketCard` component to replace the placeholder vote buttons with 
 2. Click "Vote Yes" on a market
 3. Your wallet should pop up asking you to confirm TWO batched transactions
 4. After confirmation, refresh — the odds should update
+
+<QuizAsyncUX id="fs-async-ux" />
 
 <FlavorText id="fs-voting-complete" emoji="🗳️" text="Voting wired. Approve + vote in one click." />
 

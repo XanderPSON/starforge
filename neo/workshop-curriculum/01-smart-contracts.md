@@ -398,6 +398,8 @@ This mirrors real Web3 workflow: verify what contract you are talking to, read o
 
 <QuizBlockExplorer id="sc-block-explorer" />
 
+<QuizABI id="sc-abi-calldata" />
+
 <FlavorText id="sc-explorer-done" emoji="🕵️" text="Block explorer mastery: unlocked" />
 
 ---
@@ -442,6 +444,8 @@ Gas prices aren't fixed — they adjust dynamically based on demand. **EIPs** (E
 > **Exercise:** Go back to a transaction you found in the scavenger hunt. Find "Gas Used", "Gas Price", and calculate the total fee. Compare it to the "Transaction Fee" shown — does the math check out?
 
 <QuizGas id="sc-gas-purpose" />
+
+<QuizGasMechanics id="sc-gas-mechanics" />
 
 # 🚀 Deploy Your Prediction Market (20 min)
 
@@ -542,6 +546,24 @@ Wallets, block explorers, and SDKs all add layers of abstraction that can obscur
 > This applies to real money too. If you're signing transactions without verifying the details, you could lose funds. Always lean on the chain as your source of truth — not the wallet UI, not the dApp frontend, not even your teammates. **Verify onchain.**
 
 </details>
+
+### ⚠️ The Bigger Picture: Onchain Errors Are Notoriously Bad
+
+This "Unable to estimate network fee" example isn't a one-off — it's a pattern you'll encounter constantly in Web3 development. **Onchain error messages are notoriously unreliable.** The infrastructure is still young, and the tooling layers between you and the blockchain (wallets, RPCs, SDKs) each add their own interpretation of what went wrong — often incorrectly.
+
+Common examples you'll hit:
+
+- **"Insufficient gas"** → Usually means a `revert` in the contract, not an actual gas problem. The wallet simulates the transaction, hits a revert, and reports it as infinite gas required.
+- **"Transaction underpriced"** → Could mean a nonce conflict, not a gas price issue.
+- **"Execution reverted"** → The most you'll get from many contracts. No explanation of *which* check failed or *why*.
+- **Generic hex error codes** → Some contracts return raw bytes that your tools can't decode without the ABI.
+
+This is fundamentally different from Web2, where a 403 says "forbidden" and a 404 says "not found." In Web3, you'll often get the equivalent of "something went wrong" and have to work backward from the block explorer to figure out what actually happened.
+
+> [!NOTE]
+> This is a feature of working at the frontier, not a bug in your skills. Onchain infrastructure is where web infrastructure was in the early 2000s — rapidly improving, but full of sharp edges. The debugging skill you're building here — **don't trust the error, verify onchain** — is the most transferable thing you'll take from this workshop.
+
+<QuizOnchainErrors id="sc-onchain-errors" />
 
 **✅ Success:** Contract deployed, verified, and working!
 

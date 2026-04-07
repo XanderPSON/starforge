@@ -41,6 +41,10 @@ import { QuizERCProcess } from './QuizERCProcess'
 import { QuizMulticall } from './QuizMulticall'
 import { QuizAsyncUX } from './QuizAsyncUX'
 import { QuizBlockchainAsDB } from './QuizBlockchainAsDB'
+import { QuizReadsVsWrites } from './QuizReadsVsWrites'
+import { QuizGasMechanics } from './QuizGasMechanics'
+import { QuizWalletSigning } from './QuizWalletSigning'
+import { QuizOnchainErrors } from './QuizOnchainErrors'
 import { GasFeeCalculator } from './GasFeeCalculator'
 import { Icon } from './Icon'
 import { QuipOracleProblem } from './QuipOracleProblem'
@@ -89,9 +93,9 @@ function Details({ children, className, class: classAttr }: { children?: React.R
   return createElement('details', {
     className: [
       'my-6 rounded-xl overflow-hidden group',
-      'border border-gray-200 dark:border-white/10',
-      'bg-gray-50 dark:bg-white/[0.04]',
-      'shadow-sm dark:shadow-md dark:shadow-black/20',
+      'border border-gray-200 dark:border-white/[0.14]',
+      'bg-gray-50 dark:bg-white/[0.03]',
+      'shadow-sm dark:shadow-lg dark:shadow-black/30',
     ].join(' '),
     'data-variant': 'section',
   }, children)
@@ -106,11 +110,13 @@ function Summary({ children }: { children?: React.ReactNode }) {
       'transition-colors duration-150',
       '[&::-webkit-details-marker]:hidden',
 
-      'group-data-[variant=section]:text-lg group-data-[variant=section]:font-semibold',
-      'group-data-[variant=section]:text-gray-900 dark:group-data-[variant=section]:text-gray-100',
-      'group-data-[variant=section]:bg-gray-100/80 dark:group-data-[variant=section]:bg-white/[0.06]',
-      'group-data-[variant=section]:hover:bg-gray-200/80 dark:group-data-[variant=section]:hover:bg-white/[0.10]',
-      'group-open:group-data-[variant=section]:border-b group-open:group-data-[variant=section]:border-gray-200 dark:group-open:group-data-[variant=section]:border-white/10',
+      'group-data-[variant=section]:text-lg group-data-[variant=section]:font-semibold group-data-[variant=section]:tracking-tight',
+      'group-data-[variant=section]:text-gray-900 dark:group-data-[variant=section]:text-white',
+      'group-data-[variant=section]:bg-gradient-to-r group-data-[variant=section]:from-gray-100 group-data-[variant=section]:to-gray-50',
+      'dark:group-data-[variant=section]:from-white/[0.08] dark:group-data-[variant=section]:to-white/[0.04]',
+      'group-data-[variant=section]:hover:from-gray-200 group-data-[variant=section]:hover:to-gray-100',
+      'dark:group-data-[variant=section]:hover:from-white/[0.14] dark:group-data-[variant=section]:hover:to-white/[0.08]',
+      'group-open:group-data-[variant=section]:border-b group-open:group-data-[variant=section]:border-gray-200 dark:group-open:group-data-[variant=section]:border-white/[0.08]',
 
       'group-data-[variant=spoiler]:text-base group-data-[variant=spoiler]:font-semibold',
       'group-data-[variant=spoiler]:text-amber-700 dark:group-data-[variant=spoiler]:text-amber-400',
@@ -123,9 +129,10 @@ function Summary({ children }: { children?: React.ReactNode }) {
         'shrink-0 text-xs transition-transform duration-200 group-open:rotate-90',
 
         'group-data-[variant=section]:flex group-data-[variant=section]:items-center group-data-[variant=section]:justify-center',
-        'group-data-[variant=section]:w-6 group-data-[variant=section]:h-6 group-data-[variant=section]:rounded-md',
-        'group-data-[variant=section]:bg-coinbase-blue/10 dark:group-data-[variant=section]:bg-coinbase-blue/20',
+        'group-data-[variant=section]:w-7 group-data-[variant=section]:h-7 group-data-[variant=section]:rounded-lg',
+        'group-data-[variant=section]:bg-coinbase-blue/15 dark:group-data-[variant=section]:bg-coinbase-blue/25',
         'group-data-[variant=section]:text-coinbase-blue dark:group-data-[variant=section]:text-coinbase-cyan',
+        'group-data-[variant=section]:shadow-sm dark:group-data-[variant=section]:shadow-coinbase-blue/10',
 
         'group-data-[variant=spoiler]:text-amber-500 dark:group-data-[variant=spoiler]:text-amber-400',
       ].join(' ')
@@ -202,6 +209,10 @@ export const mdxComponents: MDXComponents = {
   QuizMulticall,
   QuizAsyncUX,
   QuizBlockchainAsDB,
+  QuizReadsVsWrites,
+  QuizGasMechanics,
+  QuizWalletSigning,
+  QuizOnchainErrors,
   GasFeeCalculator,
   Icon,
   QuipOracleProblem,
