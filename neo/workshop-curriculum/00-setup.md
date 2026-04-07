@@ -266,15 +266,9 @@ _You'll use this in Part 3 for OnchainKit (wallet connections, Smart Wallet feat
 > [!WARNING]
 > CDP has two key types — **Client** and **Secret**. You want **Client API Key**. Client keys are safe to use in frontend code (`NEXT_PUBLIC_` env vars). Secret keys are for server-side-only API calls and must never be exposed in browser code.
 
-<QuipAPIKeyTypes id="setup-api-key-types" />
-
 # ✅ Verification & Ready
 
 _Confirm everything works before starting the workshop._
-
-## ✅ Quick Verification
-
-Let's verify everything works:
 
 1. **Test Node.js**
 
@@ -314,22 +308,15 @@ Let's verify everything works:
 
     All three values should print (no blanks).
 
-<ChecklistSetupEnv id="setup-env-checklist" />
-
----
-
-## 🚀 Ready for the Workshop!
-
-Once your setup is complete:
-
-1. ✅ All tools installed and verified
-2. ✅ Dev wallet works in CLI (`cast wallet address --account dev`) and browser (Coinbase Wallet extension)
-3. ✅ Testnet ETH funded
-4. ✅ `.env` file has all keys: `WALLET_ADDRESS`, `ETHERSCAN_API_KEY`, `NEXT_PUBLIC_ONCHAINKIT_API_KEY`
+- ✅ All tools installed and verified
+- ✅ Dev wallet works in CLI (`cast wallet address --account dev`) and browser (Coinbase Wallet extension)
+- ✅ Testnet ETH funded
+- ✅ `.env` file has all keys: `WALLET_ADDRESS`, `ETHERSCAN_API_KEY`, `NEXT_PUBLIC_ONCHAINKIT_API_KEY`
 
 > [!IMPORTANT]
-> Proceed only when **all checks are green**. Missing tools or keys will block you in later modules.
+> Proceed only when **all checks pass**. Missing tools or keys will block you in later modules.
+
+<ChecklistSetupEnv id="setup-env-checklist" />
 
 <TemperatureCheck id="setup-confidence-check" />
 
-**Let's start [🔐 Part 1: Smart Contracts](./01-smart-contracts)**

@@ -18,6 +18,7 @@ export interface TrainingFrontmatter {
   author?: string
   tags?: string[]
   difficulty?: 'beginner' | 'intermediate' | 'advanced'
+  hidden?: boolean
 }
 
 // Alias for backward compatibility
@@ -54,6 +55,7 @@ function parseFrontmatterFromSource(source: string): TrainingFrontmatter {
       if (k === 'difficulty' && ['beginner', 'intermediate', 'advanced'].includes(value)) {
         frontmatter.difficulty = value as TrainingFrontmatter['difficulty']
       }
+      if (k === 'hidden') frontmatter.hidden = value === 'true'
       if (k === 'tags') {
         const tagMatch = value.match(/\[(.*)\]/)
         frontmatter.tags = tagMatch ? tagMatch[1]!.split(',').map((t) => t.trim()) : []
@@ -100,13 +102,14 @@ export async function listTrainings() {
     const files = await readdir(NEO_CONTENT_DIR)
     const mdFiles = files.filter((f) => f.endsWith('.md') && f.toLowerCase() !== 'readme.md')
 
-    return Promise.all(
+    const all = await Promise.all(
       mdFiles.map(async (file) => {
         const slug = file.replace(/\.md$/, '')
         const source = await readFile(path.join(NEO_CONTENT_DIR, file), 'utf-8')
         return { slug, frontmatter: parseFrontmatterFromSource(source) }
       })
     )
+    return all.filter((t) => !t.frontmatter.hidden)
   }
 
   if (process.env.TRAINING_REPO_URL) {

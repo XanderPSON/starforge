@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { activateAdminMode } from '@/lib/admin-access'
+import { toggleAdminMode } from '@/lib/admin-access'
 
 const CHEAT_SEQUENCES: string[][] = [
   // Konami code
@@ -32,7 +32,7 @@ export function KonamiListener() {
         if (buffer.length >= seq.length) {
           const tail = buffer.slice(-seq.length)
           if (tail.every((key, i) => key === seq[i])) {
-            activateAdminMode()
+            toggleAdminMode()
             bufferRef.current = []
             return
           }

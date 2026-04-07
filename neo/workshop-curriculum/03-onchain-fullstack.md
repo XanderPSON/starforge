@@ -1,6 +1,7 @@
 ---
 description: Build a React dashboard that reads from and writes to your pod's smart contracts using Wagmi, Viem, and OnchainKit.
 duration: 105
+hidden: true
 ---
 
 # 🌐 Part 3: Onchain Fullstack (105 min)
