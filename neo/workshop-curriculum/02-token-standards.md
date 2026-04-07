@@ -431,18 +431,6 @@ To "upgrade," the owner deploys a new Implementation contract and points the Pro
 
 <QuipProxyPattern id="ts-proxy-pattern" />
 
-### 📢 Share with Your Pod
-
-**Before Part 3, collect from each pod member:**
-
-- **Market contract address** (your upgraded PredictionMarket)
-- **Token contract address** (your custom ERC-20)
-
-> [!IMPORTANT]
-> You'll need these addresses for the Aggregator Dashboard in Part 3. Collect them now — a missing or wrong address will break the entire dashboard!
-
----
-
 <TemperatureCheck id="ts-understanding-check" />
 
 <FlavorText id="ts-part2-complete" emoji="🪙" text="Token economist: certified" />
