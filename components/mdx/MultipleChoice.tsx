@@ -87,7 +87,7 @@ export function MultipleChoice({
         id={`question-${id}`}
         className="mb-4 text-base font-medium text-gray-800 dark:text-gray-200"
       >
-        {question}
+        🤔 {question}
       </h4>
       <div
         role="radiogroup"

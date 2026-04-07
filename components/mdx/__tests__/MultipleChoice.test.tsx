@@ -45,7 +45,7 @@ describe('MultipleChoice', () => {
   it('renders with required props', () => {
     render(<MultipleChoice {...baseProps} />)
 
-    expect(screen.getByText('What is 2 + 2?')).toBeInTheDocument()
+    expect(screen.getByText('🤔 What is 2 + 2?')).toBeInTheDocument()
     expect(screen.getByRole('radio', { name: '3' })).toBeInTheDocument()
     expect(screen.getByRole('radio', { name: '4' })).toBeInTheDocument()
     expect(screen.getByRole('radio', { name: '5' })).toBeInTheDocument()
