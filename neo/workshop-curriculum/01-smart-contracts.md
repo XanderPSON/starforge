@@ -567,7 +567,7 @@ This is fundamentally different from Web2, where a 403 says "forbidden" and a 40
 
 **✅ Success:** Contract deployed, verified, and working!
 
-<Scale id="sc-deploy-confidence" max={5} label="How confident do you feel about deploying smart contracts?" />
+<Scale id="sc-deploy-confidence" max={5} label="💪 How confident do you feel about deploying smart contracts?" />
 
 ---
 

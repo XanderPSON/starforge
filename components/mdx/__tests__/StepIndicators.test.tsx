@@ -10,6 +10,7 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('@/lib/event-tracking', () => ({
   trackEvent: vi.fn(),
+  usePageIndex: () => 0,
   LEARNING_EVENT_TYPES: {
     PAGE_VIEW: 'page_view',
   },

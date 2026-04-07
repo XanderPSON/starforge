@@ -14,6 +14,7 @@ vi.mock('@/lib/storage', () => ({
 
 vi.mock('@/lib/event-tracking', () => ({
   trackEvent: vi.fn(),
+  usePageIndex: () => 0,
   LEARNING_EVENT_TYPES: {
     TEMPERATURE_CHECK: 'temperature_check',
   },

@@ -1,7 +1,7 @@
 'use client'
 
 import { useInteractive, getStorageKey } from '@/lib/storage'
-import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
+import { trackEvent, LEARNING_EVENT_TYPES, usePageIndex } from '@/lib/event-tracking'
 import { useParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
@@ -14,6 +14,7 @@ interface ChecklistProps {
 export function Checklist({ id, items, className }: ChecklistProps) {
   const params = useParams()
   const slug = params.slug as string || 'default'
+  const pageIndex = usePageIndex()
 
   // Validate required props
   const missingProps: string[] = []
@@ -60,6 +61,7 @@ export function Checklist({ id, items, className }: ChecklistProps) {
     const newCompleted = newCheckedItems.filter(Boolean).length
     trackEvent(LEARNING_EVENT_TYPES.CHECKLIST_TOGGLE, {
       slug,
+      pageIndex,
       metadata: {
         componentId: id,
         itemIndex: index,

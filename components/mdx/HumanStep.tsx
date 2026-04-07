@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import { User } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
+import { trackEvent, LEARNING_EVENT_TYPES, usePageIndex } from '@/lib/event-tracking'
 
 interface HumanStepProps {
   instruction: string
@@ -13,6 +13,7 @@ interface HumanStepProps {
 
 export function HumanStep({ instruction, className }: HumanStepProps) {
   const params = useParams()
+  const pageIndex = usePageIndex()
 
   useEffect(() => {
     if (!instruction) return
@@ -24,13 +25,14 @@ export function HumanStep({ instruction, className }: HumanStepProps) {
 
     trackEvent(LEARNING_EVENT_TYPES.PAGE_VIEW, {
       slug,
+      pageIndex,
       metadata: {
         componentId: 'human-step',
         action: 'view',
         instructionPreview: instruction.slice(0, 100)
       }
     })
-  }, [instruction, params])
+  }, [instruction, params, pageIndex])
 
   if (!instruction) {
     return (

@@ -15,6 +15,7 @@ vi.mock('@/lib/storage', () => ({
 
 vi.mock('@/lib/event-tracking', () => ({
   trackEvent: vi.fn(),
+  usePageIndex: () => 0,
   LEARNING_EVENT_TYPES: {
     SUBMISSION: 'submission',
   },
@@ -84,6 +85,7 @@ describe('SubmissionBox', () => {
 
     expect(trackEvent).toHaveBeenCalledWith('submission', {
       slug: 'test-training',
+      pageIndex: 0,
       metadata: expect.objectContaining({
         componentId: 'submit-1',
         action: 'submit',
@@ -97,6 +99,7 @@ describe('SubmissionBox', () => {
 
     expect(trackEvent).toHaveBeenCalledWith('submission', {
       slug: 'test-training',
+      pageIndex: 0,
       metadata: {
         componentId: 'submit-1',
         action: 'edit',

@@ -83,6 +83,7 @@ function Details({ children, className, class: classAttr }: { children?: React.R
       className: [
         'my-6 rounded-xl overflow-hidden group',
         'border border-amber-300/60 dark:border-amber-500/30',
+        'border-l-4 !border-l-amber-400 dark:!border-l-amber-500',
         'bg-amber-50/50 dark:bg-amber-500/[0.06]',
         'shadow-sm',
       ].join(' '),
@@ -94,6 +95,7 @@ function Details({ children, className, class: classAttr }: { children?: React.R
     className: [
       'my-6 rounded-xl overflow-hidden group',
       'border border-gray-200 dark:border-white/[0.14]',
+      'border-l-4 !border-l-coinbase-blue dark:!border-l-coinbase-cyan',
       'bg-gray-50 dark:bg-white/[0.03]',
       'shadow-sm dark:shadow-lg dark:shadow-black/30',
     ].join(' '),

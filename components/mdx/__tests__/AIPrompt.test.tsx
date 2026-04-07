@@ -15,6 +15,7 @@ vi.mock('@/lib/storage', () => ({
 
 vi.mock('@/lib/event-tracking', () => ({
   trackEvent: vi.fn(),
+  usePageIndex: () => 0,
   LEARNING_EVENT_TYPES: {
     REVEAL_TOGGLE: 'reveal_toggle',
   },
@@ -80,6 +81,7 @@ describe('AIPrompt', () => {
     await waitFor(() => {
       expect(trackEvent).toHaveBeenCalledWith('reveal_toggle', {
         slug: 'test-training',
+        pageIndex: 0,
         metadata: expect.objectContaining({
           componentId: 'ai-prompt',
           action: 'copy',

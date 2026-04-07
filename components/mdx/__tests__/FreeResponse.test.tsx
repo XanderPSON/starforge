@@ -15,6 +15,7 @@ vi.mock('@/lib/storage', () => ({
 
 vi.mock('@/lib/event-tracking', () => ({
   trackEvent: vi.fn(),
+  usePageIndex: () => 0,
   LEARNING_EVENT_TYPES: {
     FREE_RESPONSE: 'free_response',
   },
@@ -79,6 +80,7 @@ describe('FreeResponse', () => {
 
     expect(trackEvent).toHaveBeenCalledWith('free_response', {
       slug: 'test-training',
+      pageIndex: 0,
       metadata: expect.objectContaining({
         componentId: 'free-1',
         responseText: 'Tracked response',

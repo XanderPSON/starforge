@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import { safeGetItem, getStorageKey } from '@/lib/storage'
-import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
+import { trackEvent, LEARNING_EVENT_TYPES, usePageIndex } from '@/lib/event-tracking'
 import type { ReactNode } from 'react'
 
 interface RevealProps {
@@ -25,6 +25,7 @@ function checkIsAnswered(slug: string, requiredId: string): boolean {
 export function Reveal({ requiredId, children }: RevealProps) {
   const params = useParams()
   const slug = (params.slug as string) || 'default'
+  const pageIndex = usePageIndex()
   const [revealed, setRevealed] = useState(false)
   const [isHydrated, setIsHydrated] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -47,6 +48,7 @@ export function Reveal({ requiredId, children }: RevealProps) {
           requestAnimationFrame(() => setVisible(true))
           trackEvent(LEARNING_EVENT_TYPES.REVEAL_TOGGLE, {
             slug,
+            pageIndex,
             metadata: {
               componentId: requiredId,
               action: 'reveal',

@@ -1,7 +1,7 @@
 'use client'
 
 import { useInteractive, getStorageKey } from '@/lib/storage'
-import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
+import { trackEvent, LEARNING_EVENT_TYPES, usePageIndex } from '@/lib/event-tracking'
 import { useParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
@@ -19,6 +19,7 @@ interface SubmissionState {
 export function SubmissionBox({ id, label, placeholder }: SubmissionBoxProps) {
   const params = useParams()
   const slug = (params.slug as string) || 'default'
+  const pageIndex = usePageIndex()
 
   // ALL hooks must be called unconditionally (React Rules of Hooks)
   const storageKey = getStorageKey(slug, id || '__placeholder__')
@@ -50,6 +51,7 @@ export function SubmissionBox({ id, label, placeholder }: SubmissionBoxProps) {
     setState({ ...state, isSubmitted: true })
     trackEvent(LEARNING_EVENT_TYPES.SUBMISSION, {
       slug,
+      pageIndex,
       metadata: {
         componentId: id,
         action: 'submit',
@@ -63,6 +65,7 @@ export function SubmissionBox({ id, label, placeholder }: SubmissionBoxProps) {
     setState({ ...state, isSubmitted: false })
     trackEvent(LEARNING_EVENT_TYPES.SUBMISSION, {
       slug,
+      pageIndex,
       metadata: {
         componentId: id,
         action: 'edit',

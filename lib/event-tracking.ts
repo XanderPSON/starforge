@@ -1,5 +1,20 @@
 'use client'
 
+import { useSearchParams } from 'next/navigation'
+
+/**
+ * Returns the current page index from the `?page=` query parameter.
+ * Falls back to 0 if missing or unparseable.
+ * Must be called from a client component inside a <Suspense> boundary.
+ */
+export function usePageIndex(): number {
+  const searchParams = useSearchParams()
+  const raw = searchParams.get('page')
+  if (raw === null) return 0
+  const parsed = Number.parseInt(raw, 10)
+  return Number.isNaN(parsed) ? 0 : Math.max(parsed, 0)
+}
+
 export const LEARNING_EVENT_TYPES = {
   // Navigation & session
   PAGE_VIEW: 'page_view',

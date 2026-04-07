@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import { Users } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
+import { trackEvent, LEARNING_EVENT_TYPES, usePageIndex } from '@/lib/event-tracking'
 
 interface HybridStepProps {
   instruction: string
@@ -13,6 +13,7 @@ interface HybridStepProps {
 
 export function HybridStep({ instruction, className }: HybridStepProps) {
   const params = useParams()
+  const pageIndex = usePageIndex()
 
   useEffect(() => {
     if (!instruction) return
@@ -24,13 +25,14 @@ export function HybridStep({ instruction, className }: HybridStepProps) {
 
     trackEvent(LEARNING_EVENT_TYPES.PAGE_VIEW, {
       slug,
+      pageIndex,
       metadata: {
         componentId: 'hybrid-step',
         action: 'view',
         instructionPreview: instruction.slice(0, 100)
       }
     })
-  }, [instruction, params])
+  }, [instruction, params, pageIndex])
 
   if (!instruction) {
     return (

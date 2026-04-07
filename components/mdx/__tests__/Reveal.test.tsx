@@ -16,6 +16,7 @@ vi.mock('@/lib/storage', () => ({
 
 vi.mock('@/lib/event-tracking', () => ({
   trackEvent: vi.fn(),
+  usePageIndex: () => 0,
   LEARNING_EVENT_TYPES: {
     REVEAL_TOGGLE: 'reveal_toggle',
   },
@@ -99,6 +100,7 @@ describe('Reveal', () => {
     await waitFor(() => {
       expect(trackEvent).toHaveBeenCalledWith('reveal_toggle', {
         slug: 'test-training',
+        pageIndex: 0,
         metadata: {
           componentId: 'dep-1',
           action: 'reveal',

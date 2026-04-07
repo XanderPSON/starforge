@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useParams } from 'next/navigation'
-import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
+import { trackEvent, LEARNING_EVENT_TYPES, usePageIndex } from '@/lib/event-tracking'
 import type { ReactNode } from 'react'
 
 interface SuggestedAnswerProps {
@@ -14,6 +14,7 @@ interface SuggestedAnswerProps {
 export function SuggestedAnswer({ id, children, label = 'Suggested answer' }: SuggestedAnswerProps) {
   const params = useParams()
   const slug = (params.slug as string) || 'default'
+  const pageIndex = usePageIndex()
   const [isRevealed, setIsRevealed] = useState(false)
 
   if (!children) {
@@ -29,6 +30,7 @@ export function SuggestedAnswer({ id, children, label = 'Suggested answer' }: Su
     setIsRevealed(newState)
     trackEvent(LEARNING_EVENT_TYPES.REVEAL_TOGGLE, {
       slug,
+      pageIndex,
       metadata: {
         componentId: id || 'suggested-answer',
         action: newState ? 'reveal' : 'hide',

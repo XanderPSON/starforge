@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
+import { trackEvent, LEARNING_EVENT_TYPES, usePageIndex } from '@/lib/event-tracking'
 
 interface AIPromptProps {
   prompt: string
@@ -14,6 +14,7 @@ interface AIPromptProps {
 export function AIPrompt({ prompt, className }: AIPromptProps) {
   const [copied, setCopied] = useState(false)
   const params = useParams()
+  const pageIndex = usePageIndex()
 
   const handleCopy = useCallback(async (e: React.MouseEvent) => {
     // Prevent double firing if clicking the button vs the container
@@ -32,6 +33,7 @@ export function AIPrompt({ prompt, className }: AIPromptProps) {
 
       trackEvent(LEARNING_EVENT_TYPES.REVEAL_TOGGLE, {
         slug,
+        pageIndex,
         metadata: {
           componentId: 'ai-prompt',
           action: 'copy',
@@ -43,7 +45,7 @@ export function AIPrompt({ prompt, className }: AIPromptProps) {
     } catch {
       // ignore clipboard errors gracefully
     }
-  }, [prompt, params])
+  }, [prompt, params, pageIndex])
 
   if (!prompt) {
     return (

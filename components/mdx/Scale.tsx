@@ -1,7 +1,7 @@
 'use client'
 
 import { useInteractive, getStorageKey } from '@/lib/storage'
-import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
+import { trackEvent, LEARNING_EVENT_TYPES, usePageIndex } from '@/lib/event-tracking'
 import { useParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
@@ -17,6 +17,7 @@ interface ScaleProps {
 export function Scale({ id, max = 5, label, lowLabel, highLabel, className }: ScaleProps) {
   const params = useParams()
   const slug = params.slug as string || 'default'
+  const pageIndex = usePageIndex()
 
   if (!id) {
     return (
@@ -31,21 +32,22 @@ export function Scale({ id, max = 5, label, lowLabel, highLabel, className }: Sc
 
   if (value === undefined) {
     return (
-      <div className={cn('my-8 max-w-md', className)}>
+    <div className={cn('my-8 not-prose', className)}>
         {label && <div className="mb-3 h-5 bg-gray-200 dark:bg-white/10 rounded w-2/3 animate-pulse" />}
         <div className="h-10 bg-gray-100 dark:bg-white/5 rounded-lg animate-pulse" />
       </div>
     )
   }
 
-  const effectiveLow = lowLabel ?? (max === 5 ? 'Not at all' : '1')
-  const effectiveHigh = highLabel ?? (max === 5 ? 'Very much' : String(max))
+  const effectiveLow = lowLabel ?? (max === 5 ? 'Not confident' : '1')
+  const effectiveHigh = highLabel ?? (max === 5 ? 'Very confident' : String(max))
   const options = Array.from({ length: max }, (_, i) => i + 1)
 
   const handleSelect = (rating: number) => {
     setValue(rating)
     trackEvent(LEARNING_EVENT_TYPES.SCALE_RATING, {
       slug,
+      pageIndex,
       metadata: {
         componentId: id,
         value: rating,
@@ -63,12 +65,12 @@ export function Scale({ id, max = 5, label, lowLabel, highLabel, className }: Sc
   }
 
   return (
-    <div className={cn('my-8 max-w-md', className)}>
+    <div className={cn('my-8', className)}>
       {label && (
-        <p className="mb-4 text-base font-medium text-gray-700 dark:text-gray-200">{label}</p>
+        <p className="mb-4 text-base font-medium text-gray-700 dark:text-gray-200 not-prose">{label}</p>
       )}
 
-      <div role="group" aria-label={label || `Rate from 1 to ${max}`}>
+      <div role="group" aria-label={label || `Rate from 1 to ${max}`} className="max-w-md">
         <div className="flex items-center justify-between gap-1">
           {options.map((n) => {
             const isSelected = value === n

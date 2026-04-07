@@ -1,7 +1,7 @@
 'use client'
 
 import { useInteractive, getStorageKey } from '@/lib/storage'
-import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
+import { trackEvent, LEARNING_EVENT_TYPES, usePageIndex } from '@/lib/event-tracking'
 import { useParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
@@ -81,6 +81,7 @@ type TemperatureValue = 1 | 2 | 3 | 4 | 5
 export function TemperatureCheck({ id, label, className }: TemperatureCheckProps) {
   const params = useParams()
   const slug = params.slug as string || 'default'
+  const pageIndex = usePageIndex()
 
   if (!id) {
     return (
@@ -113,6 +114,7 @@ export function TemperatureCheck({ id, label, className }: TemperatureCheckProps
     const option = TEMPERATURE_OPTIONS.find((o) => o.value === temp)
     trackEvent(LEARNING_EVENT_TYPES.TEMPERATURE_CHECK, {
       slug,
+      pageIndex,
       metadata: {
         componentId: id,
         value: temp,

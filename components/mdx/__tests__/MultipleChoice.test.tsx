@@ -15,6 +15,7 @@ vi.mock('@/lib/storage', () => ({
 
 vi.mock('@/lib/event-tracking', () => ({
   trackEvent: vi.fn(),
+  usePageIndex: () => 0,
   LEARNING_EVENT_TYPES: {
     MULTIPLE_CHOICE: 'multiple_choice',
   },
@@ -95,6 +96,7 @@ describe('MultipleChoice', () => {
 
     expect(trackEvent).toHaveBeenCalledWith('multiple_choice', {
       slug: 'test-training',
+      pageIndex: 0,
       metadata: {
         componentId: 'mc-1',
         question: 'What is 2 + 2?',

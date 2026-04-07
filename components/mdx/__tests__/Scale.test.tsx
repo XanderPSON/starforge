@@ -15,6 +15,7 @@ vi.mock('@/lib/storage', () => ({
 
 vi.mock('@/lib/event-tracking', () => ({
   trackEvent: vi.fn(),
+  usePageIndex: () => 0,
   LEARNING_EVENT_TYPES: {
     SCALE_RATING: 'scale_rating',
   },
@@ -89,6 +90,7 @@ describe('Scale', () => {
 
     expect(trackEvent).toHaveBeenCalledWith('scale_rating', {
       slug: 'test-training',
+      pageIndex: 0,
       metadata: {
         componentId: 'scale-1',
         value: 4,

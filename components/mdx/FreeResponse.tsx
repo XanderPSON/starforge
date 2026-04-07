@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react'
 import { useInteractive, getStorageKey } from '@/lib/storage'
-import { trackEvent, LEARNING_EVENT_TYPES } from '@/lib/event-tracking'
+import { trackEvent, LEARNING_EVENT_TYPES, usePageIndex } from '@/lib/event-tracking'
 import { useParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
@@ -16,6 +16,7 @@ interface FreeResponseProps {
 export function FreeResponse({ id, label, className, placeholder }: FreeResponseProps) {
   const params = useParams()
   const slug = params.slug as string || 'default'
+  const pageIndex = usePageIndex()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   // ALL hooks must be called unconditionally (React Rules of Hooks)
@@ -34,6 +35,7 @@ export function FreeResponse({ id, label, className, placeholder }: FreeResponse
     if (value && value.trim().length > 0) {
       trackEvent(LEARNING_EVENT_TYPES.FREE_RESPONSE, {
         slug,
+        pageIndex,
         metadata: {
           componentId: id,
           responseText: value,
@@ -42,7 +44,7 @@ export function FreeResponse({ id, label, className, placeholder }: FreeResponse
         },
       })
     }
-  }, [value, slug, id, label])
+  }, [value, slug, id, label, pageIndex])
 
   // Validate required props (after all hooks)
   if (!id) {

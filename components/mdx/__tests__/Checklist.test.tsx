@@ -15,6 +15,7 @@ vi.mock('@/lib/storage', () => ({
 
 vi.mock('@/lib/event-tracking', () => ({
   trackEvent: vi.fn(),
+  usePageIndex: () => 0,
   LEARNING_EVENT_TYPES: {
     CHECKLIST_TOGGLE: 'checklist_toggle',
   },
@@ -82,6 +83,7 @@ describe('Checklist', () => {
 
     expect(trackEvent).toHaveBeenCalledWith('checklist_toggle', {
       slug: 'test-training',
+      pageIndex: 0,
       metadata: {
         componentId: 'check-1',
         itemIndex: 0,
