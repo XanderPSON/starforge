@@ -228,9 +228,6 @@ The **CEI Pattern (Checks, Effects, Interactions)** prevents reentrancy and keep
 
 > [!WARNING]
 > If you reverse the order and call an external contract **before** updating storage, a malicious contract could re-enter your function and exploit it (e.g., drain all funds). Always update state before making external calls.
-
-<QuizCEIPattern id="sc-cei-pattern" />
-
 ### 🤖 Implement Your Contract with AI
 
 Open `src/PredictionMarket.sol`. The struct, storage, and constructor are already wired up. Your job is to implement every function body. Feed the interface to your AI and prompt it:

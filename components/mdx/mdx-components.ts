@@ -27,7 +27,6 @@ import { ChecklistReviewContract } from './ChecklistReviewContract'
 import { ChecklistReviewERC20 } from './ChecklistReviewERC20'
 import { ChecklistUpgradedMarket } from './ChecklistUpgradedMarket'
 import { QuizSmartContractBasics } from './QuizSmartContractBasics'
-import { QuizCEIPattern } from './QuizCEIPattern'
 import { QuizGas } from './QuizGas'
 import { QuizTokenStandards } from './QuizTokenStandards'
 import { QuizAllowancePattern } from './QuizAllowancePattern'
@@ -197,7 +196,6 @@ export const mdxComponents: MDXComponents = {
   HumanStep,
   HybridStep,
   QuizSmartContractBasics,
-  QuizCEIPattern,
   QuizGas,
   QuizTokenStandards,
   QuizAllowancePattern,
