@@ -166,7 +166,7 @@ _Read the spec and implement your PredictionMarket contract._
 Clone the [**neo-workshop-smart-contracts**](https://github.com/XanderPSON/neo-workshop-smart-contracts) repo (used for Parts 1 & 2):
 
 ```copy
-git clone -b prediction-market https://github.com/XanderPSON/neo-workshop-smart-contracts.git
+git clone https://github.com/XanderPSON/neo-workshop-smart-contracts.git
 cd neo-workshop-smart-contracts
 forge build
 ```

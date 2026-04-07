@@ -64,7 +64,7 @@ Instead of building an app that only shows **your** contract, you'll build an **
 1. **Clone and Install** — this is a separate repo ([**neo-workshop-fullstack**](https://github.com/XanderPSON/neo-workshop-fullstack)) from the contracts repo you used in Parts 1 & 2.
 
     ```copy
-    git clone -b xander/prediction-market-starter https://github.com/XanderPSON/neo-workshop-fullstack.git
+    git clone https://github.com/XanderPSON/neo-workshop-fullstack.git
     cd neo-workshop-fullstack
     npm install
     ```

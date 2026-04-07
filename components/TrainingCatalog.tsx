@@ -221,6 +221,12 @@ export function TrainingCatalog({ trainings }: TrainingCatalogProps) {
                     </svg>
                   </span>
                   <div className="flex items-center gap-2 flex-wrap ml-auto">
+                    {frontmatter.duration && (
+                      <span className="px-2 py-0.5 rounded-full border font-medium bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-500/20 dark:text-blue-300 dark:border-blue-500/30">
+                        {frontmatter.duration} min
+                      </span>
+                    )}
+
                     {frontmatter.difficulty && (
                       <span className={`px-2 py-0.5 rounded-full border font-medium ${difficultyColors[frontmatter.difficulty]}`}>
                         {toTitleCase(frontmatter.difficulty)}
