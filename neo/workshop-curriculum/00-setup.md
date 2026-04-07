@@ -19,9 +19,8 @@ You're professional engineers, and AI coding tools are part of your toolkit. Use
 
 **Set up your AI coding tool of choice before anything else:**
 
-- **[Cursor](https://cursor.com/)** — AI-native IDE with inline diffs and chat (recommended for this workshop)
-- **cbcode (Claude Code)** — Coinbase's internal Claude Code wrapper for terminal-based AI development
-- **OpenCode** — Open-source terminal AI coding tool
+- **[Cursor](http://go/cursor)** — AI-native IDE with inline diffs and chat (recommended for this workshop)
+- **[cbcode](http://go/cbcode)** — Coinbase's internal wrapper for terminal-based AI development (Claude Code, Codex, OpenCode)
 
 > [!IMPORTANT]
 > **We recommend Cursor for this workshop.** Onchain code is often surprisingly short and elegant. Seeing the inline diffs in Cursor is more conducive to learning a new language. Claude Code works great, but if you accept changes without reading them, Day 3 Build Day will be tougher.
@@ -152,8 +151,8 @@ You'll create a wallet directly in your terminal using Foundry, then import it i
     source .env
     ```
 
-    > [!TIP]
-    > Run `source .env` every time you open a new terminal. All your keys and addresses load in one shot — no more re-exporting individual variables.
+    > [!IMPORTANT]
+    > **New terminal tab? Run `source .env` again.** Environment variables only exist in the terminal session where you set them. Every time you open a new terminal tab or window, run `source .env` from your project directory to reload your wallet address, API keys, and all other variables. If a command says a variable is "not set," this is almost always why.
 
 4. **Import the wallet into Foundry's keystore as `dev`**
 
