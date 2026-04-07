@@ -154,7 +154,7 @@ _Create, deploy, and distribute your custom ERC-20 token._
 
     Your token **must** implement: `name`, `symbol`, `decimals`, `totalSupply`, `balanceOf`, `transfer`, `approve`, `allowance`, `transferFrom`
 
-    Reference the [official ERC-20 spec](https://eips.ethereum.org/EIPS/eip-20), then prompt AI:
+    Reference the [official ERC-20 spec](https://eips.ethereum.org/EIPS/eip-20), then prompt AI (replace `[YourName]` with your name and `[YNC]` with your coin's acronym):
 
     <AIPrompt prompt="Write a Solidity ERC-20 token contract implementing the IERC20 interface with name [YourName]Coin, symbol [YNC], 18 decimals, and 1,000,000 initial supply minted to msg.sender. Include Transfer and Approval events." />
 
@@ -249,7 +249,7 @@ You are about to upgrade your Prediction Market to require tokens, but a market 
    Repeat for every person at your table. You're airdropping your custom currency to build a shared economy.
 
 > [!TIP]
-> After everyone sends, each person should hold 1,000 of every pod member's token. Coinbase Wallet auto-detects ERC-20 tokens — check the "Testnets" tab under "Assets". If a token doesn't appear, try refreshing the extension.
+> After everyone sends, each person should hold 1,000 of every pod member's token. Reminder, Coinbase Wallet auto-detects ERC-20 tokens — check the "Testnets" tab under "Assets". If a token doesn't appear, try refreshing the extension.
 
 **✅ Success**: Everyone at your table has 1,000 of each other's tokens.
 
@@ -395,7 +395,7 @@ It's time to test the V2 markets. This is where you will experience the two-step
 | 1 | **Token** | `approve(market, amount)` | User authorizes Market to spend tokens |
 | 2 | **Market** | `vote(..., amount)` | Market calls `token.transferFrom(user, market, amount)` |
 
-<Scale id="ts-allowance-confidence" max={5} label="How well do you understand the approve → transferFrom flow?" />
+<Scale id="ts-allowance-confidence" max={5} label="🤝 How well do you understand the approve → transferFrom flow?" />
 
 <FlavorText id="ts-allowance-unlocked" emoji="🔓" text="Allowance pattern mastered. You control the flow of tokens." />
 
