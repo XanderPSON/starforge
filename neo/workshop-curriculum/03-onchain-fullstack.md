@@ -4,7 +4,7 @@ duration: 105
 hidden: true
 ---
 
-# 🌐 Part 3: Onchain Fullstack
+# 🌐 Part 3: Onchain Fullstack (105 min)
 
 _Build an Aggregated Prediction Market Dashboard_
 
@@ -42,7 +42,7 @@ Check out the **[Troubleshooting Guide](./troubleshooting)** for wallet connecti
 
 ---
 
-## 🔌 The Cross-Wire: Aggregate Your Pod
+## 🔌 The Cross-Wire: Aggregate Your Pod (5 min)
 
 ### 🤝 What is the Cross-Wire?
 
@@ -57,7 +57,7 @@ Instead of building an app that only shows **your** contract, you'll build an **
 
 ---
 
-## ⚙️ Quick Setup
+## ⚙️ Quick Setup (10 min)
 
 ### 🚀 Get the App Running
 
@@ -152,7 +152,7 @@ When you first load the app, you'll see a **setup checklist** showing what's don
 
 <FlavorText id="fs-setup-complete" emoji="⚡" text="App scaffolded. Your pod's contracts are wired in." />
 
-# 🔙 Backend: Build the Market Data API
+# 🔙 Backend: Build the Market Data API (15 min)
 
 _Your first server-side blockchain endpoint._
 
@@ -210,7 +210,7 @@ You should see JSON with your market's question, pool sizes, and resolved status
 
 <FlavorText id="fs-backend-complete" emoji="🔙" text="Backend unlocked. You can read the blockchain from Node.js." />
 
-# 📱 Frontend: Build the MarketCard
+# 📱 Frontend: Build the MarketCard (25 min)
 
 _A React component with live blockchain data._
 
@@ -292,7 +292,7 @@ const noPercent = 100 - yesPercent;
 
 <FlavorText id="fs-frontend-complete" emoji="📱" text="Frontend wired. Your MarketCard reads live data from the blockchain." />
 
-# 🗳️ Wire Up Voting
+# 🗳️ Wire Up Voting (15 min)
 
 _Batch approve + vote into a single user action._
 
@@ -393,11 +393,11 @@ Update your `MarketCard` component to replace the placeholder vote buttons with 
 
 <FlavorText id="fs-voting-complete" emoji="🗳️" text="Voting wired. Approve + vote in one click." />
 
-# ⚒️ Build & Deploy
+# ⚒️ Build & Deploy (35 min)
 
 _Test your aggregator, deploy to Vercel, and enhance your app._
 
-### 🧪 Test Your Aggregator
+### 🧪 Test Your Aggregator (8 min)
 
 1. **Visit** http://localhost:3000
 2. **Connect** your Coinbase Wallet (Base Sepolia)
@@ -406,13 +406,13 @@ _Test your aggregator, deploy to Vercel, and enhance your app._
 5. **Refresh** – odds should update after votes
 6. **Test your API** — `curl http://localhost:3000/api/markets` should return the same data
 
-### 📢 Pod Challenge
+### 📢 Pod Challenge (7 min)
 
 - Each person vote on at least one other pod member's market
 - Verify the aggregator shows updated odds after each vote
 - Compare gas costs: single `vote` vs batch `approve` + `vote`
 
-### 🚀 Deploy Your App
+### 🚀 Deploy Your App (10 min)
 
 *Vercel deploys typically complete in 1–2 minutes.*
 
@@ -433,7 +433,7 @@ _Test your aggregator, deploy to Vercel, and enhance your app._
 
 ---
 
-## 📊 Enhance Your App
+## 📊 Enhance Your App (10 min)
 
 Now that the core loop is working, choose one feature to build with AI and make the dashboard look like a professional DeFi application.
 
@@ -445,7 +445,7 @@ Now that the core loop is working, choose one feature to build with AI and make 
 
 <FlavorText id="fs-enhance-complete" emoji="✨" text="Feature shipped. Your dashboard is production-grade." />
 
-# 🪞 Wrap-Up & Reflection
+# 🪞 Wrap-Up & Reflection (5 min)
 
 _Celebrate what you built and plan your next steps._
 

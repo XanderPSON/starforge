@@ -3,7 +3,7 @@ description: Build an ERC-20 token from scratch, master the Allowance Pattern, a
 duration: 60
 ---
 
-# 🪙 Part 2: Token Standards
+# 🪙 Part 2: Token Standards (60 min)
 
 _Create Your Own ERC-20 Token and Upgrade the Prediction Market_
 
@@ -32,7 +32,7 @@ Check out the **[Troubleshooting Guide](./troubleshooting)** for solutions to co
 
 ---
 
-## 📖 Understanding Token Standards
+## 📖 Understanding Token Standards (5 min)
 
 ### 🤔 Why do we need standards?
 In Web2, if you want your app to talk to Stripe, you have to read Stripe's specific API documentation. If you switch to PayPal, you have to rewrite your entire backend because the API is different.
@@ -142,7 +142,7 @@ interface IERC20 {
 - 🌉 **Works on Base** – These same standards work on Base (and all EVM chains), not just Ethereum mainnet
 - 🔗 **Connects to your work** – You'll integrate tokens with your PredictionMarket contract from Part 1 (token wagers instead of ETH!)
 
-# 🛠️ Build and Deploy Your Token
+# 🛠️ Build and Deploy Your Token (20 min)
 
 _Create, deploy, and distribute your custom ERC-20 token._
 
@@ -225,7 +225,7 @@ _Create, deploy, and distribute your custom ERC-20 token._
 
 <FlavorText id="ts-token-deployed" emoji="🪙" text="Minted your first token. The mint is warm." />
 
-## 🤝 Distribute & Trade
+## 🤝 Distribute & Trade (5 min)
 
 You are about to upgrade your Prediction Market to require tokens, but a market is no fun if you are the only one with the money.
 
@@ -255,7 +255,7 @@ You are about to upgrade your Prediction Market to require tokens, but a market 
 
 <FlavorText id="ts-airdrop-complete" emoji="💸" text="Token airdrop complete. Your pod has a shared economy." />
 
-# 🔄 Upgrade Your Prediction Market
+# 🔄 Upgrade Your Prediction Market (20 min)
 
 _Integrate your token using the Allowance Pattern._
 
@@ -372,7 +372,7 @@ Prompt AI to upgrade your `PredictionMarket.sol`:
 
 ---
 
-## 💥 Test the Allowance Flow
+## 💥 Test the Allowance Flow (5 min)
 
 It's time to test the V2 markets. This is where you will experience the two-step Web3 payment flow firsthand.
 
@@ -399,7 +399,7 @@ It's time to test the V2 markets. This is where you will experience the two-step
 
 <FlavorText id="ts-allowance-unlocked" emoji="🔓" text="Allowance pattern mastered. You control the flow of tokens." />
 
-# 🪞 Wrap-Up & Reflection
+# 🪞 Wrap-Up & Reflection (5 min)
 
 _Review what you built and prepare for Part 3._
 

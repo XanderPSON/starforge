@@ -3,7 +3,7 @@ description: Write Solidity, deploy a Prediction Market to Base Sepolia, and exp
 duration: 90
 ---
 
-# 🔐 Part 1: Smart Contracts
+# 🔐 Part 1: Smart Contracts (90 min)
 
 *Learn to Read, Write, and Deploy an Onchain Prediction Market*
 
@@ -31,7 +31,7 @@ Check out the **[Troubleshooting Guide](./troubleshooting)** for solutions to co
 
 ---
 
-## 🧠 Understanding Smart Contracts
+## 🧠 Understanding Smart Contracts (10 min)
 
 ### 🤖 What is a Smart Contract?
 
@@ -99,7 +99,7 @@ Now that you know how smart contracts work at a high level, let's look at what w
 
 ---
 
-## 🧠 Understanding the Prediction Market
+## 🧠 Understanding the Prediction Market (10 min)
 
 ### 🎲 What is a Pari-Mutuel Prediction Market?
 
@@ -157,7 +157,7 @@ Here are the Solidity building blocks you'll see in the contract. Don't memorize
 
 <QuizPariMutuel id="sc-pari-mutuel" />
 
-# 🔍 Code Walkthrough: The Interface
+# 🔍 Code Walkthrough: The Interface (20 min)
 
 _Read the spec and implement your PredictionMarket contract._
 
@@ -267,7 +267,7 @@ After comparing your contract to the reference, try these follow-up prompts:
 
 _Navigate blockchain data and understand transaction costs._
 
-## 🔎 Block Explorer Exploration
+## 🔎 Block Explorer Exploration (15 min)
 
 ### 🧭 What is a Block Explorer?
 
@@ -402,7 +402,7 @@ This mirrors real Web3 workflow: verify what contract you are talking to, read o
 
 ---
 
-## ⛽ Understanding Gas
+## ⛽ Understanding Gas (10 min)
 
 During the scavenger hunt, you saw "Gas Used" on every transaction. But what is gas, and why does it exist?
 
@@ -443,7 +443,7 @@ Gas prices aren't fixed — they adjust dynamically based on demand. **EIPs** (E
 
 <QuizGas id="sc-gas-purpose" />
 
-# 🚀 Deploy Your Prediction Market
+# 🚀 Deploy Your Prediction Market (20 min)
 
 _Deploy, verify, and debug your contract on Base Sepolia._
 
@@ -549,7 +549,7 @@ Wallets, block explorers, and SDKs all add layers of abstraction that can obscur
 
 ---
 
-## 🔮 The Oracle Problem
+## 🔮 The Oracle Problem (5 min)
 
 Your market can accept bets, but how does it know who won?
 
@@ -575,7 +575,7 @@ In production, you would replace `msg.sender == owner` with a **decentralized or
 
 <QuizOracleProblem id="sc-oracle-problem" />
 
-# 🤝 Pod Cross-Play & Wrap-Up
+# 🤝 Pod Cross-Play & Wrap-Up (10 min)
 
 _Test your contracts together and reflect on what you built._
 

@@ -27,26 +27,26 @@ You don't need prior blockchain experience. If you can write code and use a CLI,
 
 ## 🗂️ Workshop Structure
 
-### 🛠️ Pre-Workshop: Environment Setup
+### 🛠️ Pre-Workshop: Environment Setup (15 min)
 
 🎯 **Goal**: Get everyone's development environment ready.
 - Wallet setup (Coinbase Wallet) and testnet ETH acquisition via faucets.
 - Development tool verification (Foundry, Node.js).
 - AI Assistant setup (Cursor / Copilot).
 
-### 🔐 Part 1: Smart Contracts
+### 🔐 Part 1: Smart Contracts (90 min)
 🎯 **Goal**: Understand, write, and deploy your own Prediction Market.
 - **Solidity Fundamentals:** Structs, nested mappings, and the Checks-Effects-Interactions pattern.
 - **BaseScan Radar:** Navigate the block explorer to read raw onchain state and "spy" on transaction payloads.
 - **The Oracle Problem:** Understand how blockchains handle external real-world data and access control.
 
-### 🪙 Part 2: Token Standards
+### 🪙 Part 2: Token Standards (60 min)
 🎯 **Goal**: Create an ERC-20 token and integrate it into your market.
 - **Interface Implementation:** Build an ERC-20 token from scratch.
 - **The Allowance Pattern:** Master the crucial two-step `approve` and `transferFrom` flow to handle Web3 payments securely.
 - **Token Economies:** Airdrop your custom currency to your pod-mates and require it for placing wagers.
 
-### 🌐 Part 3: Onchain Fullstack
+### 🌐 Part 3: Onchain Fullstack (1 hr 45 min)
 🎯 **Goal**: Build a React dashboard that aggregates your pod's deployed infrastructure.
 - **Data Aggregation:** Use Wagmi's `useReadContracts` to fetch state from the entire table's smart contracts simultaneously.
 - **Writing State:** Use OnchainKit's `<Transaction>` components to batch approvals and votes into a single user action.
