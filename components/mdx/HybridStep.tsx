@@ -36,7 +36,7 @@ export function HybridStep({ instruction, className }: HybridStepProps) {
 
   if (!instruction) {
     return (
-      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
+      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-600 dark:text-red-300">
         ❌ HybridStep Error: Missing required prop: <code>instruction</code>
       </div>
     )

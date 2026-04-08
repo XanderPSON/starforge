@@ -66,7 +66,7 @@ export function Reveal({ requiredId, children }: RevealProps) {
 
   if (!requiredId) {
     return (
-      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
+      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-600 dark:text-red-300">
         ❌ Reveal Error: Missing required prop: <code>requiredId</code>
       </div>
     )

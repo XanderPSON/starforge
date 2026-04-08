@@ -85,7 +85,7 @@ export function TemperatureCheck({ id, label, className }: TemperatureCheckProps
 
   if (!id) {
     return (
-      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
+      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-600 dark:text-red-300">
         TemperatureCheck Error: Missing required prop <code>id</code>
       </div>
     )

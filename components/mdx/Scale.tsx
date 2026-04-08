@@ -21,7 +21,7 @@ export function Scale({ id, max = 5, label, lowLabel, highLabel, className }: Sc
 
   if (!id) {
     return (
-      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
+      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-600 dark:text-red-300">
         ❌ Scale Error: Missing required prop <code>id</code>
       </div>
     )
@@ -100,7 +100,7 @@ export function Scale({ id, max = 5, label, lowLabel, highLabel, className }: Sc
         <div className="flex justify-between mt-2 px-1">
           <span className="text-xs text-gray-400 dark:text-gray-500">{effectiveLow}</span>
           {value !== null && (
-            <span className="text-xs font-semibold text-blue-400 tabular-nums">{value} / {max}</span>
+            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 tabular-nums">{value} / {max}</span>
           )}
           <span className="text-xs text-gray-400 dark:text-gray-500">{effectiveHigh}</span>
         </div>

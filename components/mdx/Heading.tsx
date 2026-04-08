@@ -96,7 +96,7 @@ export function H1({ children, className }: HeadingProps) {
   const id = slugify(extractText(children))
   return (
     <h1 id={id} className={cn(
-      'group relative text-3xl font-bold mt-0 mb-6',
+      'group relative text-3xl font-semibold dark:font-bold mt-0 mb-6',
       'text-hub-text dark:text-gray-100',
       'scroll-mt-16',
       className
@@ -113,7 +113,7 @@ export function H2({ children, className }: HeadingProps) {
   const id = slugify(extractText(children))
   return (
     <h2 id={id} className={cn(
-      'group relative text-2xl font-bold mt-10 mb-4 pb-2',
+      'group relative text-2xl font-semibold dark:font-bold mt-10 mb-4 pb-2',
       'text-hub-text dark:text-gray-100 border-b border-gray-200 dark:border-gray-700',
       'scroll-mt-16',
       className

@@ -31,7 +31,7 @@ export function FlavorText({ id, emoji, text, className }: FlavorTextProps) {
   // Validate required props (after all hooks)
   if (!id || !text) {
     return (
-      <div className="my-6 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
+      <div className="my-6 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-600 dark:text-red-300">
         FlavorText Error: Missing required prop <code>{!id ? 'id' : 'text'}</code>
       </div>
     )

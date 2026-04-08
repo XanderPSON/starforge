@@ -67,9 +67,9 @@ function CopyPre({ children, className, raw }: PreProps) {
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCopy() } }}
         className={cn(
           'my-6 group flex items-stretch cursor-pointer',
-          'bg-gray-900 dark:bg-coinbase-dark text-gray-200',
+          'bg-stone-50 dark:bg-coinbase-dark text-stone-800 dark:text-gray-200',
           'rounded-xl',
-          'border border-gray-700/50 dark:border-coinbase-blue/20',
+          'border border-stone-200 dark:border-coinbase-blue/20',
           'shadow-sm dark:shadow-lg dark:shadow-coinbase-blue/10',
           'focus:outline-none focus-visible:ring-2 focus-visible:ring-coinbase-blue',
           copied && 'ring-2 ring-emerald-400/50',
@@ -114,7 +114,7 @@ function CopyIndicator({ copied }: { copied: boolean }) {
     <div
       className={cn(
         'flex items-center gap-1.5 shrink-0 self-center',
-        'text-gray-400',
+        'text-stone-400 dark:text-gray-400',
         'opacity-0 group-hover:opacity-100',
         'transition-all duration-150',
         copied && 'text-emerald-400 opacity-100'
@@ -141,9 +141,9 @@ function StandardPre({ children, className }: PreProps) {
       <div
         className={cn(
           'my-6',
-          'bg-gray-900 dark:bg-coinbase-dark text-gray-200',
+          'bg-stone-50 dark:bg-coinbase-dark text-stone-800 dark:text-gray-200',
           'rounded-xl',
-          'border border-gray-700/50 dark:border-coinbase-blue/20',
+          'border border-stone-200 dark:border-coinbase-blue/20',
           'shadow-sm dark:shadow-lg dark:shadow-coinbase-blue/10',
         )}
       >

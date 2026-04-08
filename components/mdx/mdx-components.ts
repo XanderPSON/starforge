@@ -64,13 +64,13 @@ function HorizontalRule() {
 }
 
 const ACTION_COLORS: Record<string, string> = {
-  'CLICK':    'dark:text-gray-400',     // 🖱️ pointer — subtle UI action
-  'CALL':     'dark:text-violet-400',   // ⚙️ gear — invoke a function
-  'CONSIDER': 'dark:text-yellow-300',   // 🧠 brain — think/reason
-  'FIND':     'dark:text-emerald-400',  // 🔎 magnifying glass — search/inspect
-  'ACT':      'dark:text-orange-400',   // ✍️ writing hand — submit/do
-  'CHECK':    'dark:text-green-400',    // ✅ checkmark — verify
-  'LOCATE':   'dark:text-cyan-400',     // 🧭 compass — navigate
+  'CLICK':    'text-gray-500 dark:text-gray-400',       // 🖱️ pointer — subtle UI action
+  'CALL':     'text-violet-600 dark:text-violet-400',    // ⚙️ gear — invoke a function
+  'CONSIDER': 'text-yellow-600 dark:text-yellow-300',    // 🧠 brain — think/reason
+  'FIND':     'text-emerald-600 dark:text-emerald-400',  // 🔎 magnifying glass — search/inspect
+  'ACT':      'text-orange-600 dark:text-orange-400',    // ✍️ writing hand — submit/do
+  'CHECK':    'text-green-600 dark:text-green-400',      // ✅ checkmark — verify
+  'LOCATE':   'text-cyan-600 dark:text-cyan-400',        // 🧭 compass — navigate
 }
 
 function Details({ children, className, class: classAttr }: { children?: React.ReactNode; className?: string; class?: string }) {

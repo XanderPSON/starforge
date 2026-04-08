@@ -25,10 +25,10 @@ export function ErrorMessage({
       aria-live="assertive"
     >
       <div className="text-6xl mb-6">⚠️</div>
-      <h1 className="text-4xl font-bold mb-4 text-red-400">{title}</h1>
-      <p className="text-lg text-gray-300 mb-6">{message}</p>
+      <h1 className="text-4xl font-bold mb-4 text-red-600 dark:text-red-400">{title}</h1>
+      <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">{message}</p>
       {details && (
-        <pre className="bg-coinbase-dark/80 p-6 rounded-xl text-left text-sm overflow-x-auto mb-8 text-gray-300 border border-coinbase-blue/30">
+        <pre className="bg-gray-100 dark:bg-coinbase-dark/80 p-6 rounded-xl text-left text-sm overflow-x-auto mb-8 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-coinbase-blue/30">
           {details}
         </pre>
       )}

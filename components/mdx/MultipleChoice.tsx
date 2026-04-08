@@ -43,7 +43,7 @@ export function MultipleChoice({
 
   if (missingProps.length > 0) {
     return (
-      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
+      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-600 dark:text-red-300">
         ❌ MultipleChoice Error: Missing required props: <code>{missingProps.join(', ')}</code>
       </div>
     )
@@ -148,11 +148,11 @@ export function MultipleChoice({
       {isAnswered && (
         <div className="mt-4 flex items-center gap-2">
           {isCorrect ? (
-            <p className="text-sm text-green-400 flex items-center gap-1">
+            <p className="text-sm text-green-600 dark:text-green-400 flex items-center gap-1">
               <span>✓</span> Correct!
             </p>
           ) : (
-            <p className="text-sm text-red-400 flex items-center gap-1">
+            <p className="text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
               <span>✗</span> Incorrect. Try again!
             </p>
           )}

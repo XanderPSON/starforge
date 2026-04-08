@@ -49,7 +49,7 @@ export function AIPrompt({ prompt, className }: AIPromptProps) {
 
   if (!prompt) {
     return (
-      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
+      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-600 dark:text-red-300">
         ❌ AIPrompt Error: Missing required prop: <code>prompt</code>
       </div>
     )

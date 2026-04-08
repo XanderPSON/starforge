@@ -23,7 +23,7 @@ export function Checklist({ id, items, className }: ChecklistProps) {
 
   if (missingProps.length > 0) {
     return (
-      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
+      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-600 dark:text-red-300">
         ❌ Checklist Error: Missing required props: <code>{missingProps.join(', ')}</code>
       </div>
     )
@@ -124,11 +124,11 @@ export function Checklist({ id, items, className }: ChecklistProps) {
 
       {totalCount > 0 && (
         <div className="mt-4 flex items-center justify-between text-sm">
-          <p className="text-gray-400">
+          <p className="text-gray-500 dark:text-gray-400">
             {completedCount} of {totalCount} completed
           </p>
           {completedCount === totalCount && (
-            <p className="text-green-400 flex items-center gap-1">
+            <p className="text-green-600 dark:text-green-400 flex items-center gap-1">
               <span>✓</span> All done!
             </p>
           )}

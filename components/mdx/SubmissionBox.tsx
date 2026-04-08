@@ -31,7 +31,7 @@ export function SubmissionBox({ id, label, placeholder }: SubmissionBoxProps) {
   // Validate required props (after all hooks)
   if (!id) {
     return (
-      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-300">
+      <div className="my-8 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-600 dark:text-red-300">
         ❌ SubmissionBox Error: Missing required prop <code>id</code>
       </div>
     )
@@ -117,7 +117,7 @@ export function SubmissionBox({ id, label, placeholder }: SubmissionBoxProps) {
           </button>
         ) : (
           <div className="flex items-center gap-4">
-            <span className="text-sm text-green-400 flex items-center gap-1 font-medium">
+            <span className="text-sm text-green-600 dark:text-green-400 flex items-center gap-1 font-medium">
               <span>✓</span> Submitted
             </span>
             <button
@@ -130,7 +130,7 @@ export function SubmissionBox({ id, label, placeholder }: SubmissionBoxProps) {
         )}
 
         {!state.isSubmitted && isSaved && state.draft.length > 0 && (
-          <p className="text-xs text-green-400 flex items-center gap-1">
+          <p className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
             <span>✓</span> Draft saved
           </p>
         )}

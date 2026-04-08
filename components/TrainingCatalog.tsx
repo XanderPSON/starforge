@@ -153,7 +153,7 @@ export function TrainingCatalog({ trainings }: TrainingCatalogProps) {
               key={slug}
               href={`/training/${slug}`}
               onClick={(e) => handleCardClick(e, slug)}
-              className={`training-card-shimmer ${activatingSlug === slug ? 'card-launching' : ''} group relative isolate flex flex-col overflow-hidden rounded-2xl border ${filtered.length <= 6 ? 'p-8 min-h-[220px]' : 'p-5'} bg-hub-surface dark:bg-[#0C172C]/75 dark:backdrop-blur-sm shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_32px_-18px_rgba(22,40,68,0.55)] dark:hover:shadow-[0_22px_40px_-20px_rgba(157,180,207,0.35)] ${
+              className={`training-card-shimmer ${activatingSlug === slug ? 'card-launching' : ''} group relative isolate flex flex-col overflow-hidden rounded-2xl border ${filtered.length <= 6 ? 'p-8 min-h-[220px]' : 'p-5'} bg-hub-surface dark:bg-[#0C172C]/75 dark:backdrop-blur-sm shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_32px_-18px_rgba(76,91,255,0.18)] dark:hover:shadow-[0_22px_40px_-20px_rgba(157,180,207,0.35)] ${
                 completedSlugs.has(slug)
                   ? 'border-green-400/40 dark:border-green-500/30'
                   : 'border-black/[0.08] dark:border-white/10 hover:border-[#335B86]/50 dark:hover:border-[#9DB4CF]/30'
@@ -161,11 +161,11 @@ export function TrainingCatalog({ trainings }: TrainingCatalogProps) {
             >
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-px rounded-[15px] border border-white/40 dark:border-white/[0.06] transition-colors duration-300 group-hover:border-[#9DB4CF]/45 dark:group-hover:border-[#AFC2D8]/25"
+                className="pointer-events-none absolute inset-px rounded-[15px] border border-black/[0.06] dark:border-white/[0.06] transition-colors duration-300 group-hover:border-[#335B86]/20 dark:group-hover:border-[#AFC2D8]/25"
               />
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_88%_8%,rgba(157,180,207,0.22),transparent_52%)] dark:bg-[radial-gradient(circle_at_85%_5%,rgba(45,78,118,0.45),transparent_52%)] opacity-80"
+                className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_88%_8%,rgba(76,91,255,0.06),transparent_52%)] dark:bg-[radial-gradient(circle_at_85%_5%,rgba(45,78,118,0.45),transparent_52%)] opacity-80"
               />
               <span
                 aria-hidden="true"
@@ -195,9 +195,10 @@ export function TrainingCatalog({ trainings }: TrainingCatalogProps) {
                     </div>
                   )}
 
-                  {/* Title */}
-                  <h3 className={`${filtered.length <= 6 ? 'text-xl' : 'text-base'} font-semibold tracking-[0.01em] text-hub-text dark:text-[#E3EDF8] leading-snug transition-all duration-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-[#E3EDF8] group-hover:to-[#9DB4CF] group-hover:bg-clip-text`}>
-                    {frontmatter.title || toTitleCase(slug)}
+                  <h3 className={`${filtered.length <= 6 ? 'text-xl' : 'text-base'} font-semibold tracking-[0.01em] text-hub-text dark:text-[#E3EDF8] leading-snug`}>
+                    <span className="transition-all duration-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-[#1a3a5c] group-hover:to-[#4a7099] dark:group-hover:from-[#E3EDF8] dark:group-hover:to-[#9DB4CF] group-hover:bg-clip-text">
+                      {frontmatter.title || toTitleCase(slug)}
+                    </span>
                   </h3>
                 </div>
 
@@ -211,7 +212,7 @@ export function TrainingCatalog({ trainings }: TrainingCatalogProps) {
                 {/* Launch rail */}
                 <div className={`mt-auto relative flex items-center overflow-hidden rounded-xl border border-black/[0.05] dark:border-white/[0.08] bg-black/[0.02] dark:bg-[#162844]/35 pl-12 pr-3 ${filtered.length <= 6 ? 'py-3 text-sm' : 'py-2 text-xs'} text-hub-muted dark:text-gray-400`}>
                   <span
-                    className={`chevron-rumble absolute top-1/2 -translate-y-1/2 z-10 inline-flex items-center rounded-full border border-[#2D4E76]/30 bg-[#2D4E76]/10 px-2 py-1 text-[#335B86] dark:border-[#9DB4CF]/20 dark:bg-[#9DB4CF]/10 dark:text-[#AFC2D8] transition-[left,background-color,border-color,color] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:border-[#9DB4CF]/45 group-hover:bg-[#27466A]/30 group-hover:text-[#E3EDF8] ${
+                    className={`chevron-rumble absolute top-1/2 -translate-y-1/2 z-10 inline-flex items-center rounded-full border border-hub-primary/25 bg-hub-primary/10 px-2 py-1 text-hub-primary dark:border-[#9DB4CF]/20 dark:bg-[#9DB4CF]/10 dark:text-[#AFC2D8] transition-[left,background-color,border-color,color] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:border-hub-primary/40 group-hover:bg-hub-primary/20 group-hover:text-hub-primary-dark dark:group-hover:border-[#9DB4CF]/45 dark:group-hover:bg-[#27466A]/30 dark:group-hover:text-[#E3EDF8] ${
                       activatingSlug === slug ? 'left-[calc(100%-2.5rem)]' : 'left-3'
                     }`}
                   >

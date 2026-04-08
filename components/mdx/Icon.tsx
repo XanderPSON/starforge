@@ -14,7 +14,7 @@ export function Icon({ name, size = 18, className, ...props }: IconProps) {
 
   if (!LucideIcon) {
     return (
-      <span className="text-red-400 text-xs font-mono">
+      <span className="text-red-600 dark:text-red-400 text-xs font-mono">
         [unknown icon: {name}]
       </span>
     )
