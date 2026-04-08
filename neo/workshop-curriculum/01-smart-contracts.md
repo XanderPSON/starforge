@@ -133,7 +133,7 @@ Here are the Solidity building blocks you'll see in the contract. Don't memorize
 
 **📦 Storage Structures:**
 
--   `mapping` – Key-value storage (e.g. `marketId → voter → hasVoted`)
+-   `mapping` – Key-value storage (e.g. `marketId → voter → amountStaked`)
 -   `arrays` – Lists of items (e.g. `Market[]` for all markets)
 
 **⚙️ Visibility Modifiers:**
@@ -201,8 +201,8 @@ In this workshop, your task is:
 Open `src/IPredictionMarket.sol` in your repo. This **interface** is your contract spec — it defines *what* your contract must do, but not *how*. Think of it like an API definition:
 
 - **Events** your contract must emit (`MarketCreated`, `Voted`, `MarketResolved`)
-- **Custom errors** your contract must use (`NotOwner`, `MarketAlreadyResolved`, `AlreadyVoted`, `ZeroAmount`)
-- **Functions** your contract must implement (8 total: `owner`, `totalMarkets`, `getOdds`, `getMarket`, `hasVoted`, `createMarket`, `vote`, `resolveMarket`)
+- **Custom errors** your contract must use (`NotOwner`, `MarketAlreadyResolved`, `ZeroAmount`)
+- **Functions** your contract must implement (9 total: `owner`, `totalMarkets`, `getOdds`, `getMarket`, `hasVoted`, `amountVoted`, `createMarket`, `vote`, `resolveMarket`)
 - **Struct fields** your `Market` must contain (`question`, `yesPool`, `noPool`, `resolved`, `outcome`)
 
 Your skeleton at `src/PredictionMarket.sol` already inherits this interface and has the struct + storage defined. Every function body says `revert("Not implemented")` — that's what you'll replace.
@@ -223,7 +223,7 @@ As you read the interface, pay attention to:
 The **CEI Pattern (Checks, Effects, Interactions)** prevents reentrancy and keeps state consistent. When writing state-changing functions (like placing a bet), Web3 engineers strictly follow this pattern to prevent hacks:
 
 1. **Checks** – Validate all inputs and conditions first (e.g., `msg.value > 0`, market not resolved)
-2. **Effects** – Update internal contract state (e.g., `hasVoted[marketId][msg.sender] = true`, update pools)
+2. **Effects** – Update internal contract state (e.g., `amountVoted[marketId][msg.sender] += amount`, update pools)
 3. **Interactions** – Send funds or interact with external contracts *last*
 
 > [!WARNING]

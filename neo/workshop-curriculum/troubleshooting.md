@@ -242,12 +242,6 @@ _Debugging prediction market contracts and ERC-20 token interactions._
 // If you used 'cast wallet import dev' but are using a different wallet in your browser to call the function, the transaction will fail.
 ```
 
-**❌ "AlreadyVoted" when voting**
-
-- Each address can vote only once per market
-- Check: `cast call CONTRACT "hasVoted(uint256,address)" 0 YOUR_ADDRESS --rpc-url https://sepolia.base.org`
-- If `true`, you've already voted
-
 **❌ "MarketResolved" when voting**
 
 - Market has been resolved; no more votes allowed
@@ -366,7 +360,7 @@ const config = getDefaultConfig({
 
 **❌ "Batch approve + vote: first succeeds, second fails"**
 
-- If `approve` succeeds but `vote` fails, the issue is with the Market contract (e.g., already voted, market resolved)
+- If `approve` succeeds but `vote` fails, the issue is with the Market contract (e.g., market resolved, insufficient token balance)
 - If both are in one transaction and it reverts, check the revert reason on BaseScan
 
 **❌ "CORS error when fetching RPC data"**
@@ -406,7 +400,7 @@ forge build --sizes
 | Symptom | Likely Cause | Fix |
 |---------|--------------|-----|
 | "insufficient allowance" | Forgot `approve` | Call `approve` on Token before `vote` |
-| "AlreadyVoted" | Voted before | Each address votes once per market |
+| "InsufficientAllowance" | Allowance too low for vote amount | Call `approve` with enough tokens before `vote` |
 | Multicall returns null/error | Bad address in podConfig | Verify all addresses on BaseScan |
 | Token amount too small | Decimal mistake | Use 18 decimals: 1000 * 10^18 |
 | "NotOwner" | Wrong caller | Only owner can create/resolve markets |

@@ -251,14 +251,14 @@ const { data } = useReadContracts({
     {
       address: pod.marketAddress,
       abi: PredictionMarketABI,
-      functionName: 'hasVoted',
+      functionName: 'amountVoted',
       args: [0n, account.address!],
     },
   ],
 });
 
 // Results are in the same order as the contracts array:
-const [marketResult, hasVotedResult] = data ?? [];
+const [marketResult, amountVotedResult] = data ?? [];
 // Market result shape: [question, yesPool, noPool, resolved, outcome]
 ```
 
@@ -270,9 +270,9 @@ Open the stub at `components/MarketCard.tsx`. Right now it renders a yellow 🔧
 
 **What your MarketCard should do:**
 
-1. Use `useReadContracts` to fetch `markets(0)` and `hasVoted(0, address)` from the pod's contract
+1. Use `useReadContracts` to fetch `markets(0)` and `amountVoted(0, address)` from the pod's contract
 2. Display the market question, an odds bar (green for Yes, red for No), and pool sizes in tokens
-3. Show conditional status: "Market Resolved" / "Already voted" / "Connect wallet" / vote buttons
+3. Show conditional status: "Market Resolved" / "You've staked X tokens" / "Connect wallet" / vote buttons (users can vote multiple times)
 
 **Props already defined for you:** `{ pod: PodMarket, account: ReturnType<typeof useAccount> }`
 
@@ -282,7 +282,7 @@ Open the stub at `components/MarketCard.tsx`. Right now it renders a yellow 🔧
 |------|------------|------|
 | `useReadContracts` | `wagmi` | Batches multiple contract reads into one RPC call (multicall) |
 | `formatEther()` | `viem` | Converts BigInt (e.g., `10000000000000000000n`) → `"10.0"` |
-| `PredictionMarketABI` | `@/lib/contracts` | ABI for the PredictionMarket — defines `markets`, `hasVoted`, `vote` |
+| `PredictionMarketABI` | `@/lib/contracts` | ABI for the PredictionMarket — defines `markets`, `amountVoted`, `vote` |
 
 **Odds calculation:**
 
