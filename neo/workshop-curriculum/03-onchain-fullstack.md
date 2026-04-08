@@ -37,7 +37,7 @@ By the end of this part, you'll be able to:
 
 ### 🆘 Need Help?
 
-Check out the **[Troubleshooting Guide](./troubleshooting)** for wallet connections, multicall issues, and **[Module 3](./troubleshooting#module-3-app-issues)** specific issues.
+Check out the **[Troubleshooting Guide](./troubleshooting)** for wallet connections, multicall issues, and **[Module 3](./troubleshooting#module-3-app-issues)** specific issues. The repo also has a `solutions/` directory with reference implementations for the API route, MarketCard, and pod config — don't peek unless you're stuck!
 
 ---
 
@@ -192,7 +192,14 @@ Open the placeholder stub at `app/api/markets/route.ts`. Right now it returns a 
 
 `markets(0)` returns a tuple: `[question, yesPool, noPool, resolved, outcome]` — matching the `Market` struct you wrote in Part 1.
 
-<AIPrompt prompt="Replace the placeholder stub in app/api/markets/route.ts with a real implementation. It should use Viem's createPublicClient with baseSepolia chain and the BASE_SEPOLIA_RPC env var to read market data from each contract in POD_MARKETS (imported from @/lib/podConfig). Call the 'markets' function with args [0n] using PredictionMarketABI from @/lib/contracts. Return JSON with each market's owner, addresses, question, formatted pool sizes, and resolved status. Handle errors with try/catch." />
+**🤖 Now prompt your AI to build it.** You have everything you need from this section — the file to edit (`app/api/markets/route.ts`), the Key APIs table, the contract function signature, and the expected behavior. Write your own prompt telling the AI what to build. The more specific context you include (file paths, import locations, data shapes, error handling), the better the result.
+
+<details className="spoiler">
+<summary>Stuck? Reveal a working AI prompt</summary>
+
+<AIPrompt prompt="Replace the placeholder stub in app/api/markets/route.ts with a real implementation that uses Viem to read market data from each contract in POD_MARKETS and returns it as JSON." />
+
+</details>
 
 **Verify it works:**
 
@@ -285,7 +292,14 @@ const yesPercent = totalPool > 0n ? Number((yesPool * 100n) / totalPool) : 50;
 const noPercent = 100 - yesPercent;
 ```
 
-<AIPrompt prompt="Rewrite the MarketCard component in components/MarketCard.tsx. It receives {pod, account} props (types already imported). Use useReadContracts from wagmi to batch-read markets(0) and hasVoted(0, account.address) from pod.marketAddress using PredictionMarketABI from @/lib/contracts. Display: (1) pod.owner's name, (2) the market question, (3) a green/red odds bar with percentages, (4) pool sizes formatted with formatEther from viem. Add conditional rendering: if resolved show 'Market Resolved', if hasVoted show 'Already voted', if no wallet show 'Connect wallet', otherwise show placeholder vote buttons for now. Use Tailwind CSS for styling. Keep 'use client' directive." />
+**🤖 Now prompt your AI to build it.** You've seen the multicall pattern, the Key APIs, and the odds calculation. Tell your AI what component to rewrite, what data to fetch (and how — refer back to the `useReadContracts` example above), what to display, and what conditional states to handle. Use the details from this section to craft your prompt.
+
+<details className="spoiler">
+<summary>Stuck? Reveal a working AI prompt</summary>
+
+<AIPrompt prompt="Rewrite the MarketCard component in components/MarketCard.tsx to display live market data using useReadContracts from wagmi. Show the question, an odds bar, pool sizes, and conditional status based on whether the market is resolved, the user has voted, or no wallet is connected." />
+
+</details>
 
 **Verify it works:** Your app should now show live market questions and odds instead of the yellow 🔧 placeholder cards. If you see "Loading..." stuck, check your `podConfig.ts` addresses.
 
@@ -381,7 +395,14 @@ Update your `MarketCard` component to replace the placeholder vote buttons with 
 
 <QuipJSONRPC id="fs-json-rpc" />
 
-<AIPrompt prompt="Update my MarketCard component to add voting. I need two call arrays (voteYesCalls and voteNoCalls) that each batch an ERC-20 approve call and a PredictionMarket vote call using encodeFunctionData and parseEther from viem. The approve call goes to pod.tokenAddress, approving pod.marketAddress for parseEther('10'). The vote call goes to pod.marketAddress with args [0n, true/false, parseEther('10')]. Replace the placeholder vote buttons with OnchainKit Transaction components: <Transaction calls={voteYesCalls}><TransactionButton text='Vote Yes (10 Tokens)' /><TransactionSponsor /><TransactionStatus><TransactionStatusLabel /><TransactionStatusAction /></TransactionStatus></Transaction>. Import Transaction components from @coinbase/onchainkit/transaction and ERC20ABI from @/lib/contracts." />
+**🤖 Now prompt your AI to wire it up.** You've seen the two-step vote pattern with `encodeFunctionData`, and the `<Transaction>` component API — both with full code examples. Tell your AI to update your MarketCard with the voting logic. Reference the call array structure and the OnchainKit components shown above.
+
+<details className="spoiler">
+<summary>Stuck? Reveal a working AI prompt</summary>
+
+<AIPrompt prompt="Update my MarketCard component to add voting. Build two call arrays (voteYesCalls and voteNoCalls) that each batch an ERC-20 approve and a PredictionMarket vote call. Replace the placeholder vote buttons with OnchainKit Transaction components that use these call arrays." />
+
+</details>
 
 **Verify it works:**
 
